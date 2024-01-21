@@ -1,13 +1,17 @@
 import { NavigationContainer, useNavigation} from '@react-navigation/native';
 import React from "react";
-import { Button, View} from 'react-native';
+import { Button, Image, View, StyleSheet, Text, Dimensions} from 'react-native';
 import VideoCallPage from './components/callpage';
 import RNEncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from './components/splash_screen';
 import { useState,useEffect } from 'react';
-
-
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import SignUpScreen from './components/signup';
+import SignInScreen from './components/signin';
+import HomePage from './components/HomePage';
+
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -19,27 +23,20 @@ export default function App() {
     }, 4000); // Adjust the time as needed
   }, []);
   return (
-    <NavigationContainer>
-      {isLoading ? <SplashScreen /> : <Stack.Navigator 
-        screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="HomePage" component={HomePage} />
-        <Stack.Screen name="VideoCallPage" component={VideoCallPage} />
-
-      </Stack.Navigator>
-      }
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex:1, }}>
+      <NavigationContainer>
+        {isLoading ? (
+          <SplashScreen />
+        ) : (
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="HomePage">
+            <Stack.Screen name="HomePage" component={HomePage} />
+            <Stack.Screen name="VideoCallPage" component={VideoCallPage} />
+            <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+            <Stack.Screen name="SignInScreen" component={SignInScreen} />
+          </Stack.Navigator>
+        )}
+      </NavigationContainer>
+      </GestureHandlerRootView>
   );
 }
 
-function HomePage(props) {
-    const navigation = useNavigation();
-    return (
-        <View style={{flex: 1,alignItems: 'center',justifyContent: 'space-around'}}>
-            <Button title="Make Video Call" onPress={() => { navigation.navigate('VideoCallPage') }} />
-        </View>
-    )
-}
-
-
-
-/* <Stack.Navigator initialRouteName="HomePage">  */
