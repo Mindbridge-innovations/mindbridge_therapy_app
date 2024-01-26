@@ -1,6 +1,8 @@
 import { StyleSheet, View,Image,Text, TextInput,TouchableOpacity, Dimensions } from "react-native";
 import React, { useState } from 'react';
 import CustomButton from "../assets/widgets/custom_button";
+import { ScrollView } from "react-native-gesture-handler";
+import mystyles from "../assets/stylesheet";
 
 
 const SignInScreen=()=>{
@@ -24,19 +26,20 @@ const SignInScreen=()=>{
       };
 
       return(
-        <View style={{ flex: 1,justifyContent: 'space-around',fontSize:16, backgroundColor:'#1D29D0'}}>
+        <ScrollView contentContainerStyle={{ flexGrow:1,backgroundColor:'#255ECC' }}>
+        <View style={{ flex: 1,justifyContent: 'space-around',fontSize:16}}>
             <View style={styles.container}>
             <Image
                 source={require('./../assets/mindbridgelogo_splash.png')}
-                style={styles.logoimage}
+                style={mystyles.logoimage}
               />
 
              <Text style={{ paddingBottom:80, fontSize:20, color:'white', textTransform:'uppercase' }}>Sign In</Text>
 
-              <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={styles.label}>Email address</Text>
+              <View style={{  marginBottom:30 }}>
+                <Text style={mystyles.label}>Email address</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.email}
                     onChangeText={(text) => handleInputChange('email', text)}
                     keyboardType="email-address"
@@ -45,10 +48,10 @@ const SignInScreen=()=>{
 
     
 
-              <View style={{ display:'block',marginBottom:20 }}>
-                <Text style={styles.label}>Password</Text>
+              <View style={{marginBottom:30 }}>
+                <Text style={mystyles.label}>Password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.password}
                     onChangeText={(text) => handleInputChange('password', text)}
                     secureTextEntry  
@@ -59,12 +62,12 @@ const SignInScreen=()=>{
               <CustomButton
                 onPress={null}
                 title="Sign In"
-                buttonStyle={{ backgroundColor: 'black', width:300, marginTop:40, height:50}}
+                buttonStyle={{ backgroundColor: 'black', width:300, marginTop:30, height:50}}
                 textStyle={{ color: 'white' }}
             />
             </View>
-
         </View>
+        </ScrollView>
 
       );
     
@@ -77,24 +80,10 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
   
-    logoimage: {
-      width: 100,
-      height: 80,
-      resizeMode: 'cover', // or 'contain', 'stretch', 'center'
-      borderRadius: 10, // if you want to add borderRadius
-      marginBottom:20
-    },
-    label:{
-        color:'white',
-        marginBottom:10,
-    },
+    
+    
 
-    input:{
-        backgroundColor:'#040C87',
-        borderRadius:15,
-        width:Dimensions.get('window').width*0.8,
-        color:'gray'
-    }
+   
 
     
     

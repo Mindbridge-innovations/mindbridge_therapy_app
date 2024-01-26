@@ -5,11 +5,13 @@ import RNEncryptedStorage from 'react-native-encrypted-storage';
 
 
 import {ZegoUIKitPrebuiltCall, ONE_ON_ONE_VIDEO_CALL_CONFIG } from '@zegocloud/zego-uikit-prebuilt-call-rn'
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function VideoCallPage(props) {
     randomUserID = String(Math.floor(Math.random() * 100000))
 
     return (
+        <ScrollView contentContainerStyle={{ flexGrow:1 }}>
         <View style={videoCallStyles.container}>
             <ZegoUIKitPrebuiltCall
                 appID={1043118981}
@@ -27,6 +29,7 @@ export default function VideoCallPage(props) {
                 }}
             />
         </View>
+        </ScrollView>
     );
 }
 

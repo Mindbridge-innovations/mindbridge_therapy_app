@@ -1,10 +1,19 @@
 import { StyleSheet, View,Image,Text, TextInput,TouchableOpacity, Dimensions } from "react-native";
 import React, { useState } from 'react';
 import CustomButton from "../assets/widgets/custom_button";
+import { ScrollView } from "react-native-gesture-handler";
+import { Picker } from "@react-native-picker/picker";
+import mystyles from "../assets/stylesheet";
+import {  useNavigation} from '@react-navigation/native';
+
 
 
 const SignUpScreen=()=>{
+  const navigation = useNavigation();
+
    
+  const [selectedRole, setSelectedRole] = useState(''); // Set the initial selected value
+
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -22,24 +31,25 @@ const SignUpScreen=()=>{
       };
     
       const handleSubmit = () => {
-        // Handle form submission logic
-        console.log('Form submitted:', formData);
+        navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
+
       };
 
       return(
-        <View style={{ flex: 1,justifyContent: 'space-around',fontSize:16, backgroundColor:'#1D29D0'}}>
+        <ScrollView contentContainerStyle={{ flexGrow:1 }}>
+        <View style={{ justifyContent: 'space-around',fontSize:16, backgroundColor:'#255ECC'}}>
             <View style={styles.container}>
             <Image
                 source={require('./../assets/mindbridgelogo_splash.png')}
-                style={styles.logoimage}
+                style={mystyles.logoimage}
               />
 
              <Text style={{ paddingBottom:20, fontSize:20, color:'white', textTransform:'uppercase' }}>Sign Up</Text>
 
               <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={styles.label}>Email address</Text>
+                <Text style={mystyles.label}>Email address</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.email}
                     onChangeText={(text) => handleInputChange('email', text)}
                     keyboardType="email-address"
@@ -47,9 +57,9 @@ const SignUpScreen=()=>{
               </View>
 
               <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={styles.label}>Phone number</Text>
+                <Text style={mystyles.label}>Phone number</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.phone}
                     onChangeText={(text) => handleInputChange('phone', text)}
                     keyboardType="phone-pad"
@@ -57,43 +67,58 @@ const SignUpScreen=()=>{
               </View>
 
               <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={styles.label}>Username</Text>
+                <Text style={mystyles.label}>Username</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.username}
                     onChangeText={(text) => handleInputChange('username', text)}
                 />
               </View>
 
-              <View style={{ display:'block',marginBottom:20 }}>
-                <Text style={styles.label}>Password</Text>
+              <View style={{ marginBottom:20 }}>
+                <Text style={mystyles.label}>Password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.password}
                     onChangeText={(text) => handleInputChange('password', text)}
                     secureTextEntry  
                 />
               </View>
 
-              <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={styles.label}>Confirm password</Text>
+              <View style={{ marginBottom:20 }}>
+                <Text style={mystyles.label}>Confirm password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={mystyles.input}
                     value={formData.password_confirm}
                     onChangeText={(text) => handleInputChange('password_confirm', text)}
                     secureTextEntry
                 />
               </View>
 
+
+              <View style={ styles.inputcontainer}>
+                <Text style={{ marginVertical:20, color:'white', fontWeight:'bold' }}>Select your role for which you are registering</Text>
+                <View style={mystyles.picker}>
+                <Picker selectedValue={selectedRole} onValueChange={(itemValue, itemIndex) =>setSelectedRole(itemValue)} >
+                  <Picker.Item label="Choose your role" value="" />
+                  <Picker.Item label="Patient" value="Patient" />
+                  <Picker.Item label="Therapist" value="Therapist" />
+                  
+                </Picker>
+                </View>
+              </View>
+
+
               <CustomButton
-                onPress={null}
+                onPress={handleSubmit}
                 title="Sign Up"
-                buttonStyle={{ backgroundColor: 'black', width:300 }}
+                buttonStyle={{ backgroundColor: 'black', width:300 , marginTop:20}}
                 textStyle={{ color: 'white' }}
             />
             </View>
 
         </View>
+        </ScrollView> 
 
       );
     
@@ -106,13 +131,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
   
-    logoimage: {
-      width: 100,
-      height: 80,
-      resizeMode: 'cover', // or 'contain', 'stretch', 'center'
-      borderRadius: 10, // if you want to add borderRadius
-      marginBottom:20
-    },
     label:{
         color:'white',
         marginBottom:10,

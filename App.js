@@ -1,16 +1,15 @@
 import { NavigationContainer, useNavigation} from '@react-navigation/native';
 import React from "react";
-import { Button, Image, View, StyleSheet, Text, Dimensions} from 'react-native';
 import VideoCallPage from './components/callpage';
 import RNEncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from './components/splash_screen';
 import { useState,useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import SignUpScreen from './components/signup';
 import SignInScreen from './components/signin';
 import HomePage from './components/HomePage';
-
+import OnBoardQtnsScreen from './components/onboard_qtns_screen';
 
 
 const Stack = createNativeStackNavigator();
@@ -33,6 +32,8 @@ export default function App() {
             <Stack.Screen name="VideoCallPage" component={VideoCallPage} />
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
+            <Stack.Screen name="OnBoardQtnsScreen" component={OnBoardQtnsScreen} />
+
           </Stack.Navigator>
         )}
       </NavigationContainer>
