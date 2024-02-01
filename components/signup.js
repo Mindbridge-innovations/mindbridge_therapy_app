@@ -37,7 +37,7 @@ const SignUpScreen=()=>{
 
       return(
         <ScrollView contentContainerStyle={{ flexGrow:1 }}>
-        <View style={{ justifyContent: 'space-around',fontSize:16, backgroundColor:'#255ECC'}}>
+        <View style={{ justifyContent: 'space-around',fontSize:16, backgroundColor:'#255ECC', alignItems:'center'}}>
             <View style={styles.container}>
             <Image
                 source={require('./../assets/mindbridgelogo_splash.png')}
@@ -112,11 +112,22 @@ const SignUpScreen=()=>{
               <CustomButton
                 onPress={handleSubmit}
                 title="Sign Up"
-                buttonStyle={{ backgroundColor: 'black', width:300 , marginTop:20}}
+                buttonStyle={{ backgroundColor: 'black', width:300 , marginTop:40}}
                 textStyle={{ color: 'white' }}
             />
             </View>
 
+
+            <View style={{ flexDirection:'row', marginTop:-30 }}>
+                <Text style={{ color:'white', marginTop:10 , fontWeight:'bold'}}>Already having an account? </Text>
+                <CustomButton
+                onPress={()=>navigation.navigate('SignInScreen')}
+                title="Sign in"
+                buttonStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{ color: 'black', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
+                />
+              </View>
+              
         </View>
         </ScrollView> 
 
@@ -131,18 +142,6 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
   
-    label:{
-        color:'white',
-        marginBottom:10,
-    },
-
-    input:{
-        backgroundColor:'#040C87',
-        borderRadius:15,
-        width:Dimensions.get('window').width*0.8,
-        color:'gray'
-    }
-
     
     
   });

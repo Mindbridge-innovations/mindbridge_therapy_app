@@ -4,9 +4,14 @@ import CustomButton from '../assets/widgets/custom_button';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Picker } from '@react-native-picker/picker';
 import mystyles from '../assets/stylesheet';
+import { useNavigation } from '@react-navigation/native';
 
 
 const OnBoardQtnsScreen = ({route}) => {
+  // defining the navigation variable to shift btn screens
+  const navigation=useNavigation();
+
+  // defining the route parameter 
   const { params } = route;
   const role = params ? params.role : null;
 
@@ -14,14 +19,18 @@ const OnBoardQtnsScreen = ({route}) => {
   const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
 
   const [currentStep, setCurrentStep] = useState(1);
+
+  // defining the age selection variable options
   const numbersArray = Array.from({ length: 86 }, (_, index) => index + 15);
 
+  // logic to collect entered form field values
   const [formData, setFormData] = useState({
     therapy_cause: '',
     expectation: '',
     full_name:'',
   });
 
+  // logic to move to next question screen
   const handleNext = () => {
     // You can perform validation here if needed
     // Move to the next step and update the form data
@@ -35,7 +44,9 @@ const OnBoardQtnsScreen = ({route}) => {
 
   const handleDone = () => {
     // You can perform validation here if needed
-    console.log('Form completed:', formData);
+
+    navigation.navigate('DashboardDrawer')
+    // console.log('Form completed:', formData);
     // Perform any final actions, like submitting the form
   };
   
@@ -187,6 +198,8 @@ const OnBoardQtnsScreen = ({route}) => {
             </View>
           </View>
         );
+
+        // return third screen of the questions
       case 3:
         return (
           <View style={{ alignItems:'center' }}>

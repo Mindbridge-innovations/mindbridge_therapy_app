@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import CustomButton from "../assets/widgets/custom_button";
 import { ScrollView } from "react-native-gesture-handler";
 import mystyles from "../assets/stylesheet";
+import { useNavigation } from "@react-navigation/native";
 
 
 const SignInScreen=()=>{
+  const navigation=useNavigation();
    
     const [formData, setFormData] = useState({
         email: '',
@@ -27,7 +29,7 @@ const SignInScreen=()=>{
 
       return(
         <ScrollView contentContainerStyle={{ flexGrow:1,backgroundColor:'#255ECC' }}>
-        <View style={{ flex: 1,justifyContent: 'space-around',fontSize:16}}>
+        <View style={{ flex: 1,justifyContent: 'space-around',fontSize:16, alignItems:'center'}}>
             <View style={styles.container}>
             <Image
                 source={require('./../assets/mindbridgelogo_splash.png')}
@@ -62,11 +64,33 @@ const SignInScreen=()=>{
               <CustomButton
                 onPress={null}
                 title="Sign In"
-                buttonStyle={{ backgroundColor: 'black', width:300, marginTop:30, height:50}}
+                buttonStyle={{ backgroundColor: 'black', width:300, marginTop:20, height:50}}
                 textStyle={{ color: 'white' }}
             />
             </View>
+
+            <View style={{ flexDirection:'row', marginTop:-40 }}>
+                <Text style={{ color:'white', marginTop:10 , fontWeight:'bold'}}>Have no active account? </Text>
+                <CustomButton
+                onPress={()=>navigation.navigate('SignUpScreen')}
+                title="Sign up"
+                buttonStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{ color: 'black', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
+                />
+              </View>
+
+              <View style={{ flexDirection:'row', marginTop:-40 }}>
+                <Text style={{ color:'white', marginTop:10 , fontWeight:'bold'}}>Forgot your password? </Text>
+                <CustomButton
+                onPress={()=>navigation.navigate('DashboardDrawer')}
+                title="Reset password"
+                buttonStyle={{ backgroundColor: 'transparent' }}
+                textStyle={{ color: 'black', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
+                />
+              </View>
         </View>
+
+        
         </ScrollView>
 
       );

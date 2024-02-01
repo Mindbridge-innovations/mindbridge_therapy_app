@@ -34,10 +34,10 @@ function HomePage(props) {
               textStyle={{ color: 'white', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
               />
 
-              <View style={{ flex:1, flexDirection:'row', marginBottom:20 }}>
+              <View style={{ flexDirection:'row', marginTop:-40 }}>
                 <Text style={{ color:'white', marginTop:10 , fontWeight:'bold'}}>Already signed up? </Text>
                 <CustomButton
-                onPress={()=>navigation.navigate('OnBoardQtnsScreen')}
+                onPress={()=>navigation.navigate('DashboardDrawer')}
                 title="Sign in"
                 buttonStyle={{ backgroundColor: 'transparent' }}
                 textStyle={{ color: 'black', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
