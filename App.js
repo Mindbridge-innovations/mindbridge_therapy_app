@@ -14,6 +14,9 @@ import { DrawerContentScrollView, DrawerItem, createDrawerNavigator } from '@rea
 import DashboardScreen from './components/Dashboard';
 import SettingScreen from './components/profile';
 import { Image } from 'react-native';
+import TherapistListScreen from './components/dashboard_components/mytherapists';
+import PatientListScreen from './components/dashboard_components/mypatients';
+import TherapistDetailsScreen from './components/dashboard_components/therapist_details';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,9 +26,9 @@ const DashboardDrawer = () => {
   return (
     <Drawer.Navigator initialRouteName="Appointments" drawerContent={(props) => <CustomDrawerContent {...props} />}>
       <Drawer.Screen name="Appointments" component={DashboardScreen} />
-      <Drawer.Screen name="My patients" component={DashboardScreen} />
+      <Drawer.Screen name="My patients" component={PatientListScreen} />
       <Drawer.Screen name="Feedback/review" component={DashboardScreen} />
-      <Drawer.Screen name="My therapists" component={DashboardScreen} />
+      <Drawer.Screen name="My therapists" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={DashboardScreen} />
     </Drawer.Navigator>
@@ -97,6 +100,7 @@ export default function App() {
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
             <Stack.Screen name="OnBoardQtnsScreen" component={OnBoardQtnsScreen} />
+            <Stack.Screen name="TherapistDetailsScreen" component={TherapistDetailsScreen} />
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
 
 
