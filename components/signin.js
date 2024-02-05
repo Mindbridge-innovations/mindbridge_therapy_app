@@ -22,9 +22,36 @@ const SignInScreen=()=>{
         });
       };
     
-      const handleSubmit = () => {
-        // Handle form submission logic
-        console.log('Form submitted:', formData);
+      const handleSubmit = async () => {
+        try {
+          const response = await fetch(`${Config.API_URL}/api/login`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email: formData.email,
+              password: formData.password,
+            }),
+          });
+    
+          const result = await response.json();
+    
+          if (response.ok) {
+            // Handle successful login
+            console.log('Login successful:', result);
+            // Save the token, navigate to the dashboard, etc.
+            // For example, if using AsyncStorage to store the token:
+            // await AsyncStorage.setItem('userToken', result.token);
+            navigation.navigate('DashboardDrawer');
+          } else {
+            // Handle errors
+            alert(result.message);
+          }
+        } catch (error) {
+          // Handle network errors
+          alert('An error occurred: ' + error.message);
+        }
       };
 
       return(
