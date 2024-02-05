@@ -25,7 +25,7 @@ const Drawer=createDrawerNavigator();
 const DashboardDrawer = () => {
   return (
     <Drawer.Navigator initialRouteName="Appointments" drawerContent={(props) => <CustomDrawerContent {...props} />}>
-      <Drawer.Screen name="Appointments" component={DashboardScreen} />
+      <Drawer.Screen name="Appointments" component={PatientListScreen} />
       <Drawer.Screen name="My patients" component={PatientListScreen} />
       <Drawer.Screen name="Feedback/review" component={DashboardScreen} />
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
