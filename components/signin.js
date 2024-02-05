@@ -24,7 +24,7 @@ const SignInScreen=()=>{
     
       const handleSubmit = async () => {
         try {
-          const response = await fetch(`${Config.API_URL}/api/login`, {
+          const response = await fetch('', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const SignInScreen=()=>{
 
 
               <CustomButton
-                onPress={null}
+                onPress={handleSubmit}
                 title="Sign In"
                 buttonStyle={{ backgroundColor: 'black', width:300, marginTop:20, height:50}}
                 textStyle={{ color: 'white' }}
