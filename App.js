@@ -19,6 +19,7 @@ import PatientListScreen from './components/dashboard_components/mypatients';
 import TherapistDetailsScreen from './components/dashboard_components/therapist_details';
 
 
+
 const Stack = createNativeStackNavigator();
 const Drawer=createDrawerNavigator();
 
