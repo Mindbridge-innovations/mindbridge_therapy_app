@@ -30,11 +30,48 @@ const SignUpScreen=()=>{
         });
       };
     
-      const handleSubmit = () => {
-        navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
-
+      const handleSubmit = async () => {
+        if (formData.password != formData.password_confirm){
+          alert('Passwords do not match');
+          return;
+        }
       };
 
+      const payload = {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        // Include additional fields as required by your backend
+        firstName: 'YourFirstName', // Replace with actual field if needed
+        lastName: 'YourLastName',   // Replace with actual field if needed
+        age: 25,                    // Replace with actual field if needed
+      };
+
+      try {
+        // Replace 'http://your-backend-url.com' with your actual backend URL
+        const response = await fetch('', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+  
+        const result = await response.json();
+  
+        if (response.ok) {
+          // Handle successful registration
+          alert('Registration successful');
+          navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
+        } else {
+          // Handle errors
+          alert(result.message);
+        }
+      } catch (error) {
+        // Handle network errors
+        alert('An error occurred: ' + error.message);
+      }
+    };
       return(
         <ScrollView contentContainerStyle={{ flexGrow:1 }}>
         <View style={{ justifyContent: 'space-around',fontSize:16, backgroundColor:'#255ECC', alignItems:'center'}}>
