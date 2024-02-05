@@ -5,6 +5,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import mystyles from "../assets/stylesheet";
 import {  useNavigation} from '@react-navigation/native';
+import config from "../config";
 
 
 
@@ -47,7 +48,7 @@ const SignUpScreen=()=>{
         }
         try {
           // Replace 'http://your-backend-url.com' with your actual backend URL
-          const response = await fetch('', {
+          const response = await fetch(`${config.BACKEND_API_URL}/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

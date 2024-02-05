@@ -4,7 +4,8 @@ import CustomButton from "../assets/widgets/custom_button";
 import { ScrollView } from "react-native-gesture-handler";
 import mystyles from "../assets/stylesheet";
 import { useNavigation } from "@react-navigation/native";
-
+import config from "../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignInScreen=()=>{
   const navigation=useNavigation();
@@ -24,7 +25,7 @@ const SignInScreen=()=>{
     
       const handleSubmit = async () => {
         try {
-          const response = await fetch('', {
+          const response = await fetch(`${config.BACKEND_API_URL}/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -34,15 +35,20 @@ const SignInScreen=()=>{
               password: formData.password,
             }),
           });
-    
           const result = await response.json();
     
           if (response.ok) {
             // Handle successful login
-            console.log('Login successful:', result);
+            alert('You have been logged in successfully!')
+            // console.log('Login successful:', result);
+          
             // Save the token, navigate to the dashboard, etc.
             // For example, if using AsyncStorage to store the token:
             // await AsyncStorage.setItem('userToken', result.token);
+            const expirationTime = new Date().getTime() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
+            await AsyncStorage.setItem('userToken', result.token);
+            await AsyncStorage.setItem('tokenExpiration', expirationTime.toString());
+        
             navigation.navigate('DashboardDrawer');
           } else {
             // Handle errors
@@ -50,6 +56,10 @@ const SignInScreen=()=>{
           }
         } catch (error) {
           // Handle network errors
+          console.log(`URL: ${config.BACKEND_API_URL}/login`);
+          console.log(Config);
+
+
           alert('An error occurred: ' + error.message);
         }
       };

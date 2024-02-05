@@ -1,13 +1,33 @@
 import {  useNavigation} from '@react-navigation/native';
-import React from "react";
+import React, { useEffect } from "react";
 import {  Image, View, StyleSheet, Text, Dimensions} from 'react-native';
 import CustomButton from '../assets/widgets/custom_button';
 import { ScrollView } from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 function HomePage(props) {
     const navigation = useNavigation();
+    useEffect(() => {
+      checkToken();
+    }, []);
+
+    const checkToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem('userToken');
+        const expiration = await AsyncStorage.getItem('tokenExpiration');
+        const currentTime = new Date().getTime();
+  
+        if (token && expiration && currentTime < parseInt(expiration)) {
+          // Token exists and has not expired, navigate to the dashboard
+          navigation.navigate('DashboardDrawer');
+        }
+        // If there's no token or it's expired, stay on the HomePage
+      } catch (e) {
+        console.error('Error reading token or expiration:', e);
+      }
+    };
 
     return (
       <ScrollView contentContainerStyle={mystyles.containerview }>
