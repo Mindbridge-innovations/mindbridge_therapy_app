@@ -12,6 +12,8 @@ const AppointmentBookingScreen = () => {
   const [description, setDescription] = useState('');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
+
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -19,7 +21,6 @@ const AppointmentBookingScreen = () => {
     setDate(currentDate);
   };
 
-  const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
 
 
   const handleTimeChange = (event, selectedTime) => {

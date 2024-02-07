@@ -16,21 +16,23 @@ const SignUpScreen=()=>{
   const [selectedRole, setSelectedRole] = useState(''); // Set the initial selected value
 
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        phone:'',
-        password: '',
-        password_confirm: '',
+      firstName:'',
+      lastName:'',
+      username: '',
+      email: '',
+      phone:'',
+      password: '',
+      password_confirm: '',
 
-      });
+    });
 
       const payload = {
         username: formData.username,
         email: formData.email,
         password: formData.password,
         // Include additional fields as required by your backend
-        firstName: 'YourFirstName', // Replace with actual field if needed
-        lastName: 'YourLastName',   // Replace with actual field if needed
+        firstName: formData.firstName, // Replace with actual field if needed
+        lastName: formData.lastName,   // Replace with actual field if needed
         age: 25,                    // Replace with actual field if needed
       };
     
@@ -87,6 +89,24 @@ const SignUpScreen=()=>{
 
              <Text style={{ paddingBottom:20, fontSize:20, color:'white', textTransform:'uppercase' }}>Sign Up</Text>
 
+             <View style={{ display:'block', marginBottom:20 }}>
+                <Text style={mystyles.label}>First Name</Text>
+                <TextInput
+                    style={mystyles.input}
+                    value={formData.firstName}
+                    onChangeText={(text) => handleInputChange('firstName', text)}
+                />
+              </View>
+
+              <View style={{ display:'block', marginBottom:20 }}>
+                <Text style={mystyles.label}>Last Name</Text>
+                <TextInput
+                    style={mystyles.input}
+                    value={formData.lastName}
+                    onChangeText={(text) => handleInputChange('lastName', text)}
+                />
+              </View>
+              
               <View style={{ display:'block', marginBottom:20 }}>
                 <Text style={mystyles.label}>Email address</Text>
                 <TextInput
