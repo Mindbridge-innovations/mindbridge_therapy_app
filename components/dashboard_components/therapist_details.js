@@ -4,6 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import mystyles from "../../assets/stylesheet";
 import CustomButton from "../../assets/widgets/custom_button";
 import { useNavigation } from "@react-navigation/native";
+import AppointmentBookingScreen from "./bookappointment";
 
 
 const TherapistDetailsScreen=({route})=>{
@@ -30,7 +31,7 @@ const TherapistDetailsScreen=({route})=>{
                 <View >
                     <View style={{ flexDirection:'row', marginTop:40 }}>
                         <CustomButton
-                            onPress={null}
+                            onPress={()=>navigation.navigate('AppointmentBookingScreen')}
                             title="Book appointment"
                             buttonStyle={styles.custombutton}
                             textStyle={{ color: 'white', fontWeight: 'bold' }}

@@ -17,6 +17,8 @@ import { Image } from 'react-native';
 import TherapistListScreen from './components/dashboard_components/mytherapists';
 import PatientListScreen from './components/dashboard_components/mypatients';
 import TherapistDetailsScreen from './components/dashboard_components/therapist_details';
+import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
+
 
 
 
@@ -102,6 +104,7 @@ export default function App() {
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
             <Stack.Screen name="OnBoardQtnsScreen" component={OnBoardQtnsScreen} />
             <Stack.Screen name="TherapistDetailsScreen" component={TherapistDetailsScreen} />
+            <Stack.Screen name="AppointmentBookingScreen" component={AppointmentBookingScreen} />
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
 
 

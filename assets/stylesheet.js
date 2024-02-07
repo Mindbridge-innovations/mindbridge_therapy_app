@@ -36,7 +36,7 @@ const mystyles = StyleSheet.create({
         
         backgroundColor:'#D9D9D9',
         borderRadius:10,
-        width:Dimensions.get('window').width*0.8,
+        width:Dimensions.get('window').width*0.9,
         color:'black',
     },
 

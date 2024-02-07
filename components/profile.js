@@ -26,6 +26,8 @@ function ProfileScreen (){
                 <Text style={{ fontSize:18, marginLeft:30 , color:'white'}}>Personal information</Text>
             </View>
 
+
+            <View style={{ width:'90%' }}>
             <View style={{ alignItems:'center', marginTop:40 }}>
                 <View style={{ marginBottom:20 }}>
                     <Text style={mystyles.dashlabel}>Your name</Text>
@@ -65,9 +67,10 @@ function ProfileScreen (){
               <CustomButton
               onPress={()=>navigation.navigate('SignUpScreen')}
               title="Update"
-              buttonStyle={{ backgroundColor: 'black', padding: 10, borderRadius: 15, width:Dimensions.get('window').width*0.8, }}
+              buttonStyle={{ backgroundColor: 'black', padding: 10, borderRadius: 15, width:Dimensions.get('window').width*0.9, }}
               textStyle={{ color: 'white', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
               />
+              </View>
 
         </ScrollView>
 
