@@ -90,7 +90,7 @@ const SignUpScreen=()=>{
              <Text style={{ paddingBottom:20, fontSize:20, color:'white', textTransform:'uppercase' }}>Sign Up</Text>
 
              <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={mystyles.label}>First Name</Text>
+                <Text style={mystyles.label}>First Name (optional)</Text>
                 <TextInput
                     style={mystyles.input}
                     value={formData.firstName}
@@ -99,14 +99,14 @@ const SignUpScreen=()=>{
               </View>
 
               <View style={{ display:'block', marginBottom:20 }}>
-                <Text style={mystyles.label}>Last Name</Text>
+                <Text style={mystyles.label}>Last Name (optional)</Text>
                 <TextInput
                     style={mystyles.input}
                     value={formData.lastName}
                     onChangeText={(text) => handleInputChange('lastName', text)}
                 />
               </View>
-              
+
               <View style={{ display:'block', marginBottom:20 }}>
                 <Text style={mystyles.label}>Email address</Text>
                 <TextInput

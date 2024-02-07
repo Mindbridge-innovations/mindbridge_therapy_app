@@ -28,6 +28,8 @@ const OnBoardQtnsScreen = ({route}) => {
     therapy_cause: '',
     expectation: '',
     full_name:'',
+    experience_yrs:'',
+
   });
 
   // logic to move to next question screen
@@ -165,6 +167,15 @@ const OnBoardQtnsScreen = ({route}) => {
               </View>}
 
               {role==='Therapist' && <View style={styles.inputcontainer}>
+                <Text style={mystyles.label}>Please enter your current years of experience</Text>
+                <TextInput
+                    style={mystyles.input}
+                    value={formData.expectation}
+                    onChangeText={(text) => setFormData({ ...formData, experience_yrs: text })}
+                />
+              </View>}
+
+              {role==='Therapist' && <View style={styles.inputcontainer}>
               <View style={{ alignItems:'center' }}>
                 <Text style={{ marginVertical:20, color:'white', fontWeight:'bold' }}>Which communication mechanisms do you prefer?</Text>
                 <View style={styles.picker}>
@@ -245,6 +256,17 @@ const OnBoardQtnsScreen = ({route}) => {
                   <Picker.Item label="Lusoga" value="lusoga" />  
                 </Picker>
                 </View>
+
+                {role==='Therapist' && <View style={styles.inputcontainer}>
+                <Text style={mystyles.label}>Write about yourself, describing your profession and how you do it</Text>
+                <TextInput
+                    style={mystyles.input}
+                    value={formData.expectation}
+                    onChangeText={(text) => setFormData({ ...formData, experience_yrs: text })}
+                    numberOfLines={7}
+                    maxLength={300}
+                />
+              </View>}
               </View>
             <View style={styles.buttoncontainer}>
                 <CustomButton
