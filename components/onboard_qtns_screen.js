@@ -84,17 +84,6 @@ const OnBoardQtnsScreen = ({route}) => {
 
             </View>
 
-            <View style={ styles.inputcontainer}>
-              <Text style={{ marginVertical:20, color:'white', fontWeight:'bold' }}>What is your religion?</Text>
-              <View style={styles.picker}>
-              <Picker selectedValue={selectedValue} onValueChange={(itemValue, itemIndex) =>setSelectedValue(itemValue)}>
-                <Picker.Item label="Choose your religion" value="" />
-                <Picker.Item label="Christianity" value="christian" />
-                <Picker.Item label="Islam" value="islam" />
-              </Picker>
-              </View>
-
-            </View>
 
             {role==='Patient' && <View style={ styles.inputcontainer}>
               <Text style={{ marginVertical:20, color:'white', fontWeight:'bold' }}>What is your relationship status?</Text>

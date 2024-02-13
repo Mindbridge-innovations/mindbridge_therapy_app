@@ -20,6 +20,7 @@ import TherapistDetailsScreen from './components/dashboard_components/therapist_
 import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
 import AppointmentManagementScreen from './components/dashboard_components/Appointments';
 import AppointmentDetailsScreen from './components/dashboard_components/appointment_details';
+import Icon from 'react-native-vector-icons/dist/FontAwesome'
 
 
 
@@ -39,7 +40,6 @@ const DashboardDrawer = () => {
     </Drawer.Navigator>
   );
 };
-
 const CustomDrawerContent = (props) => {
   return (
     <DrawerContentScrollView {...props}>
@@ -49,10 +49,14 @@ const CustomDrawerContent = (props) => {
         style={{ height: 150, resizeMode: 'cover' }}
       />
       {/* Default drawer items */}
+      
+      <Icon name="rocket" size={30} color='red'/>
       <DrawerItem
         label="Appointments"
         onPress={() => props.navigation.navigate('Appointments')}
       />
+      
+      
       <DrawerItem
         label="My patients"
         onPress={() => props.navigation.navigate('My patients')}
@@ -66,6 +70,7 @@ const CustomDrawerContent = (props) => {
         onPress={() => props.navigation.navigate('My therapists')}
       />
       <DrawerItem
+      
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}
       />
