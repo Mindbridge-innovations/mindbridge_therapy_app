@@ -20,9 +20,10 @@ const SignUpScreen=()=>{
       lastName:'',
       username: '',
       email: '',
-      phone:'',
+      phoneNumber:'',
       password: '',
       password_confirm: '',
+      role:'',
 
     });
 
@@ -33,9 +34,18 @@ const SignUpScreen=()=>{
         // Include additional fields as required by your backend
         firstName: formData.firstName, // Replace with actual field if needed
         lastName: formData.lastName,   // Replace with actual field if needed
-        age: 25,                    // Replace with actual field if needed
+        phoneNumber:formData.phoneNumber,
+        role:formData.role
       };
     
+      const handleRoleChange = (role) => {
+        setSelectedRole(role);
+        setFormData({
+          ...formData,
+          role: role, // Update the role in formData
+        });
+      };
+
       const handleInputChange = (field, value) => {
         setFormData({
           ...formData,
@@ -44,6 +54,7 @@ const SignUpScreen=()=>{
       };
     
       const handleSubmit = async () => {
+        console.log(formData)
         if (formData.password != formData.password_confirm){
           alert('Passwords do not match');
           return;
@@ -62,8 +73,8 @@ const SignUpScreen=()=>{
     
           if (response.ok) {
             // Handle successful registration
-            alert('Registration successful');
-            navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
+            alert('Registration successful, please check your email for confirmation');
+            // navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
           } else {
             // Handle errors
             alert(result.message);
@@ -121,8 +132,8 @@ const SignUpScreen=()=>{
                 <Text style={mystyles.label}>Phone number</Text>
                 <TextInput
                     style={mystyles.input}
-                    value={formData.phone}
-                    onChangeText={(text) => handleInputChange('phone', text)}
+                    value={formData.phoneNumber}
+                    onChangeText={(text) => handleInputChange('phoneNumber', text)}
                     keyboardType="phone-pad"
                 />
               </View>
@@ -160,7 +171,7 @@ const SignUpScreen=()=>{
               <View style={ styles.inputcontainer}>
                 <Text style={{ marginVertical:20, color:'white', fontWeight:'bold' }}>Select your role for which you are registering</Text>
                 <View style={mystyles.picker}>
-                <Picker selectedValue={selectedRole} onValueChange={(itemValue, itemIndex) =>setSelectedRole(itemValue)} >
+                <Picker selectedValue={selectedRole} onValueChange={(itemValue, itemIndex) =>handleRoleChange(itemValue)} >
                   <Picker.Item label="Choose your role" value="" />
                   <Picker.Item label="Patient" value="Patient" />
                   <Picker.Item label="Therapist" value="Therapist" />

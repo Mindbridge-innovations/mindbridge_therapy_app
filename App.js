@@ -1,5 +1,7 @@
 import { NavigationContainer, useNavigation} from '@react-navigation/native';
-import React from "react";
+import React, { useRef } from "react";
+import queryString from 'query-string';
+import { Linking, Platform } from 'react-native';
 import VideoCallPage from './components/callpage';
 import RNEncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from './components/splash_screen';
@@ -27,6 +29,14 @@ import Icon from 'react-native-vector-icons/dist/FontAwesome'
 
 const Stack = createNativeStackNavigator();
 const Drawer=createDrawerNavigator();
+const linking={
+  prefixes:['videocall://'],
+  config:{
+    screens:{
+      DashboardDrawer: "/"
+    }
+  }
+}
 
 const DashboardDrawer = () => {
   return (
@@ -91,16 +101,70 @@ const CustomDrawerContent = (props) => {
 
 
 export default function App() {
+  const navigationRef = useRef();
+  const routeNameRef = useRef();
+
   const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    // Simulate loading process
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 4000); // Adjust the time as needed
-  }, []);
+  
+ // Handle deep linking
+ useEffect(() => {
+  const handleDeepLink = (event) => {
+    const parsedUrl = queryString.parseUrl(event.url);
+    const path = parsedUrl.url.split('://')[1]; 
+    const params = parsedUrl.query;
+
+    if (path === 'confirm' && params && params.email) {
+      // Make sure the navigation container is ready before navigating
+      if (navigationRef.current && routeNameRef.current) {
+        navigationRef.current.navigate('SignInScreen', { email: params.email });
+      }
+    }
+  };
+
+  // Listen for incoming links
+  Linking.addEventListener('url', handleDeepLink);
+
+  // Check if the app was opened by a deep link
+  Linking.getInitialURL().then((url) => {
+    if (url) handleDeepLink({ url });
+  });
+
+  // Return the cleanup function
+  return () => {
+    // Clean up the event listener
+    Linking.removeEventListener('url', handleDeepLink);
+  };
+}, []);
+
+// Simulate loading process
+useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsLoading(false);
+  }, 4000); // Adjust the time as needed
+
+  // Return the cleanup function
+  return () => clearTimeout(timer);
+}, []);
+
+  
   return (
     <GestureHandlerRootView style={{ flex:1, }}>
-      <NavigationContainer>
+      <NavigationContainer
+     ref={navigationRef}
+     onReady={() => {
+       // Ensure that the navigation container is mounted
+       if (navigationRef.current) {
+         // Get the current route
+         const currentRoute = navigationRef.current.getCurrentRoute();
+
+         // Check if the current route is defined
+         if (currentRoute) {
+           // Set the current route name
+           routeNameRef.current = currentRoute.name;
+         }
+       }
+     }}>
+
         {isLoading ? (
           <SplashScreen />
         ) : (
