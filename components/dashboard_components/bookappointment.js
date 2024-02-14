@@ -4,38 +4,17 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
 import { Picker } from '@react-native-picker/picker';
+import { DatePicker, TimePicker} from './datePicker';
 
-const AppointmentBookingScreen = () => {
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
+const AppointmentBookingScreen = ({isBackgroundBlue}) => {
+  
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  
   const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
 
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
-
-
-  const handleTimeChange = (event, selectedTime) => {
-    const currentTime = selectedTime || time;
-    setShowTimePicker(false);
-    setTime(currentTime);
-  };
-
-  const formatDate = (date) => {
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-  };
-
-  const formatTime = (time) => {
-    return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
-  };
+  
 
   const handleBookingSubmit = () => {
     // Logic to handle form submission, including validation and sending data to your backend
@@ -57,48 +36,11 @@ const AppointmentBookingScreen = () => {
 
       <View style={{ width:'90%' }}>
       
-      <View>
-      <Text style={mystyles.dashlabel}>Please select your suitable date for the appointment</Text>
-      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateTimeContainer}>
-        <TextInput
-          style={mystyles.dashinput}
-          placeholder="Select Date"
-          value={formatDate(date)}
-          editable={false} // Prevent manual editing
-        />
-      </TouchableOpacity>
-      {showDatePicker && (
-        <DateTimePicker
-          testID="datePicker"
-          value={date}
-          mode="date"
-          display="default"
-          onChange={handleDateChange}
-        />
-      )}
-      </View>
+      <DatePicker isBackgroundBlue={false}/>
+      <TimePicker/>
+      
 
-      <View>
-      <Text style={mystyles.dashlabel}>Please select your suitable time for the appointment</Text>
-      <TouchableOpacity onPress={() => setShowTimePicker(true)} style={styles.dateTimeContainer}>
-        <TextInput
-          style={mystyles.dashinput}
-          placeholder="Select Time"
-          value={formatTime(time)}
-          editable={false} // Prevent manual editing
-        />
-      </TouchableOpacity>
-      {showTimePicker && (
-        <DateTimePicker
-          testID="timePicker"
-          value={time}
-          mode="time"
-          is24Hour={true}
-          display="default"
-          onChange={handleTimeChange}
-        />
-      )}
-      </View>
+      
 
       <View style={{ marginBottom:20 }}>
         <Text style={mystyles.dashlabel}>
@@ -132,6 +74,22 @@ const AppointmentBookingScreen = () => {
         maxLength={200}
       />
       </View>
+
+      <View style={{ marginBottom:20 }}>
+        <Text style={mystyles.dashlabel}>
+          Please select the required mode of appointment
+        </Text>
+        <View style={mystyles.dashinput}>
+        <Picker selectedValue={selectedValue} onValueChange={(itemValue, itemIndex) =>setSelectedValue(itemValue)} >
+          <Picker.Item label="Choose your preference" value="" />
+          <Picker.Item label="Physical (in office)" value="Physical (in office)" />
+          <Picker.Item label="Video call" value="Video call" />
+         
+
+        </Picker>
+        </View>
+      </View>
+
 
       <CustomButton
           onPress={handleBookingSubmit}

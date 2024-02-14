@@ -31,6 +31,11 @@ const mystyles = StyleSheet.create({
         marginBottom:10,
         fontWeight:'bold'
     },
+    dashlabelWhite: {
+        color: 'white',
+        marginBottom: 10,
+        fontWeight: 'bold'
+    },
     //styles for text input fields
     dashinput:{
         
@@ -78,6 +83,18 @@ const mystyles = StyleSheet.create({
         marginTop:20,
 
     },
+    title: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        backgroundColor:'#255ECC',
+        color:'white',
+        paddingLeft:20
+      },
+      
+      dateTimeContainer: {
+        marginBottom: 20,
+      },
   
   // Add more common styles as needed
 });

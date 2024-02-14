@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
+import { DatePicker, TimePicker } from './datePicker';
 
 const AppointmentManagementScreen = ({ navigation }) => {
   const [appointments, setAppointments] = useState([]);
@@ -205,7 +206,8 @@ const AppointmentManagementScreen = ({ navigation }) => {
           <View style={styles.modalView}>
             <Text style={styles.modalText}>Please select a new date and time for the appointment.</Text>
             {/* Add date and time picker or other UI for rescheduling */}
-           
+           <DatePicker isBackgroundBlue={true}/>
+           <TimePicker isBackgroundBlue={true}/>
             <CustomButton
               onPress={() => {
                 // Add logic to confirm rescheduling
