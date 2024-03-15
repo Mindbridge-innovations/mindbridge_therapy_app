@@ -12,7 +12,7 @@ import CustomButton from '../assets/widgets/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
-import config from '../config';
+import Config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignInScreen = () => {
@@ -32,7 +32,7 @@ const SignInScreen = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch(`${config.BACKEND_API_URL}/login`, {
+      const response = await fetch(`${Config.BACKEND_API_URL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,12 +65,18 @@ const SignInScreen = () => {
         alert(result.message);
       }
     } catch (error) {
-      // Handle network errors
-      console.log(`URL: ${config.BACKEND_API_URL}/login`);
-      console.log(Config);
-
       alert('An error occurred: ' + error.message);
     }
+
+    // signInWithEmailAndPassword(auth, formData.email, formData.password)
+    // .then((userCredential) => {
+    //   navigation.navigate('Chat');
+    // })
+    // .catch((error) => {
+    //   const errorCode = error.code;
+    //   const errorMessage = error.message;
+    //   alert(errorMessage);
+    // });
   };
 
   return (

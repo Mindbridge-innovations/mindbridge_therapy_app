@@ -82,7 +82,7 @@ function HomePage(props) {
             Already signed up?{' '}
           </Text>
           <CustomButton
-            onPress={() => navigation.navigate('SignInScreen')}
+            onPress={() => navigation.navigate('Chat')}
             title="Sign in"
             buttonStyle={{backgroundColor: 'transparent'}}
             textStyle={{

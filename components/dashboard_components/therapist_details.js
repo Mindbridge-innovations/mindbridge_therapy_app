@@ -67,7 +67,7 @@ const TherapistDetailsScreen = ({route}) => {
             />
 
             <CustomButton
-              onPress={null}
+              onPress={() => navigation.navigate('Chat')}
               title="Message chat"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}

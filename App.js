@@ -26,7 +26,17 @@ import TherapistDetailsScreen from './components/dashboard_components/therapist_
 import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
 import AppointmentManagementScreen from './components/dashboard_components/Appointments';
 import AppointmentDetailsScreen from './components/dashboard_components/appointment_details';
-import Icon from 'react-native-vector-icons/dist/FontAwesome';
+// import Icon from 'react-native-vector-icons/dist/FontAwesome'
+import ChatScreen from './components/dashboard_components/ChatScreen';
+import FontAwesomeIcon from 'react-native-vector-icons/dist/FontAwesome';
+import AntDesignIcon from 'react-native-vector-icons/dist/AntDesign';
+import IoniconsIcon from 'react-native-vector-icons/dist/Ionicons';
+import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
+import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
+import {auth, db} from './firebaseConfig';
+import {Text} from 'react-native-elements';
+
+// ... other imports
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -41,9 +51,14 @@ const linking = {
 
 const DashboardDrawer = () => {
   return (
+    // main drawer navigator
     <Drawer.Navigator
       initialRouteName="Appointments"
-      drawerContent={props => <CustomDrawerContent {...props} />}>
+      drawerContent={props => <CustomDrawerContent {...props} />}
+      screenOptions={{
+        drawerStyle: {backgroundColor: '#ADD8E6', width: 250},
+        drawerActiveBackgroundColor: 'blue',
+      }}>
       <Drawer.Screen
         name="Appointments"
         component={AppointmentManagementScreen}
@@ -62,35 +77,41 @@ const CustomDrawerContent = props => {
       {/* Custom content at the top of the drawer */}
       <Image
         source={require('./assets/mindbridgelogo_splash.png')}
-        style={{height: 150, resizeMode: 'cover'}}
+        style={{height: 150, resizeMode: 'cover', width: 250}}
       />
-      {/* Default drawer items */}
 
-      <Icon name="rocket" size={30} color="red" />
+      {/* Default drawer items */}
       <DrawerItem
         label="Appointments"
         onPress={() => props.navigation.navigate('Appointments')}
+        icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
       />
-
       <DrawerItem
         label="My patients"
         onPress={() => props.navigation.navigate('My patients')}
+        icon={() => (
+          <FontAwesome6 name="hospital-user" size={20} color="#000" />
+        )} // Replace with your desired icon
       />
       <DrawerItem
         label="Feedback/review"
         onPress={() => props.navigation.navigate('Feedback/review')}
+        icon={() => <MaterialIcons name="reviews" size={20} color="#000" />} // Replace with your desired icon
       />
       <DrawerItem
         label="My therapists"
         onPress={() => props.navigation.navigate('My therapists')}
+        icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
       />
       <DrawerItem
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}
+        icon={() => <AntDesignIcon name="profile" size={20} color="#000" />} // Replace with your desired icon
       />
       <DrawerItem
         label="Resource Library"
         onPress={() => props.navigation.navigate('Resource Library')}
+        icon={() => <IoniconsIcon name="library" size={20} color="#000" />} // Replace with your desired icon
       />
       {/* Signout button at the bottom */}
       <DrawerItem
@@ -98,6 +119,7 @@ const CustomDrawerContent = props => {
         onPress={() => {
           // Handle sign out action here
         }}
+        icon={() => <FontAwesomeIcon name="sign-out" size={20} color="#000" />} // Replace with your desired icon
       />
     </DrawerContentScrollView>
   );
@@ -189,6 +211,7 @@ export default function App() {
               component={AppointmentBookingScreen}
             />
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
+            <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen
               name="AppointmentDetailsScreen"
               component={AppointmentDetailsScreen}
