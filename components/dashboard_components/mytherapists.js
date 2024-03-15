@@ -52,8 +52,8 @@ const TherapistListScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
-  const handleInteractPress = (therapist) => {
-    // Handle interaction logic here:
+  const handleDetailPress = (therapist) => {
+  // Handle interaction logic here:
     // - Navigate to a chat screen
     // - Open a video call
     // - Send a message
@@ -62,7 +62,7 @@ const TherapistListScreen = ({ navigation }) => {
   };
 
   const renderTherapist = ({ item }) => (
-    <TouchableOpacity style={styles.therapistItem} onPress={() => handleInteractPress(item)}>
+    <TouchableOpacity style={styles.therapistItem} onPress={() => handleDetailPress(item)}>
       <View style={styles.therapistInfo}>
         <Text style={styles.therapistName}>{item.name}</Text>
         <Text style={styles.therapistSpecialty}>{item.specialty}</Text>

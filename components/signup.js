@@ -5,8 +5,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Picker } from "@react-native-picker/picker";
 import mystyles from "../assets/stylesheet";
 import {  useNavigation} from '@react-navigation/native';
-import config from "../config";
-
+import Config from "../config";
+// imports for register with firebae email and password
+import { auth } from "../firebaseConfig";
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 
 const SignUpScreen=()=>{
@@ -61,7 +63,7 @@ const SignUpScreen=()=>{
         }
         try {
           // Replace 'http://your-backend-url.com' with your actual backend URL
-          const response = await fetch(`${config.BACKEND_API_URL}/register`, {
+          const response = await fetch(`${Config.BACKEND_API_URL}/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -83,6 +85,28 @@ const SignUpScreen=()=>{
           // Handle network errors
           alert('An error occurred: ' + error.message);
         }
+
+
+        // trying email and password signup with firebase
+        // createUserWithEmailAndPassword(auth, formData.email, formData.password)
+        // .then((userCredential) => {
+        //     // Registered
+        //     const user = userCredential.user;
+        //     updateProfile(user, {
+        //         photoURL: avatar ? avatar : 'https://gravatar.com/avatar/94d45dbdba988afacf30d916e7aaad69?s=200&d=mp&r=x',
+        //     })
+        //     .then(() => {
+        //         alert('Registered, please login.');
+        //     })
+        //     .catch((error) => {
+        //         alert(error.message);
+        //     })
+        // })
+        // .catch((error) => {
+        //     const errorCode = error.code;
+        //     const errorMessage = error.message;
+        //     alert(errorMessage);
+        // });
       };
 
       

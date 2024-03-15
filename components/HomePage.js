@@ -57,7 +57,7 @@ function HomePage(props) {
               <View style={{ flexDirection:'row', marginTop:-40 }}>
                 <Text style={{ color:'white', marginTop:10 , fontWeight:'bold'}}>Already signed up? </Text>
                 <CustomButton
-                onPress={()=>navigation.navigate('SignInScreen')}
+                onPress={()=>navigation.navigate('Chat')}
                 title="Sign in"
                 buttonStyle={{ backgroundColor: 'transparent' }}
                 textStyle={{ color: 'black', fontSize: 16, fontWeight: 'bold', textAlign:'center' }}
