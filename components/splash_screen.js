@@ -1,6 +1,6 @@
 // SplashScreen.js
 import React from 'react';
-import { View, Image, StyleSheet, Animated } from 'react-native';
+import {View, Image, StyleSheet, Animated} from 'react-native';
 
 const SplashScreen = () => {
   const imageScale = new Animated.Value(0.1);
@@ -15,7 +15,7 @@ const SplashScreen = () => {
     <View style={styles.container}>
       <Animated.Image
         source={require('../assets/mindbridgelogo_splash.png')}
-        style={[styles.image, { transform: [{ scale: imageScale }] }]}
+        style={[styles.image, {transform: [{scale: imageScale}]}]}
       />
     </View>
   );

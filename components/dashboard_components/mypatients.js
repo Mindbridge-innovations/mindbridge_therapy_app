@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,10 @@ import {
   StyleSheet,
   ActivityIndicator,
   Alert,
-  Button
+  Button,
 } from 'react-native';
 
-const PatientListScreen = ({ navigation }) => {
+const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,17 +34,19 @@ const PatientListScreen = ({ navigation }) => {
     fetchData();
   }, []);
 
-  const handleInteractPress = (patient) => {
+  const handleInteractPress = patient => {
     // Handle interaction logic here:
     // - Navigate to a chat screen
     // - Open a video call
     // - Send a message
     // - Show more information
-    navigation.navigate('ChatScreen', { patient }); // Example navigation
+    navigation.navigate('ChatScreen', {patient}); // Example navigation
   };
 
-  const renderPatient = ({ item }) => (
-    <TouchableOpacity style={styles.patientItem} onPress={() => handleInteractPress(item)}>
+  const renderPatient = ({item}) => (
+    <TouchableOpacity
+      style={styles.patientItem}
+      onPress={() => handleInteractPress(item)}>
       <View style={styles.patientInfo}>
         <Text style={styles.patientName}>{item.name}</Text>
         <Text style={styles.patientSpecialty}>{item.specialty}</Text>
@@ -71,7 +73,7 @@ const PatientListScreen = ({ navigation }) => {
       <FlatList
         data={patients}
         renderItem={renderPatient}
-        keyExtractor={(item) => item.id || item.someUniqueIdentifier}
+        keyExtractor={item => item.id || item.someUniqueIdentifier}
       />
     </View>
   );
