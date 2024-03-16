@@ -11,6 +11,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import SignUpScreen from './components/signup';
 import SignInScreen from './components/signin';
 import HomePage from './components/HomePage';
+import UserProvider from './utils/contexts/userProvider';
 import OnBoardQtnsScreen from './components/onboard_qtns_screen';
 import {
   DrawerContentScrollView,
@@ -172,6 +173,7 @@ export default function App() {
   }, []);
 
   return (
+    <UserProvider>
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer
         ref={navigationRef}
@@ -220,5 +222,6 @@ export default function App() {
         )}
       </NavigationContainer>
     </GestureHandlerRootView>
+    </UserProvider>
   );
 }
