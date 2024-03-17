@@ -1,12 +1,17 @@
-import React, {useEffect, useCallback, useState, useLayoutEffect} from 'react';
+import React, {useEffect, useCallback, useState, useLayoutEffect,useContext} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {Avatar} from 'react-native-elements';
 import {auth, db} from '../../firebaseConfig';
 import {signOut} from 'firebase/auth';
 import {GiftedChat} from 'react-native-gifted-chat';
+import UserContext from '../../utils/contexts/userContext';
 
 const ChatScreen = ({navigation}) => {
   const [messages, setMessages] = useState([]);
+  const {user}=useContext(UserContext);
+  if(user){
+    console.log('user data: ', user);
+  }
   const signOutNow = () => {
     signOut(auth)
       .then(() => {

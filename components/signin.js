@@ -47,11 +47,8 @@ const SignInScreen = () => {
       if (response.ok) {
         // Handle successful login
         alert('You have been logged in successfully!');
-        // console.log('Login successful:', result);
-
         // Save the token, navigate to the dashboard, etc.
         // For example, if using AsyncStorage to store the token:
-        // await AsyncStorage.setItem('userToken', result.token);
         const expirationTime = new Date().getTime() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
         await AsyncStorage.setItem('userToken', result.token);
         await AsyncStorage.setItem(
@@ -68,15 +65,6 @@ const SignInScreen = () => {
       alert('An error occurred: ' + error.message);
     }
 
-    // signInWithEmailAndPassword(auth, formData.email, formData.password)
-    // .then((userCredential) => {
-    //   navigation.navigate('Chat');
-    // })
-    // .catch((error) => {
-    //   const errorCode = error.code;
-    //   const errorMessage = error.message;
-    //   alert(errorMessage);
-    // });
   };
 
   return (

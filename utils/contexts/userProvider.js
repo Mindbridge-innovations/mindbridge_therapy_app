@@ -20,7 +20,6 @@ const UserProvider = ({ children }) => {
         const result = await response.json();
         if (response.ok) {
           setUser(result.userData);
-          console.log('Fetched user data:', result.userData);//log it
         } else {
           console.error('Error fetching user data:', result.message);
           await AsyncStorage.removeItem('userToken');
