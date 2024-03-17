@@ -19,10 +19,10 @@ const UserProvider = ({ children }) => {
         });
         const result = await response.json();
         if (response.ok) {
-          setUser(result.userData);
-          console.log('Fetched user data:', result.userData);//log it
+          setUser(result);
+          console.log('Fetched user data:', result);//log it
         } else {
-          console.error('Error fetching user data:', result.message);
+          console.error('Error fetching user data:', result);
           await AsyncStorage.removeItem('userToken');
           // Handle navigation to the login screen if needed
         }

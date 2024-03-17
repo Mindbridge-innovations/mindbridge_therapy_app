@@ -4,9 +4,12 @@ import mystyles from '../assets/stylesheet';
 import CustomButton from '../assets/widgets/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
+import { useContext } from 'react';
+import UserContext from '../utils/contexts/userContext';
 
 function ProfileScreen() {
   const navigation = useNavigation();
+  const { user } = useContext(UserContext);
   return (
     <ScrollView contentContainerStyle={mystyles.dashviewcontainer}>
       <View>
@@ -41,20 +44,24 @@ function ProfileScreen() {
       <View style={{width: '90%'}}>
         <View style={{alignItems: 'center', marginTop: 40}}>
           <View style={{marginBottom: 20}}>
-            <Text style={mystyles.dashlabel}>Your name</Text>
-            <TextInput style={mystyles.dashinput} value={null} />
+            <Text style={mystyles.dashlabel}>First name</Text>
+            <TextInput style={mystyles.dashinput} value={user?.firstName} />
+          </View>
+          <View style={{marginBottom: 20}}>
+            <Text style={mystyles.dashlabel}>Last name</Text>
+            <TextInput style={mystyles.dashinput} value={user?.lastName} />
           </View>
           <View style={{marginBottom: 20}}>
             <Text style={mystyles.dashlabel}>Username</Text>
-            <TextInput style={mystyles.dashinput} value={null} />
+            <TextInput style={mystyles.dashinput} value={user?.username} />
           </View>
           <View style={{marginBottom: 20}}>
             <Text style={mystyles.dashlabel}>Email address</Text>
-            <TextInput style={mystyles.dashinput} value={null} />
+            <TextInput style={mystyles.dashinput} value={user?.email} />
           </View>
           <View style={{marginBottom: 20}}>
             <Text style={mystyles.dashlabel}>Phone number</Text>
-            <TextInput style={mystyles.dashinput} value={null} />
+            <TextInput style={mystyles.dashinput} value={user?.phoneNumber} />
           </View>
         </View>
         <CustomButton

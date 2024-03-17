@@ -1,5 +1,5 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import React, {useRef} from 'react';
+import React, {useRef,useContext} from 'react';
 import queryString from 'query-string';
 import {Linking, Platform} from 'react-native';
 import VideoCallPage from './components/callpage';
@@ -36,6 +36,7 @@ import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import {auth, db} from './firebaseConfig';
 import {Text} from 'react-native-elements';
+import UserContext from './utils/contexts/userContext';
 
 // ... other imports
 
@@ -73,6 +74,8 @@ const DashboardDrawer = () => {
   );
 };
 const CustomDrawerContent = props => {
+  //get the current user data
+  const {user}=useContext(UserContext)
   return (
     <DrawerContentScrollView {...props}>
       {/* Custom content at the top of the drawer */}
@@ -87,23 +90,27 @@ const CustomDrawerContent = props => {
         onPress={() => props.navigation.navigate('Appointments')}
         icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
       />
-      <DrawerItem
+      {user.role==="Therapist" && (<DrawerItem
         label="My patients"
         onPress={() => props.navigation.navigate('My patients')}
         icon={() => (
           <FontAwesome6 name="hospital-user" size={20} color="#000" />
         )} // Replace with your desired icon
       />
+      )}
       <DrawerItem
         label="Feedback/review"
         onPress={() => props.navigation.navigate('Feedback/review')}
         icon={() => <MaterialIcons name="reviews" size={20} color="#000" />} // Replace with your desired icon
       />
+
+      { user.role==='Patient' && (
       <DrawerItem
         label="My therapists"
         onPress={() => props.navigation.navigate('My therapists')}
         icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
       />
+      )}
       <DrawerItem
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}
