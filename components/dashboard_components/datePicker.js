@@ -10,37 +10,34 @@ import {
   Dimensions,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
 import mystyles from '../../assets/stylesheet';
 
-const handleDateChange = (event, selectedDate) => {
-  const currentDate = selectedDate || date;
-  setShowDatePicker(false);
-  setDate(currentDate);
-};
 
-const handleTimeChange = (event, selectedTime) => {
-  const currentTime = selectedTime || time;
-  setShowTimePicker(false);
-  setTime(currentTime);
-};
 
-const formatDate = date => {
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-};
 
-const formatTime = time => {
-  return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
-};
-
-export const DatePicker = ({isBackgroundBlue}) => {
+export const DatePicker = ({isBackgroundBlue,label,date,onDateChange}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
+
+
+   const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false); // Hide the picker
+    if (selectedDate) {
+      onDateChange(selectedDate); // Use the passed in onDateChange
+    }
+  };
+
+  const formatDate = date => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
+  console.log(formatDate(date))
+
   return (
     <View>
       <Text
         style={isBackgroundBlue ? mystyles.dashlabelWhite : mystyles.dashlabel}>
-        Please select your suitable date for the appointment
+          {label}
+          
       </Text>
       <TouchableOpacity
         onPress={() => setShowDatePicker(true)}
@@ -58,6 +55,7 @@ export const DatePicker = ({isBackgroundBlue}) => {
           value={date}
           mode="date"
           display="default"
+          
           onChange={handleDateChange}
         />
       )}
@@ -65,15 +63,26 @@ export const DatePicker = ({isBackgroundBlue}) => {
   );
 };
 
-export const TimePicker = ({isBackgroundBlue}) => {
+export const TimePicker = ({isBackgroundBlue,label}) => {
   const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  const handleTimeChange = (event, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setShowTimePicker(false);
+    setTime(currentTime);
+  };
+
+  const formatTime = time => {
+    return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
+  };
 
   return (
     <View>
       <Text
         style={isBackgroundBlue ? mystyles.dashlabelWhite : mystyles.dashlabel}>
-        Please select your suitable time for the appointment
+        {label}
+         
       </Text>
       <TouchableOpacity
         onPress={() => setShowTimePicker(true)}

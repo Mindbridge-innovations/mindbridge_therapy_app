@@ -23,7 +23,7 @@ const SignUpScreen = () => {
 
   const [selectedRole, setSelectedRole] = useState(''); // Set the initial selected value
 
-  const [formData, setFormData] = useState({
+  const [userData, setuserData] = useState({
     firstName: '',
     lastName: '',
     username: '',
@@ -35,65 +35,32 @@ const SignUpScreen = () => {
   });
 
   const payload = {
-    username: formData.username,
-    email: formData.email,
-    password: formData.password,
-    // Include additional fields as required by your backend
-    firstName: formData.firstName, // Replace with actual field if needed
-    lastName: formData.lastName, // Replace with actual field if needed
-    phoneNumber: formData.phoneNumber,
-    role: formData.role,
+    username: userData.username,
+    email: userData.email,
+    password: userData.password,
+    firstName: userData.firstName, // Replace with actual field if needed
+    lastName: userData.lastName, // Replace with actual field if needed
+    phoneNumber: userData.phoneNumber,
+    role: userData.role,
   };
 
   const handleRoleChange = role => {
     setSelectedRole(role);
-    setFormData({
-      ...formData,
-      role: role, // Update the role in formData
+    setuserData({
+      ...userData,
+      role: role, // Update the role in userData
     });
   };
 
   const handleInputChange = (field, value) => {
-    setFormData({
-      ...formData,
+    setuserData({
+      ...userData,
       [field]: value,
     });
   };
 
-  const handleSubmit = async () => {
-    console.log(formData);
-    if (formData.password != formData.password_confirm) {
-      alert('Passwords do not match');
-      return;
-    }
-    try {
-      // Replace 'http://your-backend-url.com' with your actual backend URL
-      const response = await fetch(`${Config.BACKEND_API_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        // Handle successful registration
-        alert(
-          'Registration successful, please check your email for confirmation',
-        );
-        // navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
-      } else {
-        // Handle errors
-        alert(result.message);
-      }
-    } catch (error) {
-      // Handle network errors
-      alert('An error occurred: ' + error.message);
-    }
-  };
-
+  // method to handle signup form submission
+  
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View
@@ -123,7 +90,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>First Name (optional)</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.firstName}
+              value={userData.firstName}
               onChangeText={text => handleInputChange('firstName', text)}
             />
           </View>
@@ -132,7 +99,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Last Name (optional)</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.lastName}
+              value={userData.lastName}
               onChangeText={text => handleInputChange('lastName', text)}
             />
           </View>
@@ -141,7 +108,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Email address</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.email}
+              value={userData.email}
               onChangeText={text => handleInputChange('email', text)}
               keyboardType="email-address"
             />
@@ -151,7 +118,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Phone number</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.phoneNumber}
+              value={userData.phoneNumber}
               onChangeText={text => handleInputChange('phoneNumber', text)}
               keyboardType="phone-pad"
             />
@@ -161,7 +128,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Username</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.username}
+              value={userData.username}
               onChangeText={text => handleInputChange('username', text)}
             />
           </View>
@@ -170,7 +137,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Password</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.password}
+              value={userData.password}
               onChangeText={text => handleInputChange('password', text)}
               secureTextEntry
             />
@@ -180,7 +147,7 @@ const SignUpScreen = () => {
             <Text style={mystyles.label}>Confirm password</Text>
             <TextInput
               style={mystyles.input}
-              value={formData.password_confirm}
+              value={userData.password_confirm}
               onChangeText={text => handleInputChange('password_confirm', text)}
               secureTextEntry
             />
@@ -205,8 +172,8 @@ const SignUpScreen = () => {
           </View>
 
           <CustomButton
-            onPress={handleSubmit}
-            title="Sign Up"
+            onPress={()=>navigation.navigate('OnBoardQtnsScreen',{userData})}            
+            title="Next"
             buttonStyle={{backgroundColor: 'black', width: 300, marginTop: 40}}
             textStyle={{color: 'white'}}
           />

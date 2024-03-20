@@ -29,77 +29,77 @@ const TherapistListScreen = ({navigation}) => {
             name: 'John Doe',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. John Doe, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 11,
-            name: 'John Doe',
+            name: 'Alva Doe',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Alva Doe, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 2,
-            name: 'John Doe',
+            name: 'John Negredo',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. John Negredo, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 3,
-            name: 'John Doe',
+            name: 'Rachel Anderson',
             specialty: 'Psychologist',
             about:
               "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 4,
-            name: 'John Doe',
+            name: 'Kamya George',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Kamya George, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 5,
-            name: 'John Doe',
+            name: 'Rachel Anderson',
             specialty: 'Psychologist',
             about:
               "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 6,
-            name: 'John Doe',
+            name: 'Soffy Mailen',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Soffy Mailen, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 7,
-            name: 'John Doe',
+            name: 'Micheal Acex',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Micheal Acex, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 8,
-            name: 'John Doe',
+            name: 'Godfrey Owach',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Godfrey Owach, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 9,
-            name: 'John Doe',
+            name: 'Steven Wells',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. Steven Wells, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
           {
             id: 10,
-            name: 'John Doe',
+            name: 'John Mbabazi Peters',
             specialty: 'Psychologist',
             about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
+              "Hello! I'm Dr. John Mbabazi Peters, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
           },
 
           // Add more therapists as needed

@@ -93,7 +93,27 @@ const mystyles = StyleSheet.create({
     marginBottom: 20,
   },
 
-  // Add more common styles as needed
+  // checkbox styles
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#f1e8e6',
+    marginRight: 10,
+  },
+  checkboxChecked: {
+    backgroundColor: '#000',
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color:'white'
+  },
 });
 
 export default mystyles;

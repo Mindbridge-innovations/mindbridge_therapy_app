@@ -16,6 +16,7 @@ const ChatScreen = ({ route }) => {
   //get the therapist data object from the therapist details screen
   const {params} = route;
   const otherUser = params ? params.therapist : null;
+  
 
 
   const signOutNow = () => {
@@ -26,7 +27,7 @@ const ChatScreen = ({ route }) => {
     });
   };
 
-  // Assuming the other user's details are passed via route params
+  // create a unique chatroom id for each chat between users
   const chatRoomId = [user.userId, otherUser.id].sort().join('_');
 
   //set a ref for querring chat messages

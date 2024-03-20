@@ -18,17 +18,22 @@ import {DatePicker, TimePicker} from './datePicker';
 const AppointmentBookingScreen = ({isBackgroundBlue}) => {
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
+  const  [date, setDate]=useState(new Date())
+  const [time,setTime]=useState(new Date())
 
   const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
 
+  const formatDate = date => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
+
   const handleBookingSubmit = () => {
     // Logic to handle form submission, including validation and sending data to your backend
-    console.log({
-      date: formatDate(date),
-      time: formatTime(time),
+    console.log(
+      formatDate(date),
       reason,
       description,
-    });
+    );
   };
 
   return (
@@ -50,8 +55,11 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
       </Text>
 
       <View style={{width: '90%'}}>
-        <DatePicker isBackgroundBlue={false} />
-        <TimePicker />
+        <DatePicker isBackgroundBlue={false} label={'Please select your suitable date for the appointment'} 
+         date={date} 
+        onDateChange={setDate}
+        />
+        <TimePicker label={'Please select your suitable time for the appointment'}/>
 
         <View style={{marginBottom: 20}}>
           <Text style={mystyles.dashlabel}>
