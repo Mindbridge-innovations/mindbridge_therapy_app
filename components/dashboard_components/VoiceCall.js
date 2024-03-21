@@ -5,11 +5,11 @@ import RNEncryptedStorage from 'react-native-encrypted-storage';
 
 import {
   ZegoUIKitPrebuiltCall,
-  ONE_ON_ONE_VIDEO_CALL_CONFIG,
+  ONE_ON_ONE_VOICE_CALL_CONFIG
 } from '@zegocloud/zego-uikit-prebuilt-call-rn';
 import {ScrollView} from 'react-native-gesture-handler';
 
-export default function VideoCallPage(props) {
+export default function VoiceCallPage(props) {
   randomUserID = String(Math.floor(Math.random() * 100000));
 
   return (
@@ -25,12 +25,13 @@ export default function VideoCallPage(props) {
           callID={String(100090)} // callID can be any unique string.
           config={{
             // You can also use ONE_ON_ONE_VOICE_CALL_CONFIG/GROUP_VIDEO_CALL_CONFIG/GROUP_VOICE_CALL_CONFIG to make more types of calls.
-            ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
+            ...ONE_ON_ONE_VOICE_CALL_CONFIG,
+            
             onOnlySelfInRoom: () => {
-              props.navigation.navigate('HomePage');
+              props.navigation.navigate('DashboardDrawer');
             },
             onHangUp: () => {
-              props.navigation.navigate('HomePage');
+              props.navigation.navigate('DashboardDrawer');
             },
           }}
         />

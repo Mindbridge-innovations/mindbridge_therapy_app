@@ -2,7 +2,7 @@ import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import React, {useRef,useContext} from 'react';
 import queryString from 'query-string';
 import {Linking, Platform} from 'react-native';
-import VideoCallPage from './components/callpage';
+import VideoCallPage from './components/VideoCall';
 import RNEncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from './components/splash_screen';
 import {useState, useEffect} from 'react';
@@ -37,6 +37,7 @@ import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import {auth, db} from './firebaseConfig';
 import {Text} from 'react-native-elements';
 import UserContext from './utils/contexts/userContext';
+import VoiceCallPage from './components/dashboard_components/VoiceCall';
 
 // ... other imports
 
@@ -70,6 +71,7 @@ const DashboardDrawer = () => {
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={DashboardScreen} />
+      
     </Drawer.Navigator>
   );
 };
@@ -224,6 +226,10 @@ export default function App() {
             <Stack.Screen
               name="AppointmentDetailsScreen"
               component={AppointmentDetailsScreen}
+            />
+            <Stack.Screen
+              name="VoiceCall"
+              component={VoiceCallPage}
             />
           </Stack.Navigator>
         )}

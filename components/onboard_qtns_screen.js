@@ -15,6 +15,7 @@ import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
 import { DatePicker,TimePicker} from './dashboard_components/datePicker';
 import Checkbox from '../assets/widgets/checkBox';
+import Config from '../config';
 
 const OnBoardQtnsScreen = ({route}) => {
   // defining the navigation variable to shift btn screens
@@ -249,7 +250,7 @@ const OnBoardQtnsScreen = ({route}) => {
         alert(
           'Registration successful, please check your email for confirmation',
         );
-        navigation.navigate('OnBoardQtnsScreen', { role: selectedRole });
+        navigation.navigate('SignInScreen');
       } else {
         // Handle errors
         alert(result.message);

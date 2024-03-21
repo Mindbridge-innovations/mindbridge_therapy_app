@@ -34,15 +34,7 @@ const SignUpScreen = () => {
     role: '',
   });
 
-  const payload = {
-    username: userData.username,
-    email: userData.email,
-    password: userData.password,
-    firstName: userData.firstName, // Replace with actual field if needed
-    lastName: userData.lastName, // Replace with actual field if needed
-    phoneNumber: userData.phoneNumber,
-    role: userData.role,
-  };
+  
 
   const handleRoleChange = role => {
     setSelectedRole(role);

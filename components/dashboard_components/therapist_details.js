@@ -83,7 +83,7 @@ const TherapistDetailsScreen = ({route}) => {
             />
 
             <CustomButton
-              onPress={null}
+              onPress={()=>navigation.navigate('VoiceCall')}
               title="Voice call"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}
