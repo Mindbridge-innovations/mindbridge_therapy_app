@@ -8,7 +8,11 @@ import {
   ActivityIndicator,
   Alert,
   Button,
+  Dimensions,
 } from 'react-native';
+import CustomButton from '../../assets/widgets/custom_button';
+import { rtdb } from '../../firebaseConfig';
+import { onValue,ref,query,orderByChild,equalTo } from 'firebase/database';
 
 const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
@@ -19,39 +23,39 @@ const PatientListScreen = ({navigation}) => {
 
   // Example API call using `fetch`:
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('https://your-api-endpoint');
-        const data = await response.json();
-        setPatients(data.patients); // Or your API's specific structure
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+    // Create a query to get users where role is 'therapist'
+    const patientsQuery = query(ref(rtdb, 'users'), orderByChild('role'), equalTo('client'));
+
+    const unsubscribe = onValue(patientsQuery, (snapshot) => {
+      const patientsData = snapshot.val();
+      const patientsList = patientsData ? Object.values(patientsData) : [];
+      setPatients(patientsList);
+      setIsLoading(false);
+    }, (errorObject) => {
+      setError(errorObject.message);
+      setIsLoading(false);
+    });
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
       }
     };
-
-    fetchData();
   }, []);
 
-  const handleInteractPress = patient => {
+  const handleDetailPress = patient => {
     // Handle interaction logic here:
-    // - Navigate to a chat screen
-    // - Open a video call
-    // - Send a message
-    // - Show more information
-    navigation.navigate('ChatScreen', {patient}); // Example navigation
+    navigation.navigate('PatientDetailsScreen', {passedUser:patient}); // Example navigation
   };
 
   const renderPatient = ({item}) => (
+    
     <TouchableOpacity
-      style={styles.patientItem}
-      onPress={() => handleInteractPress(item)}>
+      style={styles.patientsItem}
+      onPress={() => handleDetailPress(item)}>
       <View style={styles.patientInfo}>
-        <Text style={styles.patientName}>{item.name}</Text>
-        <Text style={styles.patientSpecialty}>{item.specialty}</Text>
+        <Text style={styles.patientName}>{item.lastName}</Text>
       </View>
-      <Text style={styles.interactButton}>Interact</Text>
     </TouchableOpacity>
   );
 
@@ -63,7 +67,21 @@ const PatientListScreen = ({navigation}) => {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorMessage}>Error: {error}</Text>
-        <Button title="Retry" onPress={null} />
+        <CustomButton
+          onPress={null}
+          title="Retry"
+          buttonStyle={{
+            backgroundColor: 'black',
+            width: Dimensions.get('window').width * 0.5,
+            alignItems: 'center',
+          }}
+          textStyle={{
+            color: 'white',
+            fontSize: 16,
+            fontWeight: 'bold',
+            fontStyle: 'italic',
+          }}
+        />
       </View>
     );
   }
@@ -85,7 +103,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
-  patientItem: {
+  patientsItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -100,7 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  patientSpecialty: {
+  therapistSpecialty: {
     fontSize: 16,
     color: '#888',
   },

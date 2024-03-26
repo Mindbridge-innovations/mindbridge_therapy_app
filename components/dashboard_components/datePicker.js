@@ -63,14 +63,16 @@ export const DatePicker = ({isBackgroundBlue,label,date,onDateChange}) => {
   );
 };
 
-export const TimePicker = ({isBackgroundBlue,label}) => {
-  const [time, setTime] = useState(new Date());
+export const TimePicker = ({isBackgroundBlue,label,time, onTimeChange}) => {
+  // const [time, setTime] = useState(new Date());
   const [showTimePicker, setShowTimePicker] = useState(false);
 
   const handleTimeChange = (event, selectedTime) => {
-    const currentTime = selectedTime || time;
+    
     setShowTimePicker(false);
-    setTime(currentTime);
+    if (selectedTime) {
+      onTimeChange(selectedTime); // Use the passed in onDateChange
+    }
   };
 
   const formatTime = time => {

@@ -15,7 +15,7 @@ const ChatScreen = ({ route }) => {
 
   //get the therapist data object from the therapist details screen
   const {params} = route;
-  const otherUser = params ? params.therapist : null;
+  const {passedUser} = route.params;
   
 
 
@@ -28,7 +28,7 @@ const ChatScreen = ({ route }) => {
   };
 
   // create a unique chatroom id for each chat between users
-  const chatRoomId = [user.userId, otherUser.id].sort().join('_');
+  const chatRoomId = [user.userId, passedUser.userId].sort().join('_');
 
   //set a ref for querring chat messages
   const messagesRef = ref(rtdb, `chat-messages/${chatRoomId}`);
@@ -74,11 +74,11 @@ const ChatScreen = ({ route }) => {
               <Text>logout</Text>
           </TouchableOpacity>
       ),
-      headerTitle: () => <Text style={styles.headerTitle}>Chat with {otherUser.name}</Text>,
+      headerTitle: () => <Text style={styles.headerTitle}>Chat with {passedUser.username}</Text>,
       headerStyle: {
       backgroundColor: '#077AB0', // Set your desired color
       },
-  },[navigation, otherUser]);
+  },[navigation, passedUser]);
 
     const unsubscribe = onValue(messagesRef, (snapshot) => {
       const loadedMessages = [];

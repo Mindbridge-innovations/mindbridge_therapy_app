@@ -157,8 +157,8 @@ const SignUpScreen = () => {
                   handleRoleChange(itemValue)
                 }>
                 <Picker.Item label="Choose your role" value="" />
-                <Picker.Item label="Patient" value="Patient" />
-                <Picker.Item label="Therapist" value="Therapist" />
+                <Picker.Item label="Client" value="client" />
+                <Picker.Item label="Therapist doctor" value="therapist" />
               </Picker>
             </View>
           </View>

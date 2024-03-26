@@ -138,9 +138,10 @@ const OnBoardQtnsScreen = ({route}) => {
   const [formData, setFormData] = useState({
     therapy_cause: '',
     expectation: '',
-    full_name: '',
+    fullName: '',
     experience_yrs: '',
     dob:formatDate(date),
+    about_therapist:''
   });
 
 
@@ -209,9 +210,10 @@ const OnBoardQtnsScreen = ({route}) => {
     // Include other form data that goes as values
     therapy_cause: formData.therapy_cause,
     expectation: formData.expectation,
-    full_name: formData.full_name,
+    fullName: formData.full_name,
     experience_yrs: formData.experience_yrs,
     dob: formatDate(date),
+    about_therapist:formData.about_therapist,
     // ... any other fields ...
   };
   
@@ -306,7 +308,7 @@ const OnBoardQtnsScreen = ({route}) => {
               <DatePicker isBackgroundBlue={false} date={date} onDateChange={setDate} styles={{backgroundColor:'white',marginTop:10}} />
               </View>
 
-            {userData.role === 'Patient' && (
+            {userData.role === 'client' && (
               <View style={styles.inputcontainer}>
                 <Text
                   style={{
@@ -347,7 +349,7 @@ const OnBoardQtnsScreen = ({route}) => {
       case 2:
         return (
           <View style={{alignItems: 'center'}}>
-            {userData.role === 'Patient' && (
+            {userData.role === 'client' && (
               <View style={styles.inputcontainer}>
                 <Text
                   style={{
@@ -367,7 +369,7 @@ const OnBoardQtnsScreen = ({route}) => {
               </View>
             )}
 
-          {userData.role === 'Patient' && (
+          {userData.role === 'client' && (
               <View style={styles.inputcontainer}>
                 <Text
                   style={{
@@ -390,7 +392,7 @@ const OnBoardQtnsScreen = ({route}) => {
 
            
 
-            {userData.role === 'Patient' && (
+            {userData.role === 'client' && (
               <View style={styles.inputcontainer}>
                 <View style={{alignItems: 'center'}}>
                   <Text
@@ -417,7 +419,7 @@ const OnBoardQtnsScreen = ({route}) => {
               </View>
             )}
 
-            {userData.role === 'Therapist' && (
+            {userData.role === 'therapist' && (
               <View style={styles.inputcontainer}>
                 <Text style={mystyles.label}>
                   Enter full name
@@ -432,7 +434,7 @@ const OnBoardQtnsScreen = ({route}) => {
               </View>
             )}
 
-            {userData.role === 'Therapist' && (
+            {userData.role === 'therapist' && (
               <View style={styles.inputcontainer}>
                 <Text style={mystyles.label}>
                   Enter number of years of experience
@@ -497,7 +499,7 @@ const OnBoardQtnsScreen = ({route}) => {
                   color: 'white',
                   fontWeight: 'bold',
                 }}>
-                {userData.role === 'Patient'
+                {userData.role === 'client'
                   ? 'What experience do you prefer from your therapist?'
                   : 'What professional therapeautic experiences do you posses'}
               </Text>
@@ -532,7 +534,7 @@ const OnBoardQtnsScreen = ({route}) => {
                   />
                 ))}
 
-              {userData.role === 'Therapist' && (
+              {userData.role === 'therapist' && (
                 <View style={styles.inputcontainer}>
                   <Text style={mystyles.label}>
                     Briefly describe your professional life.
@@ -578,7 +580,7 @@ const OnBoardQtnsScreen = ({route}) => {
           style={mystyles.logoimage}
         />
         <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
-          {userData.role === 'Patient'
+          {userData.role === 'client'
             ? 'Help us pick a relationship therapist for you. This eases matching you with a therapist!'
             : 'Help us match you easily to patients'}
         </Text>

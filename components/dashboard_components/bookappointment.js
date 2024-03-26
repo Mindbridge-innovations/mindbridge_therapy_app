@@ -14,26 +14,63 @@ import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
 import {Picker} from '@react-native-picker/picker';
 import {DatePicker, TimePicker} from './datePicker';
+import Config from '../../config';
 
 const AppointmentBookingScreen = ({isBackgroundBlue}) => {
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
   const  [date, setDate]=useState(new Date())
-  const [time,setTime]=useState(new Date())
+  const  [time, setTime]=useState(new Date())
 
-  const [selectedValue, setSelectedValue] = useState(''); // Set the initial selected value
+  const [mode,setSelectedMode]=useState('')
+
 
   const formatDate = date => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
 
-  const handleBookingSubmit = () => {
-    // Logic to handle form submission, including validation and sending data to your backend
-    console.log(
-      formatDate(date),
-      reason,
-      description,
-    );
+  const formatTime = time => {
+    return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
+  };
+
+  const handleBookingSubmit = async () => {
+    const payload={
+      date:formatDate(date),
+      time:formatTime(time),
+      reason:reason,
+      description:description,
+      appointmentType:mode,
+      status:'pending',
+     
+    }
+   console.log(payload)
+   
+    try {
+      // Replace 'http://your-backend-url.com' with your actual backend URL
+      const response = await fetch(`${Config.BACKEND_API_URL}/appointments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Handle successful registration
+        alert(
+          'Your new appointment has been booked.Please wait for confirmation from your doctor',
+        );
+        navigation.navigate('AppointmentBookingScreen');
+      } else {
+        // Handle errors
+        alert(result.message);
+      }
+    } catch (error) {
+      // Handle network errors
+      alert('An error occurred: ' + error.message);
+    }
   };
 
   return (
@@ -59,7 +96,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
          date={date} 
         onDateChange={setDate}
         />
-        <TimePicker label={'Please select your suitable time for the appointment'}/>
+        <TimePicker label={'Please select your suitable time for the appointment'} time={time} onTimeChange={setTime}/>
 
         <View style={{marginBottom: 20}}>
           <Text style={mystyles.dashlabel}>
@@ -67,9 +104,9 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
           </Text>
           <View style={mystyles.dashinput}>
             <Picker
-              selectedValue={selectedValue}
+              selectedValue={reason}
               onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
+                setReason(itemValue)
               }>
               <Picker.Item label="Choose your preference" value="" />
               <Picker.Item
@@ -125,9 +162,9 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
           </Text>
           <View style={mystyles.dashinput}>
             <Picker
-              selectedValue={selectedValue}
+              selectedValue={mode}
               onValueChange={(itemValue, itemIndex) =>
-                setSelectedValue(itemValue)
+                setSelectedMode(itemValue)
               }>
               <Picker.Item label="Choose your preference" value="" />
               <Picker.Item
@@ -135,6 +172,8 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
                 value="Physical (in office)"
               />
               <Picker.Item label="Video call" value="Video call" />
+              <Picker.Item label="Voice call" value="Voice call" />
+
             </Picker>
           </View>
         </View>

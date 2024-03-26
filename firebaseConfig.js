@@ -15,6 +15,7 @@ const firebaseConfig = {
   messagingSenderId: Config.MESSAGE_SENDER_ID,
   appId: Config.APP_ID,
   databaseURL: Config.DATABASE_URL,
+
 };
 
 const app = initializeApp(firebaseConfig);
@@ -23,4 +24,4 @@ const auth = getAuth(app);
 const db = initializeFirestore(app, {experimentalForceLongPolling: true});//using firestore
 const rtdb = getDatabase(app); //using realtime database
 
-export {db, auth,rtdb};
+export {db, auth,rtdb,app};

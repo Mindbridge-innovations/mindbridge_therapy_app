@@ -11,9 +11,12 @@ import {
   Dimensions,
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
+import { rtdb } from '../../firebaseConfig';
+import { onValue,ref,query,orderByChild,equalTo } from 'firebase/database';
 
 const TherapistListScreen = ({navigation}) => {
   const [therapists, setTherapists] = useState([]);
+  const [responses, setResponses] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,118 +24,39 @@ const TherapistListScreen = ({navigation}) => {
 
   // Example API call using `fetch`:
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = [
-          {
-            id: 1,
-            name: 'John Doe',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. John Doe, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 11,
-            name: 'Alva Doe',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Alva Doe, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 2,
-            name: 'John Negredo',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. John Negredo, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 3,
-            name: 'Rachel Anderson',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 4,
-            name: 'Kamya George',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Kamya George, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 5,
-            name: 'Rachel Anderson',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Rachel Anderson, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 6,
-            name: 'Soffy Mailen',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Soffy Mailen, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 7,
-            name: 'Micheal Acex',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Micheal Acex, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 8,
-            name: 'Godfrey Owach',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Godfrey Owach, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 9,
-            name: 'Steven Wells',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. Steven Wells, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
-          {
-            id: 10,
-            name: 'John Mbabazi Peters',
-            specialty: 'Psychologist',
-            about:
-              "Hello! I'm Dr. John Mbabazi Peters, a compassionate and dedicated therapist with over a decade of experience in mental health. My mission is to create a safe and non-judgmental space for individuals seeking support and healing.I specialize in helping clients navigate life's challenges, whether it's managing stress, coping with anxiety, overcoming trauma, or improving relationships. My therapeutic approach is client-centered, incorporating evidence-based techniques to tailor treatment to your unique needs.In our sessions, we'll work collaboratively to explore your thoughts, feelings, and goals. I believe in the power of self-discovery and personal growth, and I'm here to support you on your journey to a happier and more fulfilling life",
-          },
+    // Create a query to get users where role is 'therapist'
+    const therapistsQuery = query(ref(rtdb, 'users'), orderByChild('role'), equalTo('therapist'));
 
-          // Add more therapists as needed
-        ];
-        // const response = await fetch('https://your-api-endpoint');
-        // const data = await response.json();
-        setTherapists(data); // Or your API's specific structure
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
+    const unsubscribe = onValue(therapistsQuery, (snapshot) => {
+      const therapistsData = snapshot.val();
+      const therapistsList = therapistsData ? Object.values(therapistsData) : [];
+      setTherapists(therapistsList);
+      setIsLoading(false);
+    }, (errorObject) => {
+      setError(errorObject.message);
+      setIsLoading(false);
+    });
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
       }
     };
-
-    fetchData();
   }, []);
 
   const handleDetailPress = therapist => {
     // Handle interaction logic here:
-    // - Navigate to a chat screen
-    // - Open a video call
-    // - Send a message
-    // - Show more information
-    navigation.navigate('TherapistDetailsScreen', {therapist}); // Example navigation
+    navigation.navigate('TherapistDetailsScreen', {passedUser:therapist}); // Example navigation
   };
 
   const renderTherapist = ({item}) => (
+    
     <TouchableOpacity
       style={styles.therapistItem}
       onPress={() => handleDetailPress(item)}>
       <View style={styles.therapistInfo}>
-        <Text style={styles.therapistName}>{item.name}</Text>
-        <Text style={styles.therapistSpecialty}>{item.specialty}</Text>
+        <Text style={styles.therapistName}>{item.lastName}</Text>
+        <Text style={styles.therapistSpecialty}>{item.email}</Text>
       </View>
     </TouchableOpacity>
   );

@@ -67,6 +67,20 @@ const SignInScreen = () => {
 
   };
 
+  React.useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', async () => {
+      try {
+        // Remove the token from AsyncStorage
+        await AsyncStorage.removeItem('userToken');
+      } catch (error) {
+        console.error('Error removing user token:', error);
+        // Handle error (optional)
+      }
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
   return (
     <ScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: '#255ECC'}}>

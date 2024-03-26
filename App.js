@@ -1,3 +1,4 @@
+
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import React, {useRef,useContext} from 'react';
 import queryString from 'query-string';
@@ -27,19 +28,19 @@ import TherapistDetailsScreen from './components/dashboard_components/therapist_
 import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
 import AppointmentManagementScreen from './components/dashboard_components/Appointments';
 import AppointmentDetailsScreen from './components/dashboard_components/appointment_details';
-// import Icon from 'react-native-vector-icons/dist/FontAwesome'
 import ChatScreen from './components/dashboard_components/ChatScreen';
 import FontAwesomeIcon from 'react-native-vector-icons/dist/FontAwesome';
 import AntDesignIcon from 'react-native-vector-icons/dist/AntDesign';
 import IoniconsIcon from 'react-native-vector-icons/dist/Ionicons';
 import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
 import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-import {auth, db} from './firebaseConfig';
-import {Text} from 'react-native-elements';
 import UserContext from './utils/contexts/userContext';
 import VoiceCallPage from './components/dashboard_components/VoiceCall';
-
+import PatientDetailsScreen from './components/dashboard_components/patient_details';
+import { Text } from 'react-native-elements';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // ... other imports
+
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -51,6 +52,7 @@ const linking = {
     },
   },
 };
+
 
 const DashboardDrawer = () => {
   return (
@@ -72,19 +74,37 @@ const DashboardDrawer = () => {
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={DashboardScreen} />
       
+      
     </Drawer.Navigator>
   );
 };
 const CustomDrawerContent = props => {
   //get the current user data
   const {user}=useContext(UserContext)
+  const navigation = useNavigation(); // Get the navigation object
+
+  const handleSignOut = async () => {
+    try {
+      // Clear user session by removing the token from AsyncStorage
+      await AsyncStorage.removeItem('userToken');
+
+      // After signout, navigate the user to the login screen
+      navigation.navigate('SignInScreen');
+    } catch (error) {
+      console.error('Error clearing user session:', error);
+      // Handle error (optional)
+    }
+  };
   return (
+    
     <DrawerContentScrollView {...props}>
       {/* Custom content at the top of the drawer */}
       <Image
         source={require('./assets/mindbridgelogo_splash.png')}
         style={{height: 150, resizeMode: 'cover', width: 250}}
       />
+      
+      <Text style={{marginLeft:20, fontWeight:'400'}}>Logged in as {user.email}</Text>
 
       {/* Default drawer items */}
       <DrawerItem
@@ -92,7 +112,7 @@ const CustomDrawerContent = props => {
         onPress={() => props.navigation.navigate('Appointments')}
         icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
       />
-      {user.role==="Therapist" && (<DrawerItem
+      {user.role==="therapist" && (<DrawerItem
         label="My patients"
         onPress={() => props.navigation.navigate('My patients')}
         icon={() => (
@@ -106,7 +126,7 @@ const CustomDrawerContent = props => {
         icon={() => <MaterialIcons name="reviews" size={20} color="#000" />} // Replace with your desired icon
       />
 
-      { user.role==='Patient' && (
+      { user.role==='client' && (
       <DrawerItem
         label="My therapists"
         onPress={() => props.navigation.navigate('My therapists')}
@@ -126,9 +146,7 @@ const CustomDrawerContent = props => {
       {/* Signout button at the bottom */}
       <DrawerItem
         label="Sign Out"
-        onPress={() => {
-          // Handle sign out action here
-        }}
+        onPress={handleSignOut}
         icon={() => <FontAwesomeIcon name="sign-out" size={20} color="#000" />} // Replace with your desired icon
       />
     </DrawerContentScrollView>
@@ -139,10 +157,13 @@ export default function App() {
   const navigationRef = useRef();
   const routeNameRef = useRef();
 
+
   const [isLoading, setIsLoading] = useState(true);
 
   // Handle deep linking
   useEffect(() => {
+    // registerNotificationHandlers(navigationRef.current);
+    // checkInitialNotification(navigationRef.current);
     const handleDeepLink = event => {
       const parsedUrl = queryString.parseUrl(event.url);
       const path = parsedUrl.url.split('://')[1];
@@ -209,6 +230,9 @@ export default function App() {
             <Stack.Screen name="VideoCallPage" component={VideoCallPage} />
             <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
+            <Stack.Screen name="MyTherapists" component={TherapistListScreen} />
+            <Stack.Screen name="MyPatients" component={PatientListScreen} />
+
             <Stack.Screen
               name="OnBoardQtnsScreen"
               component={OnBoardQtnsScreen}
@@ -231,6 +255,11 @@ export default function App() {
               name="VoiceCall"
               component={VoiceCallPage}
             />
+            <Stack.Screen
+              name="PatientDetailsScreen"
+              component={PatientDetailsScreen}
+            />
+            
           </Stack.Navigator>
         )}
       </NavigationContainer>

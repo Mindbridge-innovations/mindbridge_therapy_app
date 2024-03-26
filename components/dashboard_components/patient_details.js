@@ -5,7 +5,7 @@ import mystyles from '../../assets/stylesheet';
 import CustomButton from '../../assets/widgets/custom_button';
 import {useNavigation} from '@react-navigation/native';
 
-const TherapistDetailsScreen = ({route}) => {
+const PatientDetailsScreen = ({route}) => {
   //getting the details of the therapist and saving to a user object
   const {passedUser} = route.params;
   const navigation = useNavigation();
@@ -20,7 +20,7 @@ const TherapistDetailsScreen = ({route}) => {
             marginLeft: 30,
             marginTop: 10,
           }}>
-          Dr. {passedUser.lastName}
+          Client: {passedUser.lastName}
         </Text>
       </View>
       <View style={{flex: 1, alignItems: 'center', width: '90%'}}>
@@ -32,12 +32,12 @@ const TherapistDetailsScreen = ({route}) => {
         {/* small text displays of the number of patients, experience and rating */}
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
-            <Text style={styles.infoTitle}>Patients</Text>
-            <Text style={styles.infoValue}>44</Text>
+            <Text style={styles.infoTitle}>Gender</Text>
+            <Text style={styles.infoValue}>Male</Text>
           </View>
           <View style={styles.infoItem}>
-            <Text style={styles.infoTitle}>Experience</Text>
-            <Text style={styles.infoValue}>6 yrs</Text>
+            <Text style={styles.infoTitle}>Age</Text>
+            <Text style={styles.infoValue}>34</Text>
           </View>
           <View style={styles.infoItem}>
             <Text style={styles.infoTitle}>Rating</Text>
@@ -60,12 +60,12 @@ const TherapistDetailsScreen = ({route}) => {
 
         <View>
           <View style={{flexDirection: 'row', marginTop: 40}}>
-            <CustomButton
+            {/* <CustomButton
               onPress={() => navigation.navigate('AppointmentBookingScreen')}
               title="Book appointment"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}
-            />
+            /> */}
 
             <CustomButton
               onPress={() => navigation.navigate('Chat', {passedUser})}
@@ -95,7 +95,7 @@ const TherapistDetailsScreen = ({route}) => {
     </ScrollView>
   );
 };
-export default TherapistDetailsScreen;
+export default PatientDetailsScreen;
 
 const styles = StyleSheet.create({
   custombutton: {
