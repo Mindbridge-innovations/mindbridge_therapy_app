@@ -14,6 +14,8 @@ import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
 import Config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+
 
 const SignInScreen = () => {
   const navigation = useNavigation();
@@ -56,6 +58,28 @@ const SignInScreen = () => {
           expirationTime.toString(),
         );
 
+        async function requestUserPermission() {
+          const authStatus = await messaging().requestPermission();
+          const enabled =
+            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        
+          if (enabled) {
+            console.log('Authorization status:', authStatus);
+            getFcmToken();
+          }
+        }
+        
+        async function getFcmToken() {
+          const fcmToken = await messaging().getToken();
+          if (fcmToken) {
+            console.log('Your Firebase Token is:', fcmToken);
+            // Send the token to your server to store it
+          } else {
+            console.log('Failed to get the token');
+          }
+        }
+        
         navigation.navigate('DashboardDrawer');
       } else {
         // Handle errors
@@ -64,6 +88,8 @@ const SignInScreen = () => {
     } catch (error) {
       alert('An error occurred: ' + error.message);
     }
+
+
 
   };
 

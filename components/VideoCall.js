@@ -16,9 +16,10 @@ export default function VideoCallPage({route,...props}) {
   // randomUserID = String(Math.floor(Math.random() * 100000));
   const {user}=useContext(UserContext)
   const {passedUser}=route.params
-  const callId= [user.userId, passedUser.id].sort().join('_');
+  const callId= [user.userId, passedUser.userId].sort().join('_');
   const userName = user.lastName || user.username;
 
+console.log(callId)
   
 
   return (

@@ -24,4 +24,4 @@ const auth = getAuth(app);
 const db = initializeFirestore(app, {experimentalForceLongPolling: true});//using firestore
 const rtdb = getDatabase(app); //using realtime database
 
-export {db, auth,rtdb,app};
+export {db, auth,rtdb,app,firebaseConfig};

@@ -42,7 +42,10 @@ export default function VoiceCallPage({route,...props}) {
     }
   };
 
+  
+
   return (
+    
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={videoCallStyles.container}>
         

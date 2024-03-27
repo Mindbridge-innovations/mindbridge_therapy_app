@@ -39,6 +39,12 @@ import VoiceCallPage from './components/dashboard_components/VoiceCall';
 import PatientDetailsScreen from './components/dashboard_components/patient_details';
 import { Text } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import messaging from '@react-native-firebase/messaging';
+import { app,firebaseConfig } from './firebaseConfig';
+import { firebase } from '@react-native-firebase/app';
+
+
 // ... other imports
 
 
@@ -73,7 +79,6 @@ const DashboardDrawer = () => {
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={DashboardScreen} />
-      
       
     </Drawer.Navigator>
   );
@@ -158,6 +163,7 @@ export default function App() {
   const routeNameRef = useRef();
 
 
+  
   const [isLoading, setIsLoading] = useState(true);
 
   // Handle deep linking
@@ -202,8 +208,16 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  
+  
+  function navigateToVideoCall(callId) {
+    // Navigate to the VideoCallPage with the callId
+    props.navigation.navigate('VideoCallPage', { callId });
+  }
+
   return (
     <UserProvider>
+    <SafeAreaView style={{flex:1}}>
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer
         ref={navigationRef}
@@ -264,6 +278,7 @@ export default function App() {
         )}
       </NavigationContainer>
     </GestureHandlerRootView>
+    </SafeAreaView>
     </UserProvider>
   );
 }

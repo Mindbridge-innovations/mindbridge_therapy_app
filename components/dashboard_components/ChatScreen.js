@@ -74,7 +74,7 @@ const ChatScreen = ({ route }) => {
               <Text>logout</Text>
           </TouchableOpacity>
       ),
-      headerTitle: () => <Text style={styles.headerTitle}>Chat with {passedUser.username}</Text>,
+      headerTitle: () => <Text style={styles.headerTitle}>Chat with {user.username}</Text>,
       headerStyle: {
       backgroundColor: '#077AB0', // Set your desired color
       },
@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     headerTitle: {
       fontSize: 20,
       fontWeight: 'bold',
+      paddingBottom:50
       // Add other styling as needed
     },
      // ... other styles
