@@ -22,7 +22,7 @@ const UserProvider = ({ children }) => {
           setUser(result);
           console.log('Fetched user data:', result);//log it
         } else {
-          console.error('Error fetching user data:', result);
+          console.error('Error fetching user data:', result.message);
           await AsyncStorage.removeItem('userToken');
           // Handle navigation to the login screen if needed
         }
