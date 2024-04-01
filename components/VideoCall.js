@@ -16,21 +16,22 @@ export default function VideoCallPage({route,...props}) {
   // randomUserID = String(Math.floor(Math.random() * 100000));
   const {user}=useContext(UserContext)
   const {passedUser}=route.params
-  const callId= [user.userId, passedUser.userId].sort().join('_');
+  const callID= [user.userId, passedUser.userId].join('_');
   const userName = user.lastName || user.username;
 
-console.log(callId)
   
 
   return (
+console.log('CALL IDENTIFICATION FOR THE VIDEO CALL IS:',callID),
+
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={videoCallStyles.container}>
         <ZegoUIKitPrebuiltCall
-          appID={Config.ZEGOCLOUD_APP_ID}
-          appSign={Config.ZEGOCLOUD_APP_SIGN}
+          appID={Config.ZEGOCLOUD_APP_ID1}
+          appSign={Config.ZEGOCLOUD_APP_SIGN1}
           userID={user.phoneNumber} // userID can be something like a phone number or the user id on your own user system.
           userName={userName}
-          callID={callId} // callID can be any unique string.
+          callID={callID} // callID can be any unique string.
           config={{
             // You can also use ONE_ON_ONE_VOICE_CALL_CONFIG/GROUP_VIDEO_CALL_CONFIG/GROUP_VOICE_CALL_CONFIG to make more types of calls.
             ...ONE_ON_ONE_VIDEO_CALL_CONFIG,
@@ -60,7 +61,9 @@ console.log(callId)
               })
           }
           }}
+
         />
+
       </View>
     </ScrollView>
   );

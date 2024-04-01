@@ -61,7 +61,7 @@ const TherapistDetailsScreen = ({route}) => {
         <View>
           <View style={{flexDirection: 'row', marginTop: 40}}>
             <CustomButton
-              onPress={() => navigation.navigate('AppointmentBookingScreen')}
+              onPress={() => navigation.navigate('AppointmentBookingScreen',{passedUser})}
               title="Book appointment"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}

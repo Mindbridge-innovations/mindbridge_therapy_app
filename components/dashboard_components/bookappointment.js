@@ -9,18 +9,21 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
 import {Picker} from '@react-native-picker/picker';
 import {DatePicker, TimePicker} from './datePicker';
 import Config from '../../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
-const AppointmentBookingScreen = ({isBackgroundBlue}) => {
+const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
+  const {passedUser}=route.params
   const [reason, setReason] = useState('');
   const [description, setDescription] = useState('');
   const  [date, setDate]=useState(new Date())
   const  [time, setTime]=useState(new Date())
+  const navigation=useNavigation()
 
   const [mode,setSelectedMode]=useState('')
 
@@ -34,16 +37,18 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
   };
 
   const handleBookingSubmit = async () => {
-    const payload={
+    const appointmentData={
       date:formatDate(date),
       time:formatTime(time),
       reason:reason,
       description:description,
       appointmentType:mode,
-      status:'pending',
-     
+      therapistId:passedUser.userId,
+      status:"pending"
     }
-   console.log(payload)
+    const token = await AsyncStorage.getItem('userToken');
+
+   console.log(appointmentData)
    
     try {
       // Replace 'http://your-backend-url.com' with your actual backend URL
@@ -51,8 +56,10 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(appointmentData),
       });
 
       const result = await response.json();
@@ -62,7 +69,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
         alert(
           'Your new appointment has been booked.Please wait for confirmation from your doctor',
         );
-        navigation.navigate('AppointmentBookingScreen');
+        navigation.navigate('AppointmentBookingScreen',{passedUser});
       } else {
         // Handle errors
         alert(result.message);
@@ -76,7 +83,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
   return (
     <ScrollView contentContainerStyle={mystyles.dashviewcontainer}>
       <View style={{width: '100%'}}>
-        <Text style={styles.title}>Book a Therapy Session</Text>
+        <Text style={styles.title}>Book a Therapy Session with Dr. {passedUser.lastName}</Text>
       </View>
 
       <Text
@@ -201,7 +208,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue}) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     backgroundColor: '#255ECC',

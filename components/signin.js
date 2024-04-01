@@ -51,34 +51,34 @@ const SignInScreen = () => {
         alert('You have been logged in successfully!');
         // Save the token, navigate to the dashboard, etc.
         // For example, if using AsyncStorage to store the token:
-        const expirationTime = new Date().getTime() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
+        const expirationTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000; // 7 days from now
         await AsyncStorage.setItem('userToken', result.token);
         await AsyncStorage.setItem(
           'tokenExpiration',
           expirationTime.toString(),
         );
 
-        async function requestUserPermission() {
-          const authStatus = await messaging().requestPermission();
-          const enabled =
-            authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        // async function requestUserPermission() {
+        //   const authStatus = await messaging().requestPermission();
+        //   const enabled =
+        //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
         
-          if (enabled) {
-            console.log('Authorization status:', authStatus);
-            getFcmToken();
-          }
-        }
+        //   if (enabled) {
+        //     console.log('Authorization status:', authStatus);
+        //     getFcmToken();
+        //   }
+        // }
         
-        async function getFcmToken() {
-          const fcmToken = await messaging().getToken();
-          if (fcmToken) {
-            console.log('Your Firebase Token is:', fcmToken);
-            // Send the token to your server to store it
-          } else {
-            console.log('Failed to get the token');
-          }
-        }
+        // async function getFcmToken() {
+        //   const fcmToken = await messaging().getToken();
+        //   if (fcmToken) {
+        //     console.log('Your Firebase Token is:', fcmToken);
+        //     // Send the token to your server to store it
+        //   } else {
+        //     console.log('Failed to get the token');
+        //   }
+        // }
         
         navigation.navigate('DashboardDrawer');
       } else {

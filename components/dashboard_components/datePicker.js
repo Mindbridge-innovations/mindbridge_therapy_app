@@ -30,7 +30,6 @@ export const DatePicker = ({isBackgroundBlue,label,date,onDateChange}) => {
   const formatDate = date => {
     return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   };
-  console.log(formatDate(date))
 
   return (
     <View>

@@ -24,6 +24,7 @@ const mystyles = StyleSheet.create({
     borderRadius: 10,
     width: Dimensions.get('window').width * 0.8,
     color: 'black',
+    fontSize:16
   },
   dashlabel: {
     color: '#255ECC',

@@ -55,6 +55,8 @@ const PatientListScreen = ({navigation}) => {
       onPress={() => handleDetailPress(item)}>
       <View style={styles.patientInfo}>
         <Text style={styles.patientName}>{item.lastName}</Text>
+        <Text style={styles.patientName}>{item.email}</Text>
+
       </View>
     </TouchableOpacity>
   );

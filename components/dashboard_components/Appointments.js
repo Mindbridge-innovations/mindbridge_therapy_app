@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -9,10 +9,15 @@ import {
   ActivityIndicator,
   Modal,
   Button,
+  Alert,
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
 import {DatePicker, TimePicker} from './datePicker';
+import { rtdb } from '../../firebaseConfig';
+import { onValue,ref,query,orderByChild,get,update ,equalTo} from 'firebase/database';
+import { where } from 'firebase/firestore';
+import UserContext from '../../utils/contexts/userContext';
 
 const AppointmentManagementScreen = ({navigation}) => {
   const [appointments, setAppointments] = useState([]);
@@ -22,122 +27,179 @@ const AppointmentManagementScreen = ({navigation}) => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
+  const {user}=useContext(UserContext)
+  const [cancellationReason, setCancellationReason] = useState('');
+  const  [newDate, setNewDate]=useState(new Date())
+  const  [newTime, setNewTime]=useState(new Date())
+
+
+  const formatDate = date => {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  };
+
+  const formatTime = time => {
+    return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
+  };
+
 
   useEffect(() => {
-    // Simulate fetching data
-    const fetchData = async () => {
-      try {
-        // Simulated data
-        const data = [
-          {
-            id: 1,
-            name: 'John Doe',
-            date: '12/04/2024',
-            time: '12:30',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 2,
-            name: 'Winny Ayebare',
-            date: '01/02/2024',
-            time: '12:00',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 3,
-            name: 'Kamsi Edochi',
-            date: '12/02/2024',
-            time: '10:00',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 4,
-            name: 'John Trevor',
-            date: '13/02/2024',
-            time: '01:30',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 5,
-            name: 'Mamgbi Geofrey',
-            date: '01/03/2024',
-            time: '02:30',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 6,
-            name: 'Alva Geof',
-            date: '12/04/2024',
-            time: '12:34',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-          {
-            id: 7,
-            name: 'Negredo Geof',
-            date: '12/04/2024',
-            time: '12:34',
-            reason: 'Substance Abuse Counseling',
-            description:
-              "I'm experiencing heightened anxiety and would like to discuss coping strategies and potential treatments.",
-          },
-        ];
-        setAppointments(data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    fetchData();
+    let appointmentsQuery;
+
+  if (user.role === 'therapist') {
+    // If the user is a therapist, fetch only their appointments
+    appointmentsQuery = query(ref(rtdb, 'appointments'), orderByChild('therapistId'), equalTo(user.userId));
+  } else if (user.role === 'client') {
+    // If the user is an admin, fetch all appointments
+    appointmentsQuery = query(ref(rtdb, 'appointments'), orderByChild('userId'),equalTo(user.userId));
+  } 
+
+  const unsubscribe = onValue(appointmentsQuery, async (snapshot) => {
+    const appointmentsData = snapshot.val();
+    // const appointmentsList = appointmentsData ? Object.values(appointmentsData) : [];
+    const appointmentsList = appointmentsData
+    ? Object.entries(appointmentsData).map(([key, value]) => ({
+        ...value,
+        id: key, // Ensure the 'id' property is set
+      }))
+    : [];
+
+    // Fetch user details for each appointment
+    const appointmentsWithUserDetails = await Promise.all(appointmentsList.map(async (appointment) => {
+      const userRef = ref(rtdb, `users/${appointment.userId}`);
+      const userSnapshot = await get(userRef);
+      const userData = userSnapshot.val();
+      return {
+        ...appointment,
+        user: userData ? userData : { username: 'Unknown' }, // Include the entire user data
+      };
+    }));
+
+    setAppointments(appointmentsWithUserDetails);
+    setIsLoading(false);
+  }, (errorObject) => {
+    setError(errorObject.message);
+    setIsLoading(false);
+  });
+
+  return () => {
+    if (unsubscribe) {
+      unsubscribe();
+    }
+  };
   }, []);
 
+  //show modal when an appointment is selected
   const handleInteractPress = appointment => {
     setSelectedAppointment(appointment);
     setModalVisible(true);
   };
 
+
+  //function to accept an appointment by a therapist
+  const acceptAppointment = async (appointmentId) => {
+    const appointmentRef = ref(rtdb, `appointments/${appointmentId}`);
+    try {
+      await update(appointmentRef, { status: 'accepted' });
+      // Update the local state to reflect the change 
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appt) =>
+          appt.id === appointmentId ? { ...appt, status: 'accepted' } : appt
+        )
+      );
+    } catch (error) {
+      // Handle any errors that occur during the update
+      console.error("Failed to accept appointment:", error);
+    }
+  };
+
+
+  //function to cancel an appointment
+  const cancelAppointment = async (appointmentId, reason) => {
+    const appointmentRef = ref(rtdb, `appointments/${appointmentId}`);
+    try {
+      await update(appointmentRef, {
+        status: 'cancelled',
+        cancellationReason: reason,
+        cancelledBy: user.username, // Assuming `user` has a `userId` property
+      });
+      // Update the local state to reflect the change
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appt) =>
+          appt.id === appointmentId
+            ? { ...appt, status: 'cancelled', cancellationReason: reason, cancelledBy: user.userId }
+            : appt
+        )
+      );
+      // Clear the cancellation reason input
+      setCancellationReason('');
+    } catch (error) {
+      // Handle any errors that occur during the update
+      console.error("Failed to cancel appointment:", error);
+    }
+  };
+
+
+  //function to handle cancelling of an appointment
   const handleCancelPress = appointment => {
     setSelectedAppointment(appointment);
     setCancelModalVisible(true);
   };
 
-  const handleReschedulePress = appointment => {
-    setSelectedAppointment(appointment);
-    setRescheduleModalVisible(true);
+
+  //function to handle the rescheduling of an appointment
+  const rescheduleAppointment = async (appointmentId, newDate, newTime) => {
+    const appointmentRef = ref(rtdb, `appointments/${appointmentId}`);
+    try {
+      await update(appointmentRef, {
+        status: 'rescheduled',
+        date: formatDate(newDate), // Use your formatDate function
+        time: formatTime(newTime), // Use your formatTime function
+        rescheduledBy:user.lastName,
+      });
+      // Update the local state to reflect the change
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appt) =>
+          appt.id === appointmentId
+            ? { ...appt, status: 'rescheduled', date: formatDate(newDate), time: formatTime(newTime) }
+            : appt
+        )
+      );
+    } catch (error) {
+      // Handle any errors that occur during the update
+      console.error("Failed to reschedule appointment:", error);
+    }
   };
 
+  //function that displays the list of appointments
   const renderAppointment = ({item}) => (
     <TouchableOpacity
       style={styles.appointmentItem}
       onPress={() => handleInteractPress(item)}>
       <View style={{flex: 1, marginVertical: 5}}>
         <View style={styles.appointmentInfo}>
-          <Text style={styles.appointmentName}>{item.name}</Text>
+          <Text style={styles.appointmentName}>{item.reason}</Text>
           <Text style={styles.appointmentDate}>
             {item.date} {item.time}
           </Text>
         </View>
-        <Text style={styles.appointmentSpecialty}>{item.reason}</Text>
+        <Text style={styles.appointmentSpecialty} numberOfLines={1}
+        ellipsizeMode="tail">{item.description}</Text>
+        <View style={styles.appointmentInfo}>
+          <Text style={styles.appointmentSpecialty}>Booked by: {item.user.username}</Text>
+          <Text style={styles.statusIndicator}>Status: {item.status}</Text>
+        </View>
       </View>
     </TouchableOpacity>
   );
 
   if (isLoading) {
-    return <ActivityIndicator size="large" style={styles.loadingIndicator} />;
-  }
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" style={styles.loadingIndicator} />
+        <Text style={styles.loadingText}>Loading appointments, please wait...</Text>
+      </View>
+    );  }
 
   if (error) {
     return (
@@ -154,6 +216,7 @@ const AppointmentManagementScreen = ({navigation}) => {
   }
 
   return (
+    
     <View style={styles.container}>
       <FlatList
         data={appointments}
@@ -161,7 +224,7 @@ const AppointmentManagementScreen = ({navigation}) => {
         keyExtractor={item => item.id.toString()}
       />
 
-      {/* Appointment Details Modal */}
+      {/* Appointment Details Modal to view an appointment in the list in details after press on it */}
       <Modal
         animationType="slide"
         transparent={true}
@@ -172,9 +235,11 @@ const AppointmentManagementScreen = ({navigation}) => {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             {selectedAppointment && (
+              
               <>
+              
                 <Text style={styles.modalText}>
-                  Patient name: {selectedAppointment.name}
+                  Client name: {selectedAppointment.user.username}
                 </Text>
                 <Text style={styles.modalText}>
                   Appointment date & time: {selectedAppointment.date}{' '}
@@ -186,24 +251,45 @@ const AppointmentManagementScreen = ({navigation}) => {
                 <Text style={styles.modalText}>
                   Note: {selectedAppointment.description}
                 </Text>
+                <Text style={styles.modalText}>
+                  Status: {selectedAppointment.status}
+                </Text>
+                {selectedAppointment.status==='cancelled' &&([
+                   <Text style={styles.modalText}>
+                   Cancelled by: {selectedAppointment.cancelledBy}
+                 </Text>,
+                  <Text style={styles.modalText}>
+                  Cancellation reason: {selectedAppointment.cancellationReason}
+                </Text>
+                ]
+                )}
+                {user.role==="therapist" && (
+                   <CustomButton
+                   onPress={() => {
+                     // Add logic to accept the appointment
+                     acceptAppointment(selectedAppointment.id);
+                     setModalVisible(!modalVisible);
+                   }}
+                   title="Accept appointment"
+                   buttonStyle={{marginTop: 20, marginBottom: 20}}
+                   textStyle={{color: 'white', fontWeight: 'bold'}}
+                 />
+
+                )}
+               
+               {selectedAppointment.status==="accepted" || selectedAppointment.status==='rescheduled' &&(
                 <CustomButton
-                  onPress={() => {
-                    // Add logic to accept the appointment
-                    setModalVisible(!modalVisible);
-                  }}
-                  title="Accept appointment"
-                  buttonStyle={{marginTop: 20, marginBottom: 20}}
-                  textStyle={{color: 'white', fontWeight: 'bold'}}
-                />
-                <CustomButton
-                  onPress={() => {
-                    setCancelModalVisible(true);
-                    setModalVisible(false);
-                  }}
-                  title="Cancel appointment"
-                  buttonStyle={{marginBottom: 20}}
-                  textStyle={{color: 'white', fontWeight: 'bold'}}
-                />
+                onPress={() => {
+                  setCancelModalVisible(true);
+                  setModalVisible(false);
+                }}
+                title="Cancel appointment"
+                buttonStyle={{marginBottom: 20}}
+                textStyle={{color: 'white', fontWeight: 'bold'}}
+              />
+
+               )}
+                
                 <CustomButton
                   onPress={() => {
                     setRescheduleModalVisible(true);
@@ -244,15 +330,19 @@ const AppointmentManagementScreen = ({navigation}) => {
               </Text>
               <TextInput
                 style={mystyles.input}
-                // value={formData.password_confirm}
-                onChangeText={text => handleInputChange('reason', text)}
+                placeholder="Enter cancellation reason"
+                value={cancellationReason}
+                onChangeText={setCancellationReason}
+                multiline
                 numberOfLines={3}
               />
             </View>
             <CustomButton
               onPress={() => {
                 // Add logic to confirm cancellation
+                cancelAppointment(selectedAppointment.id, cancellationReason);
                 setCancelModalVisible(!cancelModalVisible);
+                Alert.alert('Appointment cancelled successfully!')
               }}
               title="Yes, Cancel it"
               buttonStyle={{marginBottom: 20}}
@@ -268,7 +358,7 @@ const AppointmentManagementScreen = ({navigation}) => {
         </View>
       </Modal>
 
-      {/* Reschedule Appointment Modal */}
+      {/* Reschedule Appointment Modal*/}
       <Modal
         animationType="slide"
         transparent={true}
@@ -282,12 +372,14 @@ const AppointmentManagementScreen = ({navigation}) => {
               Please select a new date and time for the appointment.
             </Text>
             {/* Add date and time picker or other UI for rescheduling */}
-            <DatePicker isBackgroundBlue={true} />
-            <TimePicker isBackgroundBlue={true} />
+            <DatePicker isBackgroundBlue={true} date={newDate} onDateChange={setNewDate}/>
+            <TimePicker isBackgroundBlue={true} time={newTime} onTimeChange={setNewTime} />
             <CustomButton
               onPress={() => {
                 // Add logic to confirm rescheduling
+                rescheduleAppointment(selectedAppointment.id, newDate,newTime);
                 setRescheduleModalVisible(!rescheduleModalVisible);
+                Alert.alert('Apointment rescheduled successfully!')
               }}
               title="Reschedule"
               buttonStyle={{marginBottom: 20}}
@@ -344,6 +436,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
+  statusIndicator: {
+    fontSize: 16,
+    color: '#888',
+    textTransform:'uppercase'
+  },
   loadingIndicator: {
     flex: 1,
     justifyContent: 'center',
@@ -384,5 +481,17 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: 'white',
     fontSize: 16,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingIndicator: {
+    marginBottom: 20,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#888',
   },
 });

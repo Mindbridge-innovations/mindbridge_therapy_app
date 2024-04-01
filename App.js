@@ -71,7 +71,7 @@ const DashboardDrawer = () => {
         drawerActiveBackgroundColor: 'blue',
       }}>
       <Drawer.Screen
-        name="Appointments"
+        name="My appointments"
         component={AppointmentManagementScreen}
       />
       <Drawer.Screen name="My patients" component={PatientListScreen} />
@@ -109,11 +109,11 @@ const CustomDrawerContent = props => {
         style={{height: 150, resizeMode: 'cover', width: 250}}
       />
       
-      <Text style={{marginLeft:20, fontWeight:'400'}}>Logged in as {user.email}</Text>
+      <Text style={{marginLeft:20, fontWeight:'400'}}>Logged as {user.email}</Text>
 
       {/* Default drawer items */}
       <DrawerItem
-        label="Appointments"
+        label="My appointments"
         onPress={() => props.navigation.navigate('Appointments')}
         icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
       />
