@@ -39,11 +39,11 @@ function HomePage(props) {
         <Text
           style={{
             color: 'white',
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: 'bold',
             marginVertical: 5,
           }}>
-          No appointments required
+          Book appointments in no time.
         </Text>
         <Text
           style={{

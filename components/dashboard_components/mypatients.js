@@ -9,15 +9,24 @@ import {
   Alert,
   Button,
   Dimensions,
+  Modal
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
 import { rtdb } from '../../firebaseConfig';
 import { onValue,ref,query,orderByChild,equalTo } from 'firebase/database';
+import FeedbackForm from './feedback';
 
 const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [expandedPatientId, setExpandedPatientId] = useState(null);
+  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+
+
+
+
 
   // ... (API integration or data fetching logic here)
 
@@ -28,7 +37,12 @@ const PatientListScreen = ({navigation}) => {
 
     const unsubscribe = onValue(patientsQuery, (snapshot) => {
       const patientsData = snapshot.val();
-      const patientsList = patientsData ? Object.values(patientsData) : [];
+      const patientsList = patientsData
+    ? Object.keys(patientsData).map(key => ({
+        ...patientsData[key],
+        id: patientsData[key].id || key, // Use the key as a fallback `id`
+      }))
+    : [];
       setPatients(patientsList);
       setIsLoading(false);
     }, (errorObject) => {
@@ -43,23 +57,80 @@ const PatientListScreen = ({navigation}) => {
     };
   }, []);
 
+   const handleOpenFeedbackModal = (patientId) => {
+    setSelectedPatientId(patientId);
+    setIsFeedbackModalVisible(true);
+  };
+
+  const handleCloseFeedbackModal = () => {
+    setIsFeedbackModalVisible(false);
+  };
+
+
+  const handleToggleDropdown = (patientId) => {
+    //Toggle the dropdown only for the clicked patient
+    setExpandedPatientId(expandedPatientId === patientId ? null : patientId);
+   };
+
   const handleDetailPress = patient => {
     // Handle interaction logic here:
     navigation.navigate('PatientDetailsScreen', {passedUser:patient}); // Example navigation
   };
 
-  const renderPatient = ({item}) => (
-    
-    <TouchableOpacity
-      style={styles.patientsItem}
-      onPress={() => handleDetailPress(item)}>
-      <View style={styles.patientInfo}>
-        <Text style={styles.patientName}>{item.lastName}</Text>
-        <Text style={styles.patientName}>{item.email}</Text>
+  const renderPatient = ({ item }) => {
+    // Ensure you have a unique identifier for each patient, such as `item.id`
+    const isExpanded = expandedPatientId === item.id;
+    const dropdownIndicator = isExpanded ? '▲' : '▼';
+    // const itemBackgroundColor = isExpanded ? 'lightgray' : 'white'; // Change background color when expanded
 
+    
+
+    return (
+      <View>
+        <TouchableOpacity
+          style={styles.patientsItem}
+          onPress={() => handleToggleDropdown(item.id)}>
+          <View style={styles.patientInfo}>
+            <Text style={styles.patientName}>{item.lastName}</Text>
+            <Text style={styles.patientName}>{item.email}</Text>
+          </View>
+          <Text style={styles.dropdownIndicator}>{dropdownIndicator}</Text>
+
+        </TouchableOpacity>
+        {isExpanded && (
+          <View style={styles.dropdownContainer}>
+            {/* Action buttons for the patient */}
+            <CustomButton
+              onPress={() => navigation.navigate('Chat', { passedUser: item })}
+              title="Message chat"
+              textStyle={styles.buttonText}
+            />
+            <CustomButton
+              onPress={() => navigation.navigate('VideoCallPage', { passedUser: item })}
+              title="Video call"
+              buttonStyle={styles.custombutton}
+              textStyle={styles.buttonText}
+            />
+            <CustomButton
+              onPress={() => navigation.navigate('VoiceCall', { passedUser: item })}
+              title="Voice call"
+              buttonStyle={styles.custombutton}
+              textStyle={styles.buttonText}
+            />
+            <CustomButton
+              onPress={()=>handleOpenFeedbackModal(item.id)}
+              title="Send Feedback"
+              buttonStyle={styles.custombutton}
+              textStyle={styles.buttonText}
+            />
+            {/* Add more buttons as needed */}
+          </View>
+        )}
       </View>
-    </TouchableOpacity>
-  );
+    );
+  };
+
+
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.loadingIndicator} />;
@@ -93,8 +164,32 @@ const PatientListScreen = ({navigation}) => {
       <FlatList
         data={patients}
         renderItem={renderPatient}
-        keyExtractor={item => item.id || item.someUniqueIdentifier}
+        keyExtractor={item => item.id.toString()}
       />
+       {/* Feedback Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isFeedbackModalVisible}
+        onRequestClose={handleCloseFeedbackModal}
+      >
+        <View style={styles.modalContainer}>
+          <FeedbackForm
+            patientId={selectedPatientId}
+            onFeedbackSubmit={(patientId, formData) => {
+              // Handle feedback submission
+              console.log('Feedback submitted', formData);
+              handleCloseFeedbackModal();
+            }}
+          />
+          <CustomButton
+            onPress={handleCloseFeedbackModal}
+            title="Close"
+            buttonStyle={styles.custombutton}
+            textStyle={styles.buttonText}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -141,6 +236,43 @@ const styles = StyleSheet.create({
   errorMessage: {
     fontSize: 18,
     color: 'red',
+  },
+  dropdownContainer: {
+    backgroundColor: '#f9f9f9', // Choose an appropriate background color
+    padding: 10,
+    // Add any additional styling for the dropdown container
+  },
+  custombutton: {
+    // Your button styles
+    marginVertical: -30, // Add vertical spacing between buttons
+    // Add any additional styling for the buttons
+  },
+  buttonText: {
+    // Your button text styles
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  dropdownIndicator: {
+    // Style for the dropdown indicator
+    fontSize: 18,
+    color: '#31363F',
+    marginRight: 10, // Add some margin to the right of the indicator
+  },
+  modalContainer: {
+    margin: 20,
+    backgroundColor: '#257DE9',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    paddingHorizontal:20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
 

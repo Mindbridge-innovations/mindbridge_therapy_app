@@ -271,7 +271,7 @@ const OnBoardQtnsScreen = ({route}) => {
       case 1:
         return (
           <View style={{alignItems: 'center'}}>
-            <View style={styles.inputcontainer}>
+            <View style={mystyles.inputcontainer}>
               <Text
                 style={{
                   marginVertical: 20,
@@ -295,7 +295,7 @@ const OnBoardQtnsScreen = ({route}) => {
             </View>
 
             
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
               <Text
                 style={{
                   marginVertical: 20,
@@ -309,7 +309,7 @@ const OnBoardQtnsScreen = ({route}) => {
               </View>
 
             {userData.role === 'client' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <Text
                   style={{
                     marginVertical: 20,
@@ -350,7 +350,7 @@ const OnBoardQtnsScreen = ({route}) => {
         return (
           <View style={{alignItems: 'center'}}>
             {userData.role === 'client' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <Text
                   style={{
                     marginVertical: 20,
@@ -370,7 +370,7 @@ const OnBoardQtnsScreen = ({route}) => {
             )}
 
           {userData.role === 'client' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <Text
                   style={{
                     marginVertical: 20,
@@ -393,7 +393,7 @@ const OnBoardQtnsScreen = ({route}) => {
            
 
             {userData.role === 'client' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <View style={{alignItems: 'center'}}>
                   <Text
                     style={{
@@ -420,7 +420,7 @@ const OnBoardQtnsScreen = ({route}) => {
             )}
 
             {userData.role === 'therapist' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <Text style={mystyles.label}>
                   Enter full name
                 </Text>
@@ -435,7 +435,7 @@ const OnBoardQtnsScreen = ({route}) => {
             )}
 
             {userData.role === 'therapist' && (
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                 <Text style={mystyles.label}>
                   Enter number of years of experience
                 </Text>
@@ -450,7 +450,7 @@ const OnBoardQtnsScreen = ({route}) => {
             )}
 
             {/* choosing communication type */}
-              <View style={styles.inputcontainer}>
+              <View style={mystyles.inputcontainer}>
                
                   <Text
                     style={{
@@ -492,7 +492,7 @@ const OnBoardQtnsScreen = ({route}) => {
       case 3:
         return (
           <View style={{alignItems: 'center'}}>
-            <View style={styles.inputcontainer}>
+            <View style={mystyles.inputcontainer}>
               <Text
                 style={{
                   marginVertical: 20,
@@ -514,7 +514,7 @@ const OnBoardQtnsScreen = ({route}) => {
               
             </View>
 
-            <View style={styles.inputcontainer}>
+            <View style={mystyles.inputcontainer}>
               <Text
                 style={{
                   marginVertical: 20,
@@ -535,7 +535,7 @@ const OnBoardQtnsScreen = ({route}) => {
                 ))}
 
               {userData.role === 'therapist' && (
-                <View style={styles.inputcontainer}>
+                <View style={mystyles.inputcontainer}>
                   <Text style={mystyles.label}>
                     Briefly describe your professional life.
                   </Text>

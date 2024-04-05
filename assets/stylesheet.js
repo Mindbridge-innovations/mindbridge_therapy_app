@@ -53,6 +53,16 @@ const mystyles = StyleSheet.create({
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
   },
+  inputcontainer: {
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  custombutton: {
+    backgroundColor: 'black',
+    width: '50%',
+    alignItems: 'center',
+    marginHorizontal: 1,
+  },
 
   logoimage: {
     width: 100,

@@ -60,12 +60,7 @@ const PatientDetailsScreen = ({route}) => {
 
         <View>
           <View style={{flexDirection: 'row', marginTop: 40}}>
-            {/* <CustomButton
-              onPress={() => navigation.navigate('AppointmentBookingScreen')}
-              title="Book appointment"
-              buttonStyle={styles.custombutton}
-              textStyle={{color: 'white', fontWeight: 'bold'}}
-            /> */}
+           
 
             <CustomButton
               onPress={() => navigation.navigate('Chat', {passedUser})}
@@ -73,19 +68,26 @@ const PatientDetailsScreen = ({route}) => {
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}
             />
-          </View>
-
-          <View style={{flexDirection: 'row'}}>
             <CustomButton
               onPress={() => navigation.navigate('VideoCallPage',{passedUser})}
               title="Video call"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}
             />
+          </View>
+
+          <View style={{flexDirection: 'row'}}>
+            
 
             <CustomButton
               onPress={()=>navigation.navigate('VoiceCall',{passedUser})}
               title="Voice call"
+              buttonStyle={styles.custombutton}
+              textStyle={{color: 'white', fontWeight: 'bold'}}
+            />
+             <CustomButton
+              onPress={() => navigation.navigate('Feedback',{passedUser})}
+              title="Feedback"
               buttonStyle={styles.custombutton}
               textStyle={{color: 'white', fontWeight: 'bold'}}
             />
