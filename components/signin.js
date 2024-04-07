@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
+  ActivityIndicator
 } from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../assets/widgets/custom_button';
@@ -19,6 +20,8 @@ import messaging from '@react-native-firebase/messaging';
 
 const SignInScreen = () => {
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false); // State to track loading status
+
 
   const [formData, setFormData] = useState({
     email: '',
@@ -33,6 +36,9 @@ const SignInScreen = () => {
   };
 
   const handleSubmit = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+
+    setIsLoading(true)
     try {
       const response = await fetch(`${Config.BACKEND_API_URL}/login`, {
         method: 'POST',
@@ -57,29 +63,26 @@ const SignInScreen = () => {
           'tokenExpiration',
           expirationTime.toString(),
         );
-
-        // async function requestUserPermission() {
-        //   const authStatus = await messaging().requestPermission();
-        //   const enabled =
-        //     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        //     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-        
-        //   if (enabled) {
-        //     console.log('Authorization status:', authStatus);
-        //     getFcmToken();
-        //   }
-        // }
-        
-        // async function getFcmToken() {
-        //   const fcmToken = await messaging().getToken();
-        //   if (fcmToken) {
-        //     console.log('Your Firebase Token is:', fcmToken);
-        //     // Send the token to your server to store it
-        //   } else {
-        //     console.log('Failed to get the token');
-        //   }
-        // }
-        
+        const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        const matchingResult = await matchingResponse.json();
+  
+        if (matchingResponse.ok) {
+          console.log('MATCHING DATA:======',matchingResponse.matches)
+          // Handle successful matching
+          alert('U HAVE BEEN MATCHED');
+          // You can navigate to a screen that shows the matched therapists or handle it as needed
+          // navigation.navigate('MatchedTherapistsScreen', { matches: matchingResult });
+        } else {
+          // Handle matching errors
+          alert(matchingResult.message);
+        }
         navigation.navigate('DashboardDrawer');
       } else {
         // Handle errors
@@ -88,6 +91,7 @@ const SignInScreen = () => {
     } catch (error) {
       alert('An error occurred: ' + error.message);
     }
+    setIsLoading(false)
 
 
 
@@ -152,7 +156,12 @@ const SignInScreen = () => {
               secureTextEntry
             />
           </View>
-
+          {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text style={styles.loadingText}>Logging in, please wait...</Text>
+          </View>
+        ) : (
           <CustomButton
             onPress={handleSubmit}
             title="Sign In"
@@ -164,6 +173,9 @@ const SignInScreen = () => {
             }}
             textStyle={{color: 'white'}}
           />
+        )}
+
+          
         </View>
 
         <View style={{flexDirection: 'row', marginTop: -40}}>
@@ -209,5 +221,16 @@ const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
     alignItems: 'center',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  loadingText: {
+    color: 'white',
+    fontSize: 16,
+    marginTop: 10,
+    marginBottom:20,
   },
 });

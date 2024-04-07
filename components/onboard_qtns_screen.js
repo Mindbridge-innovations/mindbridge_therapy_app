@@ -23,7 +23,7 @@ const OnBoardQtnsScreen = ({route}) => {
 
   // defining the route parameter
   const {params} = route;
-  const userData = params ? params.userData : null;
+  const userData = params ? params?.userData : null;
 
   
 
@@ -218,6 +218,7 @@ const OnBoardQtnsScreen = ({route}) => {
   };
   
   const handleSubmit = async () => {
+
     const payload={
       username:userData.username,
       email:userData.email,

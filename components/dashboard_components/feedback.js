@@ -3,6 +3,8 @@ import { View, Text, TextInput, Button, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import mystyles from '../../assets/stylesheet';
 import CustomButton from '../../assets/widgets/custom_button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Config from '../../config';
 
 const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
   const [feedback, setFeedback] = useState('');
@@ -31,8 +33,9 @@ const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
   const handleSubmitFeedback = async () => {
     const feedbackData={
         feedback:feedback,
-        clientId:therapistId,
+        clientId:patientId,
       }
+      console.log(feedbackData)
       const token = await AsyncStorage.getItem('userToken');
   
      console.log(feedbackData)
@@ -42,7 +45,7 @@ const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
         const response = await fetch(`${Config.BACKEND_API_URL}/feedbacks`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
   
           },

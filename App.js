@@ -65,7 +65,10 @@ const linking = {
 };
 
 
+
 const DashboardDrawer = () => {
+  const {user}=useContext(UserContext);
+let userData;
   return (
     // main drawer navigator
     <Drawer.Navigator
@@ -82,6 +85,7 @@ const DashboardDrawer = () => {
       <Drawer.Screen name="My patients" component={PatientListScreen} />
       <Drawer.Screen name="Feedback/review" component={DashboardScreen} />
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
+      <Drawer.Screen name="Find a therapist" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={DashboardScreen} />
       
@@ -143,6 +147,14 @@ const CustomDrawerContent = props => {
         icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
       />
       )}
+
+    { user.role==='client' && (
+          <DrawerItem
+            label="Find a therapist"
+            onPress={() => props.navigation.navigate('OnBoardQtnsScreen',{userData:user})}
+            icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
+          />
+          )}
       <DrawerItem
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}
