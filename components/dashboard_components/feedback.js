@@ -6,7 +6,9 @@ import CustomButton from '../../assets/widgets/custom_button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';
 
-const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
+
+//this form will only appear as a modal when requested
+const FeedbackForm = ({patientId}) => {
   const [feedback, setFeedback] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -31,46 +33,50 @@ const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
 
 
   const handleSubmitFeedback = async () => {
-    const feedbackData={
-        feedback:feedback,
-        clientId:patientId,
+    
+    // Prepare data to be sent including file if selected
+    const formData = new FormData();
+    formData.append('feedback',feedback);
+    formData.append('clientId',patientId);
+    if (selectedFile) {
+      formData.append('file', {
+        uri: selectedFile.uri,
+        name: selectedFile.name,
+        type: selectedFile.type,
+      });
+    }
+  
+    const token = await AsyncStorage.getItem('userToken');
+  
+    try {
+      const response = await fetch(`${Config.BACKEND_API_URL}/feedbacks`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data', // Ensure correct content type for FormData
+        },
+        body: formData,
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        // Handle successful feedback submission
+        alert('Feedback submitted successfully!');
+        // Navigate to the appropriate screen
+      } else {
+        // Handle errors
+        alert(result.message);
       }
-      console.log(feedbackData)
-      const token = await AsyncStorage.getItem('userToken');
-  
-     console.log(feedbackData)
-     
-      try {
-        // Replace 'http://your-backend-url.com' with your actual backend URL
-        const response = await fetch(`${Config.BACKEND_API_URL}/feedbacks`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-  
-          },
-          body: JSON.stringify(feedbackData),
-        });
-  
-        const result = await response.json();
-  
-        if (response.ok) {
-          // Handle successful registration
-          alert(
-            'Doctor/therapist rating completed succssfully!',
-          );
-          navigation.navigate('TherapistDetailsScreen',{passedUser});
-        } else {
-          // Handle errors
-          alert(result.message);
-        }
-      } catch (error) {
-        // Handle network errors
-        alert('An error occurred: ' + error.message);
-      }
+    } catch (error) {
+      // Handle network errors
+      alert('An error occurred: ' + error.message);
+    }
   };
+  
 
   return (
+    
     <View style={{paddingHorizontal:20}}>
       <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Provide feedback for your patient:</Text>
       <View style={mystyles.inputcontainer}>
@@ -82,11 +88,14 @@ const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
         numberOfLines={7}
       />
       </View>
+
+      <Text style={{color:'white', fontSize:16, paddingVertical:10}}>If you would like to send a document instead, please attach a pdf or word file</Text>
       
       <CustomButton
             onPress={handleSelectFile}
             title="Select a file"
-            textStyle={{color: 'white', fontWeight: 'bold'}}
+            buttonStyle={{backgroundColor:'white'}}
+            textStyle={{color: 'blue', fontWeight: 'bold'}}
         />
 
         <CustomButton
@@ -94,10 +103,14 @@ const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
             title="Submit feedback"
             textStyle={{color: 'white', fontWeight: 'bold'}}
         />
-      {selectedFile && <Text style={{color:"blue",backgroundColor:'white'}}>{selectedFile.name}</Text>}
+      {/* {selectedFile && <Text style={{color:"blue",backgroundColor:'white'}}>{selectedFile.name}</Text>} */}
       
     </View>
   );
 };
 
 export default FeedbackForm;
+
+const MyFeedbacks=()=>{
+
+}

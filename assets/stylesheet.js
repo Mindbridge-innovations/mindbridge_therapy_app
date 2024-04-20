@@ -125,6 +125,25 @@ const mystyles = StyleSheet.create({
     fontSize: 16,
     color:'white'
   },
+  //style for the loading indicator
+  
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingIndicator: {
+    marginBottom: 20,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: '#888',
+  },
 });
 
 export default mystyles;

@@ -10,6 +10,7 @@ import {
   Modal,
   Button,
   Alert,
+  Dimensions,
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
 import mystyles from '../../assets/stylesheet';
@@ -18,6 +19,7 @@ import { rtdb } from '../../firebaseConfig';
 import { onValue,ref,query,orderByChild,get,update ,equalTo} from 'firebase/database';
 import { where } from 'firebase/firestore';
 import UserContext from '../../utils/contexts/userContext';
+import {Picker} from '@react-native-picker/picker';
 
 const AppointmentManagementScreen = ({navigation}) => {
   const [appointments, setAppointments] = useState([]);
@@ -31,6 +33,8 @@ const AppointmentManagementScreen = ({navigation}) => {
   const [cancellationReason, setCancellationReason] = useState('');
   const  [newDate, setNewDate]=useState(new Date())
   const  [newTime, setNewTime]=useState(new Date())
+  const [filter, setFilter] = useState('all'); // State to hold the current filter value
+
 
 
   const formatDate = date => {
@@ -75,7 +79,14 @@ const AppointmentManagementScreen = ({navigation}) => {
       };
     }));
 
-    setAppointments(appointmentsWithUserDetails);
+    const filteredAppointments = appointmentsWithUserDetails.filter((appointment) => {
+      if (filter === 'all') {
+        return true; // Show all appointments
+      }
+      return appointment.status === filter; // Show appointments that match the filter
+    });
+
+    setAppointments(filteredAppointments);
     setIsLoading(false);
   }, (errorObject) => {
     setError(errorObject.message);
@@ -87,7 +98,7 @@ const AppointmentManagementScreen = ({navigation}) => {
       unsubscribe();
     }
   };
-  }, []);
+  }, [filter]);
 
   //show modal when an appointment is selected
   const handleInteractPress = appointment => {
@@ -186,7 +197,9 @@ const AppointmentManagementScreen = ({navigation}) => {
         <Text style={styles.appointmentSpecialty} numberOfLines={1}
         ellipsizeMode="tail">{item.description}</Text>
         <View style={styles.appointmentInfo}>
+          {user.role==="therapist" && (
           <Text style={styles.appointmentSpecialty}>Booked by: {item.user.username}</Text>
+          )}
           <Text style={styles.statusIndicator}>Status: {item.status}</Text>
         </View>
       </View>
@@ -195,9 +208,9 @@ const AppointmentManagementScreen = ({navigation}) => {
 
   if (isLoading) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" style={styles.loadingIndicator} />
-        <Text style={styles.loadingText}>Loading appointments, please wait...</Text>
+      <View style={mystyles.loadingContainer}>
+        <ActivityIndicator size="large" style={mystyles.loadingIndicator} />
+        <Text style={mystyles.loadingText}>Loading appointments, please wait...</Text>
       </View>
     );  }
 
@@ -217,11 +230,40 @@ const AppointmentManagementScreen = ({navigation}) => {
 
   return (
     
-    <View style={styles.container}>
+    
+    <View style={{flex:1}}>
+
+      {/* setting a filter system for appointments */}
+      <View style={{flexDirection: 'row', alignItems: 'center',paddingHorizontal:5}}>
+        <Text style={{backgroundColor: 'black', color: 'white', padding: 15}}>Show by filter</Text>
+        <View style={{flex: 1, borderWidth: 1, borderColor: '#ddd'}}>
+          <Picker
+            selectedValue={filter}
+            onValueChange={(itemValue, itemIndex) => setFilter(itemValue)}
+            style={{height: 20, width: '100%'}}>
+            <Picker.Item label="All" value="all" />
+            <Picker.Item label="Pending" value="pending" />
+            <Picker.Item label="Rescheduled" value="rescheduled" />
+            <Picker.Item label="Accepted" value="accepted" />
+            <Picker.Item label="Cancelled" value="cancelled" />
+            <Picker.Item label="Done" value="done" />
+          </Picker>
+        </View>
+      </View>
+      
+      <View style={styles.container}>
       <FlatList
         data={appointments}
         renderItem={renderAppointment}
         keyExtractor={item => item.id.toString()}
+        ListEmptyComponent={() => (
+          // Render this component when the list is empty
+          <View style={styles.noAppointmentsView}>
+            <Text style={styles.noAppointmentsText}>
+              No appointments found for the selected filter.
+            </Text>
+          </View>
+        )}
       />
 
       {/* Appointment Details Modal to view an appointment in the list in details after press on it */}
@@ -263,7 +305,7 @@ const AppointmentManagementScreen = ({navigation}) => {
                 </Text>
                 ]
                 )}
-                {user.role==="therapist" && (
+                {(user.role === "therapist" && selectedAppointment.status!=="done") && (selectedAppointment.status==="rescheduled"|| selectedAppointment.status === "pending")  && (
                    <CustomButton
                    onPress={() => {
                      // Add logic to accept the appointment
@@ -277,7 +319,7 @@ const AppointmentManagementScreen = ({navigation}) => {
 
                 )}
                
-               {selectedAppointment.status==="accepted" || selectedAppointment.status==='rescheduled' &&(
+               {(selectedAppointment.status !== "cancelled" && selectedAppointment.status !== "done") &&(
                 <CustomButton
                 onPress={() => {
                   setCancelModalVisible(true);
@@ -290,6 +332,7 @@ const AppointmentManagementScreen = ({navigation}) => {
 
                )}
                 
+                {(selectedAppointment.status !== "done" && selectedAppointment.status !== "cancelled") && (
                 <CustomButton
                   onPress={() => {
                     setRescheduleModalVisible(true);
@@ -299,6 +342,8 @@ const AppointmentManagementScreen = ({navigation}) => {
                   buttonStyle={{marginBottom: 20}}
                   textStyle={{color: 'white', fontWeight: 'bold'}}
                 />
+                )}
+
                 <CustomButton
                   onPress={() => setModalVisible(!modalVisible)}
                   title="Close"
@@ -394,6 +439,7 @@ const AppointmentManagementScreen = ({navigation}) => {
           </View>
         </View>
       </Modal>
+      </View>
     </View>
   );
 };
@@ -402,9 +448,7 @@ export default AppointmentManagementScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 30,
   },
   appointmentItem: {
     flexDirection: 'row',
@@ -441,11 +485,7 @@ const styles = StyleSheet.create({
     color: '#888',
     textTransform:'uppercase'
   },
-  loadingIndicator: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+  
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -482,16 +522,26 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  filterContainer: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    backgroundColor:'lightgray',
+    paddingTop:-30,
+    paddingLeft:-20
+  },
+  pickerStyle: {
+    height: 50,
+  },
+  
+  noAppointmentsView: {
+    marginTop: 20,
     alignItems: 'center',
+    paddingVertical:'50%'
   },
-  loadingIndicator: {
-    marginBottom: 20,
-  },
-  loadingText: {
+  noAppointmentsText: {
     fontSize: 16,
     color: '#888',
   },
+  
 });

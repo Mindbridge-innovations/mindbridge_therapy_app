@@ -40,9 +40,6 @@ import PatientDetailsScreen from './components/dashboard_components/patient_deta
 import { Text } from 'react-native-elements';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import messaging from '@react-native-firebase/messaging';
-import { app,firebaseConfig } from './firebaseConfig';
-import { firebase } from '@react-native-firebase/app';
 import { LogLevel, OneSignal } from 'react-native-onesignal';
 import Config from './config';
 import RateTherapistScreen from './components/dashboard_components/rating';
@@ -123,9 +120,11 @@ const CustomDrawerContent = props => {
       {/* Default drawer items */}
       <DrawerItem
         label="My appointments"
-        onPress={() => props.navigation.navigate('Appointments')}
+        onPress={() => props.navigation.navigate('My appointments')}
         icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
       />
+
+{/* display the below drawer item only if user is a therapist */}
       {user.role==="therapist" && (<DrawerItem
         label="My patients"
         onPress={() => props.navigation.navigate('My patients')}
@@ -134,12 +133,26 @@ const CustomDrawerContent = props => {
         )} // Replace with your desired icon
       />
       )}
+
+{/* display the below drawer item only if user is a client */}
+      { user.role==="client" && (
       <DrawerItem
         label="Feedback/review"
         onPress={() => props.navigation.navigate('Feedback/review')}
         icon={() => <MaterialIcons name="reviews" size={20} color="#000" />} // Replace with your desired icon
       />
+      )}
 
+{/* display the below drawer item only if user is a patient*/}
+      { user.role==="therapist" && (
+            <DrawerItem
+              label="My ratings/review"
+              onPress={() => props.navigation.navigate('Feedback/review')}
+              icon={() => <MaterialIcons name="star-rate" size={20} color="#000" />} // Replace with your desired icon
+            />
+            )}
+
+{/* display the below drawer item only if user is a client */}
       { user.role==='client' && (
       <DrawerItem
         label="My therapists"
@@ -148,11 +161,12 @@ const CustomDrawerContent = props => {
       />
       )}
 
+{/* display the below drawer item only if user is a client */}
     { user.role==='client' && (
           <DrawerItem
             label="Find a therapist"
             onPress={() => props.navigation.navigate('OnBoardQtnsScreen',{userData:user})}
-            icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
+            icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
           />
           )}
       <DrawerItem
@@ -290,6 +304,7 @@ export default function App() {
               name="AppointmentBookingScreen"
               component={AppointmentBookingScreen}
             />
+            
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
             <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen

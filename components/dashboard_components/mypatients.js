@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,15 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert,
-  Button,
   Dimensions,
   Modal
 } from 'react-native';
 import CustomButton from '../../assets/widgets/custom_button';
 import { rtdb } from '../../firebaseConfig';
-import { onValue,ref,query,orderByChild,equalTo } from 'firebase/database';
+import { onValue,ref,get} from 'firebase/database';
 import FeedbackForm from './feedback';
+import UserContext from '../../utils/contexts/userContext';
+import mystyles from '../../assets/stylesheet';
 
 const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
@@ -23,42 +23,57 @@ const PatientListScreen = ({navigation}) => {
   const [expandedPatientId, setExpandedPatientId] = useState(null);
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
   const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const {user}=useContext(UserContext);
+  const [matchedPatients, setMatchedPatients] = useState([]);
 
 
 
 
-
-  // ... (API integration or data fetching logic here)
-
-  // Example API call using `fetch`:
+//useeffect to fetch the patients with which a therapist is matched
   useEffect(() => {
-    // Create a query to get users where role is 'therapist'
-    const patientsQuery = query(ref(rtdb, 'users'), orderByChild('role'), equalTo('client'));
+    const fetchMatchedPatientsForTherapist = async () => {
+      setIsLoading(true);
+      setError(null);
 
-    const unsubscribe = onValue(patientsQuery, (snapshot) => {
-      const patientsData = snapshot.val();
-      const patientsList = patientsData
-    ? Object.keys(patientsData).map(key => ({
-        ...patientsData[key],
-        id: patientsData[key].id || key, // Use the key as a fallback `id`
-      }))
-    : [];
-      setPatients(patientsList);
-      setIsLoading(false);
-    }, (errorObject) => {
-      setError(errorObject.message);
-      setIsLoading(false);
-    });
+      const matchesRef = ref(rtdb, `matches/${user.userId}`); // Path to the therapist's matches
+      onValue(matchesRef, async (snapshot) => {
+        if (snapshot.exists()) {
+          const patientIds = snapshot.val(); // This should be an array of patient IDs
+          const patientDetails = [];
 
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
+          for (const patientId of patientIds) {
+            const patientRef = ref(rtdb, `users/${patientId}`);
+            const patientSnapshot = await get(patientRef);
+            if (patientSnapshot.exists()) {
+              patientDetails.push({
+                patientId,
+                ...patientSnapshot.val(),
+              });
+            }
+          }
+
+          setMatchedPatients(patientDetails);
+        } else {
+          setError('No matches found');
+        }
+        setIsLoading(false);
+      }, (errorObject) => {
+        setError('The read failed: ' + errorObject.code);
+        setIsLoading(false);
+      });
     };
-  }, []);
 
-   const handleOpenFeedbackModal = (patientId) => {
-    setSelectedPatientId(patientId);
+    if (user && user.userId) {
+      fetchMatchedPatientsForTherapist();
+    } else {
+      setIsLoading(false);
+      setError('User context is not set');
+    }
+  }, [user]);
+
+
+   const handleOpenFeedbackModal = (patient) => {
+    setSelectedPatientId(patient.userId);
     setIsFeedbackModalVisible(true);
   };
 
@@ -82,8 +97,6 @@ const PatientListScreen = ({navigation}) => {
     const isExpanded = expandedPatientId === item.id;
     const dropdownIndicator = isExpanded ? '▲' : '▼';
     // const itemBackgroundColor = isExpanded ? 'lightgray' : 'white'; // Change background color when expanded
-
-    
 
     return (
       <View>
@@ -118,12 +131,11 @@ const PatientListScreen = ({navigation}) => {
               textStyle={styles.buttonText}
             />
             <CustomButton
-              onPress={()=>handleOpenFeedbackModal(item.id)}
+              onPress={()=>handleOpenFeedbackModal(item)}
               title="Send Feedback"
               buttonStyle={styles.custombutton}
               textStyle={styles.buttonText}
             />
-            {/* Add more buttons as needed */}
           </View>
         )}
       </View>
@@ -133,15 +145,20 @@ const PatientListScreen = ({navigation}) => {
 
 
   if (isLoading) {
-    return <ActivityIndicator size="large" style={styles.loadingIndicator} />;
+    return(
+      <View style={mystyles.loadingContainer}>
+        <ActivityIndicator size="large" style={mystyles.loadingIndicator} />
+        <Text style={mystyles.loadingText}>Loading clients list, please wait...</Text>
+      </View>
+    );  
   }
-
+//action of retrying if initial request failed
   if (error) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorMessage}>Error: {error}</Text>
         <CustomButton
-          onPress={null}
+          onPress={fetchMatchedPatientsForTherapist}
           title="Retry"
           buttonStyle={{
             backgroundColor: 'black',
@@ -162,9 +179,9 @@ const PatientListScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={patients}
+        data={matchedPatients}
         renderItem={renderPatient}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.patientId}
       />
        {/* Feedback Modal */}
       <Modal
@@ -174,13 +191,9 @@ const PatientListScreen = ({navigation}) => {
         onRequestClose={handleCloseFeedbackModal}
       >
         <View style={styles.modalContainer}>
+          {/* the feedback form is shown here */}
           <FeedbackForm
             patientId={selectedPatientId}
-            onFeedbackSubmit={(patientId, formData) => {
-              // Handle feedback submission
-              console.log('Feedback submitted', formData);
-              handleCloseFeedbackModal();
-            }}
           />
           <CustomButton
             onPress={handleCloseFeedbackModal}

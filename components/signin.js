@@ -8,19 +8,20 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import CustomButton from '../assets/widgets/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
 import Config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import messaging from '@react-native-firebase/messaging';
+import UserContext from '../utils/contexts/userContext';
 
 
 const SignInScreen = () => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false); // State to track loading status
+  const {user}=useContext(UserContext)
 
 
   const [formData, setFormData] = useState({
@@ -54,15 +55,14 @@ const SignInScreen = () => {
 
       if (response.ok) {
         // Handle successful login
-        alert('You have been logged in successfully!');
         // Save the token, navigate to the dashboard, etc.
-        // For example, if using AsyncStorage to store the token:
         const expirationTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000; // 7 days from now
         await AsyncStorage.setItem('userToken', result.token);
         await AsyncStorage.setItem(
           'tokenExpiration',
           expirationTime.toString(),
         );
+        if(user.isMatched==="false"){
         const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
           method: 'POST',
           headers: {
@@ -74,15 +74,13 @@ const SignInScreen = () => {
         const matchingResult = await matchingResponse.json();
   
         if (matchingResponse.ok) {
-          console.log('MATCHING DATA:======',matchingResponse.matches)
           // Handle successful matching
-          alert('U HAVE BEEN MATCHED');
-          // You can navigate to a screen that shows the matched therapists or handle it as needed
-          // navigation.navigate('MatchedTherapistsScreen', { matches: matchingResult });
+          alert('You have been matched successfully with a therapist!');
         } else {
           // Handle matching errors
           alert(matchingResult.message);
         }
+      }
         navigation.navigate('DashboardDrawer');
       } else {
         // Handle errors
