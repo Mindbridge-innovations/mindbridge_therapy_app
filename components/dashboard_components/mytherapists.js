@@ -83,7 +83,7 @@ const TherapistListScreen = ({navigation}) => {
       style={styles.therapistItem}
       onPress={() => handleDetailPress(item)}>
       <View style={styles.therapistInfo}>
-        <Text style={styles.therapistName}>{item.lastName}</Text>
+        <Text style={styles.therapistName}> Dr. {item.lastName} {item.firstName}</Text>
         <Text style={styles.therapistSpecialty}>{item.email}</Text>
       </View>
     </TouchableOpacity>

@@ -42,8 +42,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LogLevel, OneSignal } from 'react-native-onesignal';
 import Config from './config';
-import RateTherapistScreen from './components/dashboard_components/rating';
-import FeedbackForm from './components/dashboard_components/feedback';
+import RateTherapistScreen from './components/dashboard_components/ratingForm';
+import FeedbackForm from './components/dashboard_components/feedbackForm';
+import MyFeedbacks from './components/dashboard_components/queryFeedbacks';
+import MyRatings from './components/dashboard_components/queryRatings';
 
 
 
@@ -80,7 +82,8 @@ let userData;
         component={AppointmentManagementScreen}
       />
       <Drawer.Screen name="My patients" component={PatientListScreen} />
-      <Drawer.Screen name="Feedback/review" component={DashboardScreen} />
+      <Drawer.Screen name="Feedback/review" component={MyFeedbacks} />
+      <Drawer.Screen name="Ratings/review" component={MyRatings} />
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
       <Drawer.Screen name="Find a therapist" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
@@ -147,7 +150,7 @@ const CustomDrawerContent = props => {
       { user.role==="therapist" && (
             <DrawerItem
               label="My ratings/review"
-              onPress={() => props.navigation.navigate('Feedback/review')}
+              onPress={() => props.navigation.navigate('Ratings/review')}
               icon={() => <MaterialIcons name="star-rate" size={20} color="#000" />} // Replace with your desired icon
             />
             )}

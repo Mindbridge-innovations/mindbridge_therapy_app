@@ -4,7 +4,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../../assets/stylesheet';
 import CustomButton from '../../assets/widgets/custom_button';
 import {useNavigation} from '@react-navigation/native';
-import RateTherapistScreen from './rating';
+import RateTherapistScreen from './ratingForm';
 import ChatBotButton from '../../assets/widgets/chatbotButton';
 
 const TherapistDetailsScreen = ({route}) => {

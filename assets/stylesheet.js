@@ -11,6 +11,11 @@ const mystyles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#255ECC',
   },
+  scrollViewContainer: {
+    flex: 1, // Center the content horizontally
+    marginHorizontal:10,
+
+  },
   //style for input labels
 
   label: {

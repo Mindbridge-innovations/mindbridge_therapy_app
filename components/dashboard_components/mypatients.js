@@ -12,9 +12,10 @@ import {
 import CustomButton from '../../assets/widgets/custom_button';
 import { rtdb } from '../../firebaseConfig';
 import { onValue,ref,get} from 'firebase/database';
-import FeedbackForm from './feedback';
+import FeedbackForm from './feedbackForm';
 import UserContext from '../../utils/contexts/userContext';
 import mystyles from '../../assets/stylesheet';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
@@ -190,6 +191,8 @@ const PatientListScreen = ({navigation}) => {
         visible={isFeedbackModalVisible}
         onRequestClose={handleCloseFeedbackModal}
       >
+        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+
         <View style={styles.modalContainer}>
           {/* the feedback form is shown here */}
           <FeedbackForm
@@ -202,6 +205,8 @@ const PatientListScreen = ({navigation}) => {
             textStyle={styles.buttonText}
           />
         </View>
+        </ScrollView>
+
       </Modal>
     </View>
   );
@@ -258,6 +263,7 @@ const styles = StyleSheet.create({
   custombutton: {
     // Your button styles
     marginVertical: -30, // Add vertical spacing between buttons
+  
     // Add any additional styling for the buttons
   },
   buttonText: {
@@ -277,7 +283,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 35,
     alignItems: 'center',
-    paddingHorizontal:20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -287,6 +292,11 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  scrollViewContainer: {
+    alignItems: 'center', // Center the content horizontally
+    marginHorizontal:20,
+
+  }
 });
 
 export default PatientListScreen;

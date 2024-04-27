@@ -212,7 +212,8 @@ const AppointmentManagementScreen = ({navigation}) => {
         <ActivityIndicator size="large" style={mystyles.loadingIndicator} />
         <Text style={mystyles.loadingText}>Loading appointments, please wait...</Text>
       </View>
-    );  }
+    );  
+  }
 
   if (error) {
     return (
