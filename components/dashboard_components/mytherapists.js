@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,85 +6,62 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
-  Alert,
-  Button,
   Dimensions,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../assets/widgets/custom_button';
-import { rtdb } from '../../firebaseConfig';
-import { onValue,ref,get,query,orderByChild,equalTo } from 'firebase/database';
 import UserContext from '../../utils/contexts/userContext';
+import Config from '../../config'; // Ensure this is correctly set up to point to your config file
 
-const TherapistListScreen = ({navigation}) => {
+const TherapistListScreen = ({ navigation }) => {
   const [therapists, setTherapists] = useState([]);
-  const [responses, setResponses] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const {user}=useContext(UserContext);
-  const [matchedTherapists, setMatchedTherapists] = useState([]);
-
-
-  // ... (API integration or data fetching logic here)
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
-    const fetchMatchedTherapistsForUser = async () => {
-      setIsLoading(true);
-      setError(null);
-  
-      const matchesRef = ref(rtdb, 'matches');
-      onValue(matchesRef, async (snapshot) => {
-        if (snapshot.exists()) {
-          const matchesData = snapshot.val();
-          const therapistDetails = [];
-  
-          for (const therapistId of Object.keys(matchesData)) {
-            const patients = matchesData[therapistId];
-            if (patients.includes(user.userId)) {
-              // Fetch therapist details for each matched therapist ID
-              const therapistRef = ref(rtdb, `users/${therapistId}`);
-              const therapistSnapshot = await get(therapistRef);
-              if (therapistSnapshot.exists()) {
-                therapistDetails.push({
-                  therapistId,
-                  ...therapistSnapshot.val(),
-                });
-              }
-            }
-          }
-  
-          setMatchedTherapists(therapistDetails);
-        } else {
-          setError('No matches found');
-        }
-        setIsLoading(false);
-      }, (errorObject) => {
-        setError('The read failed: ' + errorObject.code);
-        setIsLoading(false);
+    fetchMatchedTherapists();
+  }, []); // Depend on user.token specifically if it's stable
+
+  const fetchMatchedTherapists = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+
+    
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`${Config.BACKEND_API_URL}/matched-therapists`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
       });
-    };
-  
-    if (user && user.userId) {
-      fetchMatchedTherapistsForUser();
-    } else {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setTherapists(data);
+    } catch (error) {
+      console.error('Failed to fetch matched therapists:', error);
+      setError('Failed to load therapists');
+    } finally {
       setIsLoading(false);
-      setError('User context is not set');
     }
-  }, [user]);
-
-
-  const handleDetailPress = therapist => {
-    // Handle interaction logic here:
-    navigation.navigate('TherapistDetailsScreen', {passedUser:therapist}); // Example navigation
   };
 
-  const renderTherapist = ({item}) => (
-    
+  const handleDetailPress = therapist => {
+    navigation.navigate('TherapistDetailsScreen', { passedUser: therapist });
+  };
+
+  const renderTherapist = ({ item }) => (
     <TouchableOpacity
       style={styles.therapistItem}
       onPress={() => handleDetailPress(item)}>
       <View style={styles.therapistInfo}>
-        <Text style={styles.therapistName}> Dr. {item.lastName} {item.firstName}</Text>
+        <Text style={styles.therapistName}>Dr. {item.lastName} {item.firstName}</Text>
         <Text style={styles.therapistSpecialty}>{item.email}</Text>
+        
       </View>
     </TouchableOpacity>
   );
@@ -98,7 +75,7 @@ const TherapistListScreen = ({navigation}) => {
       <View style={styles.errorContainer}>
         <Text style={styles.errorMessage}>Error: {error}</Text>
         <CustomButton
-          onPress={null}
+          onPress={fetchMatchedTherapists} // Directly reference the function
           title="Retry"
           buttonStyle={{
             backgroundColor: 'black',
@@ -119,9 +96,9 @@ const TherapistListScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={matchedTherapists}
+        data={therapists}
         renderItem={renderTherapist}
-        keyExtractor={item => item.therapistId || item.someUniqueIdentifier}
+        keyExtractor={item => item.therapistId}
       />
     </View>
   );
@@ -152,9 +129,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
-  interactButton: {
+  responsesContainer: {
+    marginTop: 10,
+  },
+  responsesHeader: {
     fontSize: 16,
-    color: '#007bff',
+    fontWeight: 'bold',
+  },
+  responseItem: {
+    fontSize: 14,
+    color: '#666',
   },
   loadingIndicator: {
     flex: 1,

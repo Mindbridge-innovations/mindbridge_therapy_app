@@ -1,29 +1,24 @@
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
   Image,
   Text,
   TextInput,
-  TouchableOpacity,
+  ScrollView,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
 import CustomButton from '../assets/widgets/custom_button';
-import {ScrollView} from 'react-native-gesture-handler';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import mystyles from '../assets/stylesheet';
-import {useNavigation} from '@react-navigation/native';
-import Config from '../config';
-// imports for register with firebae email and password
-import {auth} from '../firebaseConfig';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import { useNavigation } from '@react-navigation/native';
+import validateInput from './validateInput'; // Make sure this path is correct
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
 
-  const [selectedRole, setSelectedRole] = useState(''); // Set the initial selected value
-
-  const [userData, setuserData] = useState({
+  const [selectedRole, setSelectedRole] = useState('');
+  const [userData, setUserData] = useState({
     firstName: '',
     lastName: '',
     username: '',
@@ -33,28 +28,101 @@ const SignUpScreen = () => {
     password_confirm: '',
     role: '',
   });
+  const [errors, setErrors] = useState({
+    email: '',
+    phoneNumber: '',
+    username:'',
+    password: '',
+    password_confirm: '',
+  });
 
-  
+  const handleNext = () => {
+    // Check for any errors or empty required fields
+    const hasErrors = Object.values(errors).some(error => error !== '');
+    const requiredFields = ['email', 'phoneNumber', 'username', 'password', 'password_confirm', 'role'];
+    const hasEmptyFields = requiredFields.some(field => !userData[field]);
 
-  const handleRoleChange = role => {
-    setSelectedRole(role);
-    setuserData({
-      ...userData,
-      role: role, // Update the role in userData
-    });
-  };
+    if (hasErrors || hasEmptyFields) {
+        alert('Please correct the errors before submitting.');
+        return;
+    }
 
+    // If all validations are passed, navigate to the next screen
+    navigation.navigate('OnBoardQtnsScreen', { userData });
+};
+
+//validate role selection here, making sure role is not null
+const handleRoleChange = (role) => {
+  setSelectedRole(role);
+  setUserData({
+    ...userData,
+    role: role,
+  });
+
+  let error = '';
+  if (!validateInput(role, 'picker')) {
+      error = 'Please select a role.';
+  }
+
+  setErrors(prevErrors => ({
+    ...prevErrors,
+    role: error,
+  }));
+};
+
+
+//validate other input fields making sure they follow the validation rules
   const handleInputChange = (field, value) => {
-    setuserData({
+    setUserData({
       ...userData,
       [field]: value,
     });
+
+    let error = '';
+   
+    switch (field) {
+      case 'email':
+        if (!validateInput(value, 'email')) {
+          error = 'Please enter a valid email address.';
+        }
+        break;
+        case 'role':
+          if (!validateInput(value, 'picker')) {
+            error = 'Please select a role.';
+          }
+          break;
+      case 'phoneNumber':
+        if (!validateInput(value, 'phone')) {
+          error = 'Please enter a valid phone number.Include country code eg 256 for uganda';
+        }
+        break;
+      case 'password':
+        if (!validateInput(value, 'password')) {
+          error = 'Password must include at least 8 characters, one uppercase, one lowercase, one number, and one special character.';
+        }
+        break;
+        case 'username':
+        if (!validateInput(value, 'username')) {
+          error = 'Username must be 3-15 characters long and can only contain letters, numbers, and underscores.';
+        }
+        break;
+      case 'password_confirm':
+        if (value !== userData.password) {
+          error = 'Passwords do not match.';
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors(prevErrors => ({
+      ...prevErrors,
+      [field]: error,
+    }));
   };
 
-  // method to handle signup form submission
-  
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View
         style={{
           justifyContent: 'space-around',
@@ -78,76 +146,24 @@ const SignUpScreen = () => {
             Sign Up
           </Text>
 
-          <View style={{display: 'block', marginBottom: 20}}>
-            <Text style={mystyles.label}>First Name (optional)</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.firstName}
-              onChangeText={text => handleInputChange('firstName', text)}
-            />
-          </View>
-
-          <View style={{display: 'block', marginBottom: 20}}>
-            <Text style={mystyles.label}>Last Name (optional)</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.lastName}
-              onChangeText={text => handleInputChange('lastName', text)}
-            />
-          </View>
-
-          <View style={{display: 'block', marginBottom: 20}}>
-            <Text style={mystyles.label}>Email address</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.email}
-              onChangeText={text => handleInputChange('email', text)}
-              keyboardType="email-address"
-            />
-          </View>
-
-          <View style={{display: 'block', marginBottom: 20}}>
-            <Text style={mystyles.label}>Phone number</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.phoneNumber}
-              onChangeText={text => handleInputChange('phoneNumber', text)}
-              keyboardType="phone-pad"
-            />
-          </View>
-
-          <View style={{display: 'block', marginBottom: 20}}>
-            <Text style={mystyles.label}>Username</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.username}
-              onChangeText={text => handleInputChange('username', text)}
-            />
-          </View>
-
-          <View style={{marginBottom: 20}}>
-            <Text style={mystyles.label}>Password</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.password}
-              onChangeText={text => handleInputChange('password', text)}
-              secureTextEntry
-            />
-          </View>
-
-          <View style={{marginBottom: 20}}>
-            <Text style={mystyles.label}>Confirm password</Text>
-            <TextInput
-              style={mystyles.input}
-              value={userData.password_confirm}
-              onChangeText={text => handleInputChange('password_confirm', text)}
-              secureTextEntry
-            />
-          </View>
+          {/* Input fields with validation */}
+          {['firstName', 'lastName', 'email', 'phoneNumber', 'username', 'password', 'password_confirm'].map((field, index) => (
+            <View key={index} style={{ display: 'block', marginBottom: 20 }}>
+              <Text style={mystyles.label}>{field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</Text>
+              <TextInput
+                style={mystyles.input}
+                value={userData[field]}
+                onChangeText={text => handleInputChange(field, text)}
+                secureTextEntry={field.includes('password')}
+                keyboardType={field === 'email' ? 'email-address' : field === 'phoneNumber' ? 'phone-pad' : 'default'}
+              />
+              {errors[field] ? <Text style={{ color: 'red' }}>{errors[field]}</Text> : null}
+            </View>
+          ))}
 
           <View style={styles.inputcontainer}>
             <Text
-              style={{marginVertical: 20, color: 'white', fontWeight: 'bold'}}>
+              style={{ marginVertical: 20, color: 'white', fontWeight: 'bold' }}>
               Select your role for which you are registering
             </Text>
             <View style={mystyles.picker}>
@@ -161,24 +177,27 @@ const SignUpScreen = () => {
                 <Picker.Item label="Therapist doctor" value="therapist" />
               </Picker>
             </View>
+
           </View>
+          {errors.role ? <Text style={{ color: 'red' }}>{errors.role}</Text> : null}
+
 
           <CustomButton
-            onPress={()=>navigation.navigate('OnBoardQtnsScreen',{userData})}            
+            onPress={handleNext}
             title="Next"
-            buttonStyle={{backgroundColor: 'black', width: 300, marginTop: 40}}
-            textStyle={{color: 'white'}}
+            buttonStyle={{ backgroundColor: 'black', width: 300, marginTop: 40 }}
+            textStyle={{ color: 'white' }}
           />
         </View>
 
-        <View style={{flexDirection: 'row', marginTop: -30}}>
-          <Text style={{color: 'white', marginTop: 10, fontWeight: 'bold'}}>
+        <View style={{ flexDirection: 'row', marginTop: -30 }}>
+          <Text style={{ color: 'white', marginTop: 10, fontWeight: 'bold' }}>
             Already having an account?{' '}
           </Text>
           <CustomButton
             onPress={() => navigation.navigate('SignInScreen')}
             title="Sign in"
-            buttonStyle={{backgroundColor: 'transparent'}}
+            buttonStyle={{ backgroundColor: 'transparent' }}
             textStyle={{
               color: 'black',
               fontSize: 16,
@@ -191,6 +210,7 @@ const SignUpScreen = () => {
     </ScrollView>
   );
 };
+
 export default SignUpScreen;
 
 const styles = StyleSheet.create({

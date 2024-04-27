@@ -6,6 +6,7 @@ import CustomButton from '../../assets/widgets/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import RateTherapistScreen from './ratingForm';
 import ChatBotButton from '../../assets/widgets/chatbotButton';
+import reverseMappings from '../responseReverseMapping';
 
 const TherapistDetailsScreen = ({route}) => {
   //getting the details of the therapist and saving to a user object
@@ -40,7 +41,7 @@ const TherapistDetailsScreen = ({route}) => {
             marginLeft: 30,
             marginTop: 10,
           }}>
-          Dr. {passedUser.lastName}
+          Dr. {passedUser.lastName} {passedUser.firstName}
         </Text>
       </View>
       <View style={{flex: 1, alignItems: 'center', width: '90%'}}>
@@ -51,31 +52,60 @@ const TherapistDetailsScreen = ({route}) => {
         />
         {/* small text displays of the number of patients, experience and rating */}
         <View style={styles.infoRow}>
-          <View style={styles.infoItem}>
-            <Text style={styles.infoTitle}>Patients</Text>
-            <Text style={styles.infoValue}>44</Text>
-          </View>
+         
+            {/* display the number of years of experience of a therapist */}
           <View style={styles.infoItem}>
             <Text style={styles.infoTitle}>Experience</Text>
-            <Text style={styles.infoValue}>6 yrs</Text>
+            <Text style={styles.infoValue}>{passedUser.responses.experience_yrs} years</Text>
           </View>
+
+          {/* display the rating value for a therapist */}
           <View style={styles.infoItem}>
             <Text style={styles.infoTitle}>Rating</Text>
-            <Text style={styles.infoValue}>4.1 / 5</Text>
+            <Text style={styles.infoValue}>{passedUser.averageRating}/ 5</Text>
           </View>
         </View>
         {/* text display about the therapist */}
         <View style={{backgroundColor: 'lightgray', borderRadius: 10}}>
           <View style={{padding: 10}}>
-            <Text style={{fontWeight: 'bold'}}>
-              Speciality: {passedUser.specialty}
-            </Text>
-            <Text
-              style={{fontWeight: 'bold', fontSize: 18, marginVertical: 20}}>
-              About me
-            </Text>
-            <Text style={{fontSize: 16}}>{passedUser.about}</Text>
+          <View style={styles.responsesContainer}>
+    <Text style={styles.responsesHeader}>About Dr. {passedUser.responses.full_name}</Text>
+    <Text>{passedUser.responses.about_therapist}</Text>
+
+    {/* Therapeutic Experiences */}
+    {passedUser.responses['5'] && (
+        <View>
+            <Text style={styles.infoTitle}>Therapeutic Experiences:</Text>
+            {passedUser.responses['5'].map((item, index) => (
+                <Text key={index} style={styles.responseItem}>- {reverseMappings.therapy_experiences[item]}</Text>
+            ))}
+        </View>
+    )}
+
+    {/* Communication Preferences */}
+    {passedUser.responses['4'] && (
+        <View>
+            <Text style={styles.infoTitle}>Communication Preferences:</Text>
+            {passedUser.responses['4'].map((item, index) => (
+                <Text key={index} style={styles.responseItem}>- {reverseMappings.communication[item]}</Text>
+            ))}
+        </View>
+    )}
+
+    
+
+    {/* Languages */}
+    {passedUser.responses['6'] && (
+        <View>
+            <Text style={styles.infoTitle}>Languages:</Text>
+            {passedUser.responses['6'].map((item, index) => (
+                <Text key={index} style={styles.responseItem}>- {reverseMappings.languages[item]}</Text>
+            ))}
+        </View>
+    )}
+</View>
           </View>
+
         </View>
 
         <View>
@@ -175,10 +205,6 @@ const styles = StyleSheet.create({
   infoItem: {
     alignItems: 'center',
   },
-  infoTitle: {
-    fontSize: 14,
-    color: 'grey',
-  },
   infoValue: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -205,4 +231,50 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  responsesContainer: {
+    marginTop: 10,
+  },
+  responsesHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  responseItem: {
+    fontSize: 14,
+    color: '#666',
+  },
+  loadingIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorMessage: {
+    fontSize: 18,
+    color: 'red',
+  },
+  responsesContainer: {
+    marginTop: 10,
+    padding: 10,
+},
+responsesHeader: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+},
+infoTitle: {
+    fontSize: 14,
+    color: 'black',
+    marginTop: 10,
+    marginBottom: 5,
+    fontWeight:'bold'
+},
+responseItem: {
+    fontSize: 14,
+    color: '#666',
+    marginLeft: 10,  // Indent list items for better readability
+},
 });
