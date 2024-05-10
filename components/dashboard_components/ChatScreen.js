@@ -21,7 +21,7 @@ const ChatScreen = ({ route }) => {
 
   const signOutNow = () => {
     signOut(auth).then(() => {
-      navigation.replace('SignInScreen');
+      navigation.replace('DashboardDrawer');
     }).catch((error) => {
       // Handle errors here
     });
@@ -56,7 +56,7 @@ const ChatScreen = ({ route }) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-          <View style={{ marginLeft: 20 }}>
+          <View style={{ marginRight: 10 , marginLeft:-20}}>
               <Avatar
                   rounded
                   source={{
@@ -67,14 +67,14 @@ const ChatScreen = ({ route }) => {
       ),
       headerRight: () => (
           <TouchableOpacity style={{
-              marginRight: 10
+              marginRight: 10,
           }}
               onPress={signOutNow}
           >
-              <Text>logout</Text>
+              <Text style={{color:'white', fontWeight:'bold'}}>Exit chat</Text>
           </TouchableOpacity>
       ),
-      headerTitle: () => <Text style={styles.headerTitle}>Chat with {user.username}</Text>,
+      headerTitle: () => <Text style={styles.headerTitle}>Chat with {passedUser.username}</Text>,
       headerStyle: {
       backgroundColor: '#077AB0', // Set your desired color
       },
@@ -138,7 +138,6 @@ const styles = StyleSheet.create({
     headerTitle: {
       fontSize: 20,
       fontWeight: 'bold',
-      paddingBottom:50
       // Add other styling as needed
     },
      // ... other styles

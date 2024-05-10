@@ -46,6 +46,7 @@ import RateTherapistScreen from './components/dashboard_components/ratingForm';
 import FeedbackForm from './components/dashboard_components/feedbackForm';
 import MyFeedbacks from './components/dashboard_components/queryFeedbacks';
 import MyRatings from './components/dashboard_components/queryRatings';
+import ResetPasswordScreen from './components/resetPassword';
 
 
 
@@ -59,6 +60,7 @@ const linking = {
   config: {
     screens: {
       DashboardDrawer: '/',
+      ResetPassword: 'reset-password?token=:token'
     },
   },
 };
@@ -216,6 +218,30 @@ export default function App() {
 
   // Handle deep linking
   useEffect(() => {
+  const handleDeepLink = event => {
+    const parsedUrl = queryString.parseUrl(event.url);
+    const path = parsedUrl.url.split('://')[1];
+    const params = parsedUrl.query;
+
+    if (path.includes('reset-password')) {
+      const { token, email } = params; // Extract both token and email
+      if (token && email && navigationRef.current) {
+        navigationRef.current.navigate('ResetPassword', { token, email });
+      }
+    }
+  };
+
+  Linking.addEventListener('url', handleDeepLink);
+  Linking.getInitialURL().then(url => {
+    if (url) handleDeepLink({ url });
+  });
+
+  return () => {
+    Linking.removeEventListener('url', handleDeepLink);
+  };
+}, []);
+
+  useEffect(() => {
     // registerNotificationHandlers(navigationRef.current);
     // checkInitialNotification(navigationRef.current);
     const handleDeepLink = event => {
@@ -301,7 +327,7 @@ export default function App() {
             />
             <Stack.Screen
               name="TherapistDetailsScreen"
-              component={TherapistDetailsScreen}
+              component={TherapistDetailsScreen} options={{ headerShown: true }}
             />
             <Stack.Screen
               name="AppointmentBookingScreen"
@@ -309,7 +335,7 @@ export default function App() {
             />
             
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }}/>
             <Stack.Screen
               name="AppointmentDetailsScreen"
               component={AppointmentDetailsScreen}
@@ -330,6 +356,8 @@ export default function App() {
               name="Feedback"
               component={FeedbackForm}
             />
+            <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+
             
           </Stack.Navigator>
         )}
