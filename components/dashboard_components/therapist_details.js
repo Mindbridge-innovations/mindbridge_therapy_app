@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {View, Image, Text, Dimensions, StyleSheet,Modal} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../../assets/stylesheet';
@@ -29,6 +29,22 @@ const TherapistDetailsScreen = ({route}) => {
     handleCloseRatingModal();
   };
 
+  const [imageHeight, setImageHeight] = useState(300); // Default height
+
+  useEffect(() => {
+    if (passedUser.profileImage) {
+      Image.getSize(passedUser.profileImage, (width, height) => {
+        // Calculate the height based on the aspect ratio
+        const screenWidth = Dimensions.get('window').width * 0.9;
+        const scaleFactor = width / screenWidth;
+        const calculatedHeight = height / scaleFactor;
+        setImageHeight(calculatedHeight);
+      }, error => {
+        console.error(`Unable to retrieve image size: ${error.message}`);
+      });
+    }
+  }, [passedUser.profileImage]);
+  
   return (
     <View style={{flex:1}}>
     <ScrollView contentContainerStyle={mystyles.dashviewcontainer}>
@@ -47,9 +63,9 @@ const TherapistDetailsScreen = ({route}) => {
       <View style={{flex: 1, alignItems: 'center', width: '90%'}}>
         {/* displaying the therapist profile image */}
         <Image
-          source={require('../../assets/images/doctor_avatar.jpeg')}
-          style={styles.avatar}
-        />
+          source={passedUser.profileImage ? { uri: passedUser.profileImage } : require('../../assets/images/doctor_avatar.jpeg')}
+          style={[styles.avatar, { height: imageHeight }]}
+          />
         {/* small text displays of the number of patients, experience and rating */}
         <View style={styles.infoRow}>
          
@@ -77,7 +93,7 @@ const TherapistDetailsScreen = ({route}) => {
         <View>
             <Text style={styles.infoTitle}>Therapeutic Experiences:</Text>
             {passedUser.responses['5'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>- {reverseMappings.therapy_experiences[item]}</Text>
+                <Text key={index} style={styles.responseItem}>* {reverseMappings.therapy_experiences[item]}</Text>
             ))}
         </View>
     )}
@@ -87,7 +103,7 @@ const TherapistDetailsScreen = ({route}) => {
         <View>
             <Text style={styles.infoTitle}>Communication Preferences:</Text>
             {passedUser.responses['4'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>- {reverseMappings.communication[item]}</Text>
+                <Text key={index} style={styles.responseItem}>* {reverseMappings.communication[item]}</Text>
             ))}
         </View>
     )}
@@ -99,7 +115,7 @@ const TherapistDetailsScreen = ({route}) => {
         <View>
             <Text style={styles.infoTitle}>Languages:</Text>
             {passedUser.responses['6'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>- {reverseMappings.languages[item]}</Text>
+                <Text key={index} style={styles.responseItem}>* {reverseMappings.languages[item]}</Text>
             ))}
         </View>
     )}
@@ -191,7 +207,8 @@ export default TherapistDetailsScreen;
 
 const styles = StyleSheet.create({
   avatar: {
-    width: '100%',
+    width:Dimensions.get('window').width*0.9,
+    height:300,
     borderRadius: 10,
     marginVertical: 30,
   },

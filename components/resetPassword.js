@@ -43,7 +43,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
       contentContainerStyle={{flexGrow: 1, backgroundColor: '#255ECC'}}>
         <View style={{ padding: 20, alignContent:'center' }}>
         <View style={{marginBottom: 30}}>
-            <Text style={mystyles.dashlabel}>Enter new password</Text>
+            <Text style={mystyles.label}>Enter new password</Text>
             <TextInput
             secureTextEntry
                 style={mystyles.dashinput}
@@ -54,7 +54,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
         </View>
 
         <View style={{marginBottom: 30}}>
-            <Text style={mystyles.dashlabel}>Confirm new password</Text>
+            <Text style={mystyles.label}>Confirm new password</Text>
             <TextInput
             secureTextEntry
                 style={mystyles.dashinput}

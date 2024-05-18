@@ -31,7 +31,7 @@ const MyRatings = () => {
       } catch (error) {
         console.error('Failed to fetch ratings:', error);
         setLoading(false);  // Stop loading if there is an error
-      }
+      } 
     };
 
     fetchRatings();

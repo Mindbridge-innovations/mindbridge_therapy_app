@@ -91,7 +91,7 @@ const mystyles = StyleSheet.create({
   profileimage: {
     width: 100,
     height: 100,
-    resizeMode: 'cover', // or 'contain', 'stretch', 'center'
+    resizeMode: 'stretch', // or 'contain', 'stretch', 'center'
     borderRadius: 9999, // if you want to add borderRadius
     marginBottom: 20,
     marginTop: 20,

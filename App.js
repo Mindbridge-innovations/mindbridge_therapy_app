@@ -47,6 +47,8 @@ import FeedbackForm from './components/dashboard_components/feedbackForm';
 import MyFeedbacks from './components/dashboard_components/queryFeedbacks';
 import MyRatings from './components/dashboard_components/queryRatings';
 import ResetPasswordScreen from './components/resetPassword';
+import { ToastProvider } from 'react-native-toast-notifications'
+
 
 
 
@@ -174,6 +176,14 @@ const CustomDrawerContent = props => {
             icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
           />
           )}
+
+    { user.role==='therapist' && (
+          <DrawerItem
+            label="Generate VR token"
+            onPress={() => props.navigation.navigate('OnBoardQtnsScreen',{userData:user})}
+            icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
+          />
+          )}
       <DrawerItem
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}
@@ -290,6 +300,7 @@ export default function App() {
   }
 
   return (
+    <ToastProvider>
     <UserProvider>
     <SafeAreaView style={{flex:1}}>
     <GestureHandlerRootView style={{flex: 1}}>
@@ -365,5 +376,6 @@ export default function App() {
     </GestureHandlerRootView>
     </SafeAreaView>
     </UserProvider>
+    </ToastProvider>
   );
 }

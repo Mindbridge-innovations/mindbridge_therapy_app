@@ -251,6 +251,7 @@ const SignInScreen = () => {
               value={formData.email}
               onChangeText={text => handleInputChange('email', text)}
               keyboardType="email-address"
+              placeholder='Enter account email'
             />
             <CustomButton
             onPress={handlePasswordResetRequest}

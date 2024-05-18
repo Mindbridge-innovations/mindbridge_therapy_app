@@ -60,7 +60,7 @@ const ChatScreen = ({ route }) => {
               <Avatar
                   rounded
                   source={{
-                      uri: 'https://www.google.com/imgres?imgurl=https%3A%2F%2Fmedia.istockphoto.com%2Fid%2F1371797889%2Fvector%2Fyoung-smiling-man-avatar-3d-vector-people-character-illustration-cartoon-minimal-style-3d.jpg%3Fs%3D612x612%26w%3D0%26k%3D20%26c%3DWykJb6hyEUv8T9k86g-LG9u980sEwqK8FG1m1tXgnSI%3D&tbnid=wPEwKq6uj7rQzM&vet=12ahUKEwjT3aHnnvuEAxUFsScCHUsmBOYQMygAegQIARBR..i&imgrefurl=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2F3d-avatar-character&docid=Cgbh-EBhGH2y4M&w=612&h=556&q=avatar&hl=en&ved=2ahUKEwjT3aHnnvuEAxUFsScCHUsmBOYQMygAegQIARBR'
+                      uri: passedUser?.profileImage
                   }}
               />
           </View>
@@ -74,7 +74,7 @@ const ChatScreen = ({ route }) => {
               <Text style={{color:'white', fontWeight:'bold'}}>Exit chat</Text>
           </TouchableOpacity>
       ),
-      headerTitle: () => <Text style={styles.headerTitle}>Chat with {passedUser.username}</Text>,
+      headerTitle: () => <Text style={styles.headerTitle}>{passedUser.username}</Text>,
       headerStyle: {
       backgroundColor: '#077AB0', // Set your desired color
       },
