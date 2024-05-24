@@ -1,7 +1,7 @@
 import {View, Text, Image, Dimensions, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
 import React, { useRef ,useState} from 'react';
 import mystyles from '../assets/stylesheet';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import {ScrollView} from 'react-native-gesture-handler';
 import { useContext } from 'react';
@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import Config from '../config';
 import { Toast } from 'react-native-toast-notifications';
+import validateInput from '../assets/utils/validateInput';
 
 
 
@@ -33,17 +34,20 @@ function ProfileScreen() {
 
 
   const handlePasswordChange = async () => {
-    const formData=new FormData();
-    formData.append('oldPassword',oldPassword);
-    formData.append('newPassword',newPassword);
+    const body = JSON.stringify({
+      oldPassword: oldPassword,
+      newPassword: newPassword
+  });
+    
     const token = await AsyncStorage.getItem('userToken');
     try {
         const response = await fetch(`${Config.BACKEND_API_URL}/user/change-password`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             },
-            body: formData
+            body: body
         });
 
 

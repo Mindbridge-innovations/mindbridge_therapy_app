@@ -149,6 +149,22 @@ const mystyles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
+
+
+  // styles for the resources screen
+  resourceCategory:{
+    backgroundColor:'#429ef5',
+    paddingVertical:10,
+    marginVertical:10,
+    borderRadius:2
+  },
+  categoryText:{
+    color:'white',
+    marginLeft:5
+  },
+  categoryLinks:{
+    marginVertical:10,
+  }
 });
 
 export default mystyles;

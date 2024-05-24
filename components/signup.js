@@ -8,11 +8,11 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import { Picker } from '@react-native-picker/picker';
 import mystyles from '../assets/stylesheet';
 import { useNavigation } from '@react-navigation/native';
-import validateInput from './validateInput'; // Make sure this path is correct
+import validateInput from '../assets/utils/validateInput'; // Make sure this path is correct
 
 const SignUpScreen = () => {
   const navigation = useNavigation();

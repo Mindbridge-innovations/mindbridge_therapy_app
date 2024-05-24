@@ -48,6 +48,8 @@ import MyFeedbacks from './components/dashboard_components/queryFeedbacks';
 import MyRatings from './components/dashboard_components/queryRatings';
 import ResetPasswordScreen from './components/resetPassword';
 import { ToastProvider } from 'react-native-toast-notifications'
+import ResourcesScreen from './components/dashboard_components/ResourcesScreen';
+import WebViewScreen from './components/dashboard_components/WebViewScreen';
 
 
 
@@ -91,8 +93,8 @@ let userData;
       <Drawer.Screen name="My therapists" component={TherapistListScreen} />
       <Drawer.Screen name="Find a therapist" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
-      <Drawer.Screen name="Resource Library" component={DashboardScreen} />
-      
+      <Drawer.Screen name="Resource Library" component={ResourcesScreen} />
+        
     </Drawer.Navigator>
   );
 };
@@ -368,6 +370,8 @@ export default function App() {
               component={FeedbackForm}
             />
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+            <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+
 
             
           </Stack.Navigator>

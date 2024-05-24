@@ -51,6 +51,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-toast-notifications": "^3.4.0",
     "react-native-vector-icons": "^10.0.3",
+    "react-native-webview": "^13.10.2",
     "react-navigation": "^4.4.4",
     "zego-express-engine-reactnative": "^3.2.0"
   },

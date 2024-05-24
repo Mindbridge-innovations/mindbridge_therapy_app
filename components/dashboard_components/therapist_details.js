@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import {View, Image, Text, Dimensions, StyleSheet,Modal} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../../assets/stylesheet';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import RateTherapistScreen from './ratingForm';
-import ChatBotButton from '../../assets/widgets/chatbotButton';
+import ChatBotButton from '../../assets/utils/chatbotButton';
 import reverseMappings from '../responseReverseMapping';
 
 const TherapistDetailsScreen = ({route}) => {

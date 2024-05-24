@@ -9,7 +9,7 @@ import {
   Dimensions,
   Modal
 } from 'react-native';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import { rtdb } from '../../firebaseConfig';
 import { onValue,ref,get} from 'firebase/database';
 import FeedbackForm from './feedbackForm';

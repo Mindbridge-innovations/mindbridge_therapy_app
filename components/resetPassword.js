@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, Text, ScrollView } from 'react-native';
 import Config from '../config';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import mystyles from '../assets/stylesheet';
 
 const ResetPasswordScreen = ({ route, navigation }) => {

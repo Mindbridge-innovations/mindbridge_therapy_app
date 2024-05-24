@@ -12,7 +12,7 @@ import {
   Alert,
   Dimensions,
 } from 'react-native';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import mystyles from '../../assets/stylesheet';
 import {DatePicker, TimePicker} from './datePicker';
 import { rtdb } from '../../firebaseConfig';
@@ -99,6 +99,8 @@ const AppointmentManagementScreen = ({navigation}) => {
     }
   };
   }, [filter]);
+
+ 
 
   //show modal when an appointment is selected
   const handleInteractPress = appointment => {

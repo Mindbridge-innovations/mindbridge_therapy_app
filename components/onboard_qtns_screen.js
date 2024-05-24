@@ -8,13 +8,13 @@ import {
   Dimensions,
   Text,
 } from 'react-native';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import {Picker} from '@react-native-picker/picker';
 import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
 import { DatePicker,TimePicker} from './dashboard_components/datePicker';
-import Checkbox from '../assets/widgets/checkBox';
+import Checkbox from '../assets/utils/checkBox';
 import Config from '../config';
 
 const OnBoardQtnsScreen = ({route}) => {
@@ -56,14 +56,18 @@ const OnBoardQtnsScreen = ({route}) => {
 
   //list of theurapeutic experiences
   const therapy_type = [
-    'Marriage and Family Therapy', 'Substance Abuse Counseling', 'Trauma and PTSD Treatment',
+    'Anxiety Disorder','Depression','Substance Abuse Counseling','Mood(Bipolar) disorders','Disruptive behaviour and dissocial disorders','Marriage and Family Therapy', 'Trauma and PTSD Treatment',
     'Child and Adolescent Therapy', 'LGBTQ+ Counseling', 'Education mindset councelling', 'Career Counseling',
   ];
 
   //lookup to map the therapy_type array to the therapy experiences qtns
   const therapyTypeLookup = {
-    'Marriage and Family Therapy': 'marriageAndFamilyTherapy',
+    'Anxiety Disorder':'anxietyDisorder',
+    'Depression':'depression',
     'Substance Abuse Counseling': 'substanceAbuseCounseling',
+    'Mood(Bipolar) disorders':'moodDisorders',
+    'Disruptive behaviour and dissocial disorders':'disruptiveBehavior',
+    'Marriage and Family Therapy': 'marriageAndFamilyTherapy',
     'Trauma and PTSD Treatment': 'traumAandPTSDTreatment',
     'Child and Adolescent Therapy': 'childAndAdolescentTherapy',
     'LGBTQ+ Counseling': 'LGBTQCounseling',
@@ -119,7 +123,7 @@ const OnBoardQtnsScreen = ({route}) => {
     },
 
     therapy_experiences:{
-      marriageAndFamilyTherapy:1,substanceAbuseCounseling:2,traumAandPTSDTreatment:3,childAndAdolescentTherapy:4,LGBTQCounseling:5,educationMindsetCouncelling:6, careerCounseling:7,
+      anxietyDisorder:1,depression:2,substanceAbuseCounseling:3,moodDisorders:4,disruptiveBehavior:5,marriageAndFamilyTherapy:6,substanceAbuseCounseling:7,traumAandPTSDTreatment:8,childAndAdolescentTherapy:9,LGBTQCounseling:10,educationMindsetCouncelling:11, careerCounseling:7,
 
     }
     // ... other responses ...
@@ -132,7 +136,6 @@ const OnBoardQtnsScreen = ({route}) => {
   const selectedCommunicationIds = selectedCommunication.map((comm) => responses.communication[communicationLookup[comm]]);
 
   const selectedTherapyTypeIds = selectedTherapyType.map((type) => responses.therapy_experiences[therapyTypeLookup[type]]);
-
 
   // logic to collect entered form field values
   const [formData, setFormData] = useState({
@@ -185,7 +188,6 @@ const OnBoardQtnsScreen = ({route}) => {
     });
   };
 
-  console.log(selectedLanguages)
   
 
   // logic to move to next question screen

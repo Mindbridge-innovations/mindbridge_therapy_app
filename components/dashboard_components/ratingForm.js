@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button,TextInput } from 'react-native';
 import { Rating } from 'react-native-ratings';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import mystyles from '../../assets/stylesheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';

@@ -3,7 +3,7 @@ import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity
 import Config from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import mystyles from '../../assets/stylesheet';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 
 const MyFeedbacks = () => {
   const [feedbacks, setFeedbacks] = useState([]);

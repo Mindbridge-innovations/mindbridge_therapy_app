@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import mystyles from '../../assets/stylesheet';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';
 import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';

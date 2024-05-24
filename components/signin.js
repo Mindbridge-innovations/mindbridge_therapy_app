@@ -9,7 +9,7 @@ import {
   ActivityIndicator
 } from 'react-native';
 import React, {useContext, useRef, useState} from 'react';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';

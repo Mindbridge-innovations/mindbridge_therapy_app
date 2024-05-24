@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Image, Text, Dimensions, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../../assets/stylesheet';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import AppointmentBookingScreen from './bookappointment';
 

@@ -1,7 +1,7 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {Image, View, StyleSheet, Text, Dimensions} from 'react-native';
-import CustomButton from '../assets/widgets/custom_button';
+import CustomButton from '../assets/utils/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';

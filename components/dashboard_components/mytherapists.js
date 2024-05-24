@@ -9,7 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import UserContext from '../../utils/contexts/userContext';
 import Config from '../../config'; // Ensure this is correctly set up to point to your config file
 

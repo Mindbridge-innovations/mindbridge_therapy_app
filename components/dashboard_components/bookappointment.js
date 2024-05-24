@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import CustomButton from '../../assets/widgets/custom_button';
+import CustomButton from '../../assets/utils/custom_button';
 import mystyles from '../../assets/stylesheet';
 import {Picker} from '@react-native-picker/picker';
 import {DatePicker, TimePicker} from './datePicker';
