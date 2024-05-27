@@ -27,8 +27,8 @@ console.log('CALL IDENTIFICATION FOR THE VIDEO CALL IS:',callID),
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={videoCallStyles.container}>
         <ZegoUIKitPrebuiltCall
-          appID={Config.ZEGOCLOUD_APP_ID1}
-          appSign={Config.ZEGOCLOUD_APP_SIGN1}
+          appID={Config.ZEGOCLOUD_APP_ID2}
+          appSign={Config.ZEGOCLOUD_APP_SIGN2}
           userID={user.phoneNumber} // userID can be something like a phone number or the user id on your own user system.
           userName={userName}
           callID={callID} // callID can be any unique string.

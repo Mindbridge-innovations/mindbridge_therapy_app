@@ -50,6 +50,7 @@ import ResetPasswordScreen from './components/resetPassword';
 import { ToastProvider } from 'react-native-toast-notifications'
 import ResourcesScreen from './components/dashboard_components/ResourcesScreen';
 import WebViewScreen from './components/dashboard_components/WebViewScreen';
+import TokenDisplayScreen from './components/dashboard_components/tokenDisplayScreen';
 
 
 
@@ -94,6 +95,7 @@ let userData;
       <Drawer.Screen name="Find a therapist" component={TherapistListScreen} />
       <Drawer.Screen name="Profile" component={SettingScreen} />
       <Drawer.Screen name="Resource Library" component={ResourcesScreen} />
+ 
         
     </Drawer.Navigator>
   );
@@ -182,7 +184,7 @@ const CustomDrawerContent = props => {
     { user.role==='therapist' && (
           <DrawerItem
             label="Generate VR token"
-            onPress={() => props.navigation.navigate('OnBoardQtnsScreen',{userData:user})}
+            onPress={() => props.navigation.navigate('TokenDisplay')}
             icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
           />
           )}
@@ -371,6 +373,8 @@ export default function App() {
             />
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
             <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
+            <Stack.Screen name="TokenDisplay" component={TokenDisplayScreen} />
+
 
 
             
