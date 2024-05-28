@@ -48,7 +48,7 @@ const SignUpScreen = () => {
     }
 
     // If all validations are passed, navigate to the next screen
-    navigation.navigate('OnBoardQtnsScreen', { userData });
+    navigation.navigate('OnBoardQtnsScreen', { userData, source:"SignUpScreen" });
 };
 
 //validate role selection here, making sure role is not null

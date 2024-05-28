@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   TextInput,
-  Button,
   Image,
   StyleSheet,
   Dimensions,
@@ -16,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import { DatePicker,TimePicker} from './dashboard_components/datePicker';
 import Checkbox from '../assets/utils/checkBox';
 import Config from '../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const OnBoardQtnsScreen = ({route}) => {
   // defining the navigation variable to shift btn screens
@@ -24,8 +24,11 @@ const OnBoardQtnsScreen = ({route}) => {
   // defining the route parameter
   const {params} = route;
   const userData = params ? params?.userData : null;
+  const { source } = route.params;
 
-  
+  // Determine the API URL based on the source screen
+  const apiUrl = source === 'SignUpScreen' ? `${Config.BACKEND_API_URL}/register` : `${Config.BACKEND_API_URL}/user/updateResponses`;
+
 
   //logic to capture selected value for select input fields
   const [gender, setSelectedGender] = useState('');
@@ -192,7 +195,6 @@ const OnBoardQtnsScreen = ({route}) => {
 
   // logic to move to next question screen
   const handleNext = () => {
-    // You can perform validation here if needed
     // Move to the next step and update the form data
     setCurrentStep(currentStep + 1);
   };
@@ -220,51 +222,77 @@ const OnBoardQtnsScreen = ({route}) => {
   };
   
   const handleSubmit = async () => {
+    const payload = {
+        username: userData.username,
+        email: userData.email,
+        password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phoneNumber: userData.phoneNumber,
+        role: userData.role,
+        responses: responsesPayload
+    };
 
-    const payload={
-      username:userData.username,
-      email:userData.email,
-      password:userData.password,
-      firstName:userData.firstName,
-      lastName:userData.lastName,
-      phoneNumber:userData.phoneNumber,
-      role:userData.role,
-      responses:responsesPayload
-  
-      
+    // Retrieve the token from AsyncStorage
+    const token = await AsyncStorage.getItem('userToken');
+
+    // Set headers conditionally based on the source
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    if (source !== 'SignUpScreen' && token) {
+        headers['Authorization'] = `Bearer ${token}`;
     }
-   console.log(payload)
-    if (userData.password != userData.password_confirm) {
-      alert('Passwords do not match');
-      return;
-    }
+
+    // Determine the HTTP method based on the source
+    const method = source === 'SignUpScreen' ? 'POST' : 'PUT';
+
     try {
-      // Replace 'http://your-backend-url.com' with your actual backend URL
-      const response = await fetch(`${Config.BACKEND_API_URL}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+        const response = await fetch(apiUrl, {
+            method: method,
+            headers: headers,
+            body: JSON.stringify(payload),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (response.ok) {
-        // Handle successful registration
-        alert(
-          'Registration successful, please check your email for confirmation',
-        );
-        navigation.navigate('SignInScreen');
-      } else {
-        // Handle errors
-        alert(result.message);
-      }
+        if (response.ok) {
+            // Handle successful registration or update
+            alert(source === 'SignUpScreen' ? 'Registration successful, please check your email for confirmation!' : 'Your responses were updated successfully!');
+            
+            // Perform matching only if the source is not 'SignUpScreen' (indicating an update)
+            if (source !== 'SignUpScreen') {
+                const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const matchingResult = await matchingResponse.json();
+
+                if (matchingResponse.ok) {
+                    // Handle successful matching
+                    alert('You have been matched successfully with a therapist!');
+                } else {
+                    // Handle matching errors
+                    alert(matchingResult.message);
+                }
+            }
+
+            // Navigate based on the context
+            navigation.navigate(source === 'SignUpScreen' ? 'SignInScreen' : 'My therapists');
+        } else {
+            // Handle errors from registration or update
+            alert(result.message);
+        }
     } catch (error) {
-      // Handle network errors
-      alert('An error occurred: ' + error.message);
+        // Handle network errors
+        alert('An error occurred: ' + error.message);
     }
-  };
+};
 
 
 

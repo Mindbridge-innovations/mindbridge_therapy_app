@@ -30,47 +30,47 @@ const PatientListScreen = ({navigation}) => {
 
 
 
-//useeffect to fetch the patients with which a therapist is matched
-  useEffect(() => {
-    const fetchMatchedPatientsForTherapist = async () => {
-      setIsLoading(true);
-      setError(null);
+// Define fetchMatchedPatientsForTherapist at the top level of your component
+const fetchMatchedPatientsForTherapist = async () => {
+  setIsLoading(true);
+  setError(null);
 
-      const matchesRef = ref(rtdb, `matches/${user.userId}`); // Path to the therapist's matches
-      onValue(matchesRef, async (snapshot) => {
-        if (snapshot.exists()) {
-          const patientIds = snapshot.val(); // This should be an array of patient IDs
-          const patientDetails = [];
+  const matchesRef = ref(rtdb, `matches/${user.userId}`); // Path to the therapist's matches
+  onValue(matchesRef, async (snapshot) => {
+    if (snapshot.exists()) {
+      const patientIds = snapshot.val(); // This should be an array of patient IDs
+      const patientDetails = [];
 
-          for (const patientId of patientIds) {
-            const patientRef = ref(rtdb, `users/${patientId}`);
-            const patientSnapshot = await get(patientRef);
-            if (patientSnapshot.exists()) {
-              patientDetails.push({
-                patientId,
-                ...patientSnapshot.val(),
-              });
-            }
-          }
-
-          setMatchedPatients(patientDetails);
-        } else {
-          setError('No matches found');
+      for (const patientId of patientIds) {
+        const patientRef = ref(rtdb, `users/${patientId}`);
+        const patientSnapshot = await get(patientRef);
+        if (patientSnapshot.exists()) {
+          patientDetails.push({
+            patientId,
+            ...patientSnapshot.val(),
+          });
         }
-        setIsLoading(false);
-      }, (errorObject) => {
-        setError('The read failed: ' + errorObject.code);
-        setIsLoading(false);
-      });
-    };
+      }
 
-    if (user && user.userId) {
-      fetchMatchedPatientsForTherapist();
+      setMatchedPatients(patientDetails);
     } else {
-      setIsLoading(false);
-      setError('User context is not set');
+      setError('No matches found, please request for a therapist, by clicking on the "Find a therapist" button in the dashboard');
     }
-  }, [user]);
+    setIsLoading(false);
+  }, (errorObject) => {
+    setError('The read failed: ' + errorObject.code);
+    setIsLoading(false);
+  });
+};
+
+useEffect(() => {
+  if (user && user.userId) {
+    fetchMatchedPatientsForTherapist();
+  } else {
+    setIsLoading(false);
+    setError('User context is not set');
+  }
+}, [user]);
 
 
    const handleOpenFeedbackModal = (patient) => {

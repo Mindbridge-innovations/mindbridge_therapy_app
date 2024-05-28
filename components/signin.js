@@ -66,6 +66,7 @@ const SignInScreen = () => {
           'tokenExpiration',
           expirationTime.toString(),
         );
+        // match the user after successful login, so long as they are not matched and are clients
         if(user.isMatched==="false"){
         const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
           method: 'POST',
