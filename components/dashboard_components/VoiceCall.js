@@ -15,46 +15,22 @@ export default function VoiceCallPage({route,...props}) {
   const {passedUser}=route.params
   const {user}=useContext(UserContext)
   // randomUserID = String(Math.floor(Math.random() * 100000));
-  const callId= [user.userId, passedUser.id].sort().join('_');
+  const callID= [user.userId, passedUser.userId].sort().join('_');
   const userName = user.lastName || user.username;
 
-  const initiateVideoCall = async (callerId, calleeId) => {
-    try {
-      const response = await fetch(`${Config.BACKEND_API_URL}/initiateCall`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          callerId: user.phoneNumber,
-          calleeId: passedUser.id,
-          callId:callId,
-        }),
-      });
   
-      if (response.ok) {
-        console.log('Call initiated successfully');
-      } else {
-        console.error('Failed to initiate call');
-      }
-    } catch (error) {
-      console.error('Error initiating call:', error);
-    }
-  };
-
   
-
   return (
     
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={videoCallStyles.container}>
         
         <ZegoUIKitPrebuiltCall
-          appID={Config.ZEGOCLOUD_APP_ID}
-          appSign={Config.ZEGOCLOUD_APP_SIGN}
+          appID={Config.ZEGOCLOUD_APP_ID2}
+          appSign={Config.ZEGOCLOUD_APP_SIGN2}
           userID={user.phoneNumber} // userID can be something like a phone number or the user id on your own user system.
           userName={userName}
-          callID={callId} // callID can be any unique string.
+          callID={callID} // callID can be any unique string.
           config={{
             // You can also use ONE_ON_ONE_VOICE_CALL_CONFIG/GROUP_VIDEO_CALL_CONFIG/GROUP_VOICE_CALL_CONFIG to make more types of calls.
             ...ONE_ON_ONE_VOICE_CALL_CONFIG,

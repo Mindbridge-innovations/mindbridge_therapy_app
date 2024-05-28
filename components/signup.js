@@ -13,6 +13,8 @@ import { Picker } from '@react-native-picker/picker';
 import mystyles from '../assets/stylesheet';
 import { useNavigation } from '@react-navigation/native';
 import validateInput from '../assets/utils/validateInput'; // Make sure this path is correct
+import { Toast } from 'react-native-toast-notifications';
+import PasswordInput from '../assets/reusablecomponents/passwordInput';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -43,7 +45,13 @@ const SignUpScreen = () => {
     const hasEmptyFields = requiredFields.some(field => !userData[field]);
 
     if (hasErrors || hasEmptyFields) {
-        alert('Please correct the errors before submitting.');
+      Toast.show('Please fill the fields correctly before submitting.', {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
         return;
     }
 
@@ -147,7 +155,7 @@ const handleRoleChange = (role) => {
           </Text>
 
           {/* Input fields with validation */}
-          {['firstName', 'lastName', 'email', 'phoneNumber', 'username', 'password', 'password_confirm'].map((field, index) => (
+          {['firstName', 'lastName', 'email', 'phoneNumber', 'username'].map((field, index) => (
             <View key={index} style={{ display: 'block', marginBottom: 20 }}>
               <Text style={mystyles.label}>{field.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}</Text>
               <TextInput
@@ -160,6 +168,25 @@ const handleRoleChange = (role) => {
               {errors[field] ? <Text style={{ color: 'red' }}>{errors[field]}</Text> : null}
             </View>
           ))}
+          {/* password input field */}
+          <View style={{ marginBottom: 20 }}>
+            <Text style={mystyles.label}>Password</Text>
+            <PasswordInput
+              value={userData.password}
+              onChangeText={text => handleInputChange('password', text)}
+            />
+            {errors.password ? <Text style={{ color: 'red' }}>{errors.password}</Text> : null}
+          </View>
+
+            {/* confirm password input field */}
+          <View style={{ marginBottom: 20 }}>
+            <Text style={mystyles.label}>Confirm Password</Text>
+            <PasswordInput
+              value={userData.password_confirm}
+              onChangeText={text => handleInputChange('password_confirm', text)}
+            />
+            {errors.password_confirm ? <Text style={{ color: 'red' }}>{errors.password_confirm}</Text> : null}
+          </View>
 
           <View style={styles.inputcontainer}>
             <Text

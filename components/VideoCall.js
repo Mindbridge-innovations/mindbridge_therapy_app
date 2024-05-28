@@ -22,7 +22,6 @@ export default function VideoCallPage({route,...props}) {
  
 
   return (
-console.log('CALL IDENTIFICATION FOR THE VIDEO CALL IS:',callID),
 
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={videoCallStyles.container}>

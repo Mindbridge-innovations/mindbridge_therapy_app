@@ -17,6 +17,8 @@ import Config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import UserContext from '../utils/contexts/userContext';
 import BottomSheet, { BottomSheetMethods } from '@devvie/bottom-sheet';
+import { Toast } from 'react-native-toast-notifications';
+import PasswordInput from '../assets/reusablecomponents/passwordInput';
 
 
 
@@ -25,6 +27,13 @@ const SignInScreen = () => {
   const [isLoading, setIsLoading] = useState(false); // State to track loading status
   const {user}=useContext(UserContext)
   const sheetRef = useRef(null);
+
+  // State to manage password visibility
+  const [passwordVisible, setPasswordVisible] = useState(false);
+ // Toggle password visibility
+ const togglePasswordVisibility = () => {
+  setPasswordVisible(!passwordVisible);
+};
 
 
 
@@ -66,6 +75,13 @@ const SignInScreen = () => {
           'tokenExpiration',
           expirationTime.toString(),
         );
+        Toast.show("You have been successfully logged in!", {
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
         // match the user after successful login, so long as they are not matched and are clients
         if(user.isMatched==="false"){
         const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
@@ -80,19 +96,43 @@ const SignInScreen = () => {
   
         if (matchingResponse.ok) {
           // Handle successful matching
-          alert('You have been matched successfully with a therapist!');
+          Toast.show("You have been matched successfully with a therapist!", {
+            type: "success",
+            placement: "top",
+            duration: 4000,
+            offset: 30,
+            animationType: "slide-in",
+          });
         } else {
-          // Handle matching errors
-          alert(matchingResult.message);
+          //handle matching errors
+          Toast.show(matchingResult.message, {
+            type: "success",
+            placement: "top",
+            duration: 4000,
+            offset: 30,
+            animationType: "slide-in",
+          });
         }
       }
         navigation.navigate('DashboardDrawer');
       } else {
         // Handle errors
-        alert(result.message);
+        Toast.show(result.message, {
+          type: "error",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
       }
     } catch (error) {
-      alert('An error occurred: ' + error.message);
+      Toast.show(error.message, {
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
     }
     setIsLoading(false)
 
@@ -177,15 +217,13 @@ const SignInScreen = () => {
             />
           </View>
 
-          <View style={{marginBottom: 30}}>
-            <Text style={mystyles.label}>Password</Text>
-            <TextInput
-              style={mystyles.input}
-              value={formData.password}
-              onChangeText={text => handleInputChange('password', text)}
-              secureTextEntry
-            />
-          </View>
+          <View style={{ marginBottom: 30 }}>
+              <Text style={mystyles.label}>Password</Text>
+              <PasswordInput
+                value={formData.password}
+                onChangeText={text => handleInputChange('password', text)}
+              />
+            </View>
           {isLoading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#0000ff" />

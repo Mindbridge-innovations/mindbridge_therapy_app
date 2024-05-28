@@ -23,13 +23,18 @@ const reverseMappings = {
         3: 'Voice call'
     },
     therapy_experiences: {
-        1: 'Marriage and Family Therapy',
-        2: 'Substance Abuse Counseling',
-        3: 'Trauma and PTSD Treatment',
-        4: 'Child and Adolescent Therapy',
-        5: 'LGBTQ+ Counseling',
-        6: 'Education mindset counselling',
-        7: 'Career Counseling'
+        1:'Anxiety Disorder',
+        2:'Depression',
+        3:'Substance Abuse Counseling',
+        4:'Mood(Bipolar) disorders',
+        5:'Disruptive behaviour and dissocial disorders',
+        6:'Marriage and Family Therapy', 
+        7:'Trauma and PTSD Treatment',
+        8:'Child and Adolescent Therapy', 
+        9:'LGBTQ+ Counseling', 
+        10:'Education mindset councelling', 
+        11:'Career Counseling',
+  
     }
 };
 
