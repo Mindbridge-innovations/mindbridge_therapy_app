@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View, Image, Text, Dimensions, StyleSheet} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../../assets/stylesheet';
 import CustomButton from '../../assets/utils/custom_button';
 import {useNavigation} from '@react-navigation/native';
 import AppointmentBookingScreen from './bookappointment';
+import UserContext from '../../utils/contexts/userContext';
 
 const AppointmentDetailsScreen = ({route}) => {
   const {appointment} = route.params;
   const navigation = useNavigation();
+  const { user , isAuthenticated} = useEffect(UserContext);
+
+
+  //call back effect to monitor user auth status and redirect accordingly/ prevent screen access without login
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
 
   //const variables to hold the modal state
   const [modalVisible, setModalVisible] = useState(false);

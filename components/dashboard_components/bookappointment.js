@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   TextInput,
@@ -16,6 +16,7 @@ import {DatePicker, TimePicker} from './datePicker';
 import Config from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import UserContext from '../../utils/contexts/userContext';
 
 const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
   const {passedUser}=route.params
@@ -26,6 +27,15 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
   const navigation=useNavigation()
 
   const [mode,setSelectedMode]=useState('')
+
+  const { user , isAuthenticated} = useContext(UserContext);
+
+  //call back effect to monitor user auth status and redirect accordingly/ prevent screen access without login
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
 
 
   const formatDate = date => {

@@ -1,5 +1,5 @@
 import {View, Text, Image, Dimensions, TextInput, KeyboardAvoidingView, Alert} from 'react-native';
-import React, { useRef ,useState} from 'react';
+import React, { useEffect, useRef ,useState} from 'react';
 import mystyles from '../assets/stylesheet';
 import CustomButton from '../assets/utils/custom_button';
 import {useNavigation} from '@react-navigation/native';
@@ -19,18 +19,46 @@ import validateInput from '../assets/utils/validateInput';
 
 function ProfileScreen() {
   const navigation = useNavigation();
-  const { user } = useContext(UserContext);
   const sheetRef = useRef(null);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [firstName, setFirstName] = useState(user?.firstName);
-  const [lastName, setLastName] = useState(user?.lastName);
-  const [username, setUsername] = useState(user?.username);
-  const [email, setEmail] = useState(user?.email);
-  const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
-  const [profileImage, setProfileImage] = useState(user?.profileImage);
+  // const [firstName, setFirstName] = useState(user?.firstName);
+  // const [lastName, setLastName] = useState(user?.lastName);
+  // const [username, setUsername] = useState(user?.username);
+  // const [email, setEmail] = useState(user?.email);
+  // const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber);
+  // const [profileImage, setProfileImage] = useState(user?.profileImage);
   const [imageFile, setImageFile]=useState('');
+  const { user , isAuthenticated} = useContext(UserContext);
+
+  // State for form fields
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [profileImage, setProfileImage] = useState('');
+
+  // Update form fields when user object changes
+  useEffect(() => {
+    if (user) {
+      setFirstName(user.firstName || '');
+      setLastName(user.lastName || '');
+      setUsername(user.username || '');
+      setEmail(user.email || '');
+      setPhoneNumber(user.phoneNumber || '');
+      setProfileImage(user.profileImage || '');
+    }
+  }, [user]);
+
+
+  //call back effect to monitor user auth status and redirect accordingly/ prevent screen access without login
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
 
 
   const handlePasswordChange = async () => {

@@ -1,5 +1,5 @@
 // CustomDrawerContent.js
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { DrawerContentScrollView, DrawerItem } from '@react-navigation/drawer';
 import { View, Text, Image, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -11,14 +11,16 @@ import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
 import UserContext from '../../utils/contexts/userContext';
 
 const CustomDrawerContent = props => {
+ 
     const { user, logout } = useContext(UserContext);
-    const navigation = useNavigation();
+    const {isAuthenticated}=useContext(UserContext)
+    const navigation=useNavigation()
+    useEffect(() => {
+      if (!isAuthenticated) {
+          navigation.navigate('SignInScreen');
+      }
+  }, [isAuthenticated, navigation]);
   
-    const handleSignOut = async () => {
-      await logout();
-      navigation.navigate('SignInScreen');
-    };
-
   return (
       <DrawerContentScrollView {...props}>
       {/* Custom content at the top of the drawer */}
@@ -105,7 +107,7 @@ const CustomDrawerContent = props => {
       {/* Signout button at the bottom */}
       <DrawerItem
         label="Sign Out"
-        onPress={handleSignOut}
+        onPress={()=>logout()}
         icon={() => <FontAwesomeIcon name="sign-out" size={20} color="#000" />} // Replace with your desired icon
       />
     </DrawerContentScrollView>

@@ -1,5 +1,5 @@
 // DashboardDrawer.js
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import AppointmentManagementScreen from './Appointments';
 import PatientListScreen from './mypatients';
@@ -11,11 +11,20 @@ import ResourcesScreen from './ResourcesScreen';
 import OnBoardQtnsScreen from '../onboard_qtns_screen';
 import CustomDrawerContent from './CustomDrawerContent';
 import { Dimensions } from 'react-native';
+import UserContext from '../../utils/contexts/userContext';
+import { useNavigation } from '@react-navigation/native';
 
 
 const Drawer = createDrawerNavigator();
 
 const DashboardDrawer = () => {
+  const {isAuthenticated}=useContext(UserContext)
+  const navigation=useNavigation()
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
   return (
     <Drawer.Navigator
       initialRouteName="Appointments"

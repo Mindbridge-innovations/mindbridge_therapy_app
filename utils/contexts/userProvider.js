@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigation=useNavigation()
+  const navigation = useNavigation();
 
   const fetchUser = useCallback(async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -39,10 +39,15 @@ const UserProvider = ({ children }) => {
   }, [fetchUser]);
 
   const logout = async () => {
-    await AsyncStorage.removeItem('userToken');
+    console.log("Logging out...");
     setUser(null);
     setIsAuthenticated(false);
-    navigation.navigate('SignInScreen')
+    console.log("User cleared, navigating to SignInScreen...");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'SignInScreen' }],
+    });
+    await AsyncStorage.clear();
   };
 
   return (

@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useLayoutEffect, useContext } from 'react';
+import React, { useCallback, useState, useLayoutEffect, useContext, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { auth, db,rtdb } from '../../firebaseConfig';
@@ -9,9 +9,17 @@ import { useNavigation } from '@react-navigation/native';
 import UserContext from '../../utils/contexts/userContext';
 
 const ChatScreen = ({ route }) => {
-  const { user } = useContext(UserContext);
   const navigation = useNavigation();
   const [messages, setMessages] = useState([]);
+
+  const { user , isAuthenticated} = useContext(UserContext);
+
+  //call back effect to monitor user auth status and redirect accordingly/ prevent screen access without login
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
 
   //get the therapist data object from the therapist details screen
   const {params} = route;

@@ -29,11 +29,20 @@ const AppointmentManagementScreen = ({navigation}) => {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [cancelModalVisible, setCancelModalVisible] = useState(false);
   const [rescheduleModalVisible, setRescheduleModalVisible] = useState(false);
-  const {user}=useContext(UserContext)
   const [cancellationReason, setCancellationReason] = useState('');
   const  [newDate, setNewDate]=useState(new Date())
   const  [newTime, setNewTime]=useState(new Date())
   const [filter, setFilter] = useState('all'); // State to hold the current filter value
+
+  const { user , isAuthenticated} = useContext(UserContext);
+
+
+  //call back effect to monitor user auth status and redirect accordingly/ prevent screen access without login
+  useEffect(() => {
+    if (!isAuthenticated) {
+        navigation.navigate('SignInScreen');
+    }
+}, [isAuthenticated, navigation]);
 
   async function setupNotifications() {
     // Request permission to display notifications
@@ -140,7 +149,6 @@ const AppointmentManagementScreen = ({navigation}) => {
         }
       );
     }
-  
 
 
   const formatDate = date => {
@@ -153,8 +161,6 @@ const AppointmentManagementScreen = ({navigation}) => {
 
 
   useEffect(() => {
-   
-
     let appointmentsQuery;
 
   if (user.role === 'therapist') {
@@ -214,7 +220,7 @@ const AppointmentManagementScreen = ({navigation}) => {
       unsubscribe();
     }
   };
-  }, [filter]);
+  }, [user,filter, navigation]);
 
  
 

@@ -57,6 +57,7 @@ const { isAuthenticated } = useContext(UserContext);
         navigation.navigate('DashboardDrawer');
     }
 }, [isAuthenticated, navigation]);
+
   const handleSubmit = async () => {
     const token = await AsyncStorage.getItem('userToken');
 
@@ -96,6 +97,10 @@ const { isAuthenticated } = useContext(UserContext);
           'tokenExpiration',
           expirationTime.toString(),
         );
+        setUser(result.userData);
+        console.log(result.userData)
+        setIsAuthenticated(true);
+       
         Toast.show("You have been successfully logged in!", {
           type: "success",
           placement: "top",
@@ -135,8 +140,10 @@ const { isAuthenticated } = useContext(UserContext);
           });
         }
       }
-       setIsAuthenticated(true); // Assuming you have this method to update authentication state
-        navigation.navigate('DashboardDrawer');
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'DashboardDrawer' }],
+      });
       } else {
         // Handle errors
         Toast.show(result.message, {

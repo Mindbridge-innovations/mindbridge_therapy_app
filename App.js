@@ -2,9 +2,8 @@
 import {NavigationContainer, useNavigation} from '@react-navigation/native';
 import React, {useRef,useContext} from 'react';
 import queryString from 'query-string';
-import {Linking, Platform} from 'react-native';
+import {Dimensions, Linking, Platform} from 'react-native';
 import VideoCallPage from './components/VideoCall';
-import RNEncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from './components/splash_screen';
 import {useState, useEffect} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -19,42 +18,25 @@ import {
   DrawerItem,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import SettingScreen from './components/profile';
-import {Image} from 'react-native';
 import TherapistListScreen from './components/dashboard_components/mytherapists';
 import PatientListScreen from './components/dashboard_components/mypatients';
 import TherapistDetailsScreen from './components/dashboard_components/therapist_details';
 import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
-import AppointmentManagementScreen from './components/dashboard_components/Appointments';
 import AppointmentDetailsScreen from './components/dashboard_components/appointment_details';
 import ChatScreen from './components/dashboard_components/ChatScreen';
-import FontAwesomeIcon from 'react-native-vector-icons/dist/FontAwesome';
-import AntDesignIcon from 'react-native-vector-icons/dist/AntDesign';
-import IoniconsIcon from 'react-native-vector-icons/dist/Ionicons';
-import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
-import MaterialIcons from 'react-native-vector-icons/dist/MaterialIcons';
-import UserContext from './utils/contexts/userContext';
 import VoiceCallPage from './components/dashboard_components/VoiceCall';
 import PatientDetailsScreen from './components/dashboard_components/patient_details';
-import { Text } from 'react-native-elements';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LogLevel, OneSignal } from 'react-native-onesignal';
 import Config from './config';
 import RateTherapistScreen from './components/dashboard_components/ratingForm';
 import FeedbackForm from './components/dashboard_components/feedbackForm';
-import MyFeedbacks from './components/dashboard_components/queryFeedbacks';
-import MyRatings from './components/dashboard_components/queryRatings';
 import ResetPasswordScreen from './components/resetPassword';
 import { ToastProvider } from 'react-native-toast-notifications'
-import ResourcesScreen from './components/dashboard_components/ResourcesScreen';
 import WebViewScreen from './components/dashboard_components/WebViewScreen';
 import TokenDisplayScreen from './components/dashboard_components/tokenDisplayScreen';
+import DashboardDrawer from './components/dashboard_components/DashboardDrawer';
 
-
-
-
-// ... other imports
 
 
 const Stack = createNativeStackNavigator();
@@ -70,144 +52,7 @@ const linking = {
 };
 
 
-
-const DashboardDrawer = () => {
-  const {user}=useContext(UserContext);
-let userData;
-  return (
-    // main drawer navigator
-    <Drawer.Navigator
-      initialRouteName="Appointments"
-      drawerContent={props => <CustomDrawerContent {...props} />}
-      screenOptions={{
-        drawerStyle: {backgroundColor: '#ADD8E6', width: 250},
-        drawerActiveBackgroundColor: 'blue',
-      }}>
-      <Drawer.Screen
-        name="My appointments"
-        component={AppointmentManagementScreen}
-      />
-      <Drawer.Screen name="My patients" component={PatientListScreen} />
-      <Drawer.Screen name="Feedback/review" component={MyFeedbacks} />
-      <Drawer.Screen name="Ratings/review" component={MyRatings} />
-      <Drawer.Screen name="My therapists" component={TherapistListScreen} />
-      <Drawer.Screen name="Find a therapist" component={TherapistListScreen} />
-      <Drawer.Screen name="Profile" component={SettingScreen} />
-      <Drawer.Screen name="Resource Library" component={ResourcesScreen} />
- 
-        
-    </Drawer.Navigator>
-  );
-};
-const CustomDrawerContent = props => {
-  //get the current user data
-  const {user,isAuthenticated}=useContext(UserContext)
-  const navigation = useNavigation(); // Get the navigation object
-
-  const handleSignOut = async () => {
-    try {
-      // Clear user session by removing the token from AsyncStorage
-      await AsyncStorage.removeItem('userToken');
-      isAuthenticated(false)
-
-      // After signout, navigate the user to the login screen
-      navigation.navigate('SignInScreen');
-    } catch (error) {
-      console.error('Error clearing user session:', error);
-      // Handle error (optional)
-    }
-  };
-  return (
-    
-    <DrawerContentScrollView {...props}>
-      {/* Custom content at the top of the drawer */}
-      <Image
-        source={require('./assets/mindbridgelogo_splash.png')}
-        style={{height: 150, resizeMode: 'cover', width: 250}}
-      />
-      
-      <Text style={{marginLeft:20, fontWeight:'400'}}>Logged as {user.email}</Text>
-
-      {/* Default drawer items */}
-      <DrawerItem
-        label="My appointments"
-        onPress={() => props.navigation.navigate('My appointments')}
-        icon={() => <FontAwesomeIcon name="calendar" size={20} color="#000" />} // Replace with your desired icon
-      />
-
-{/* display the below drawer item only if user is a therapist */}
-      {user.role==="therapist" && (<DrawerItem
-        label="My patients"
-        onPress={() => props.navigation.navigate('My patients')}
-        icon={() => (
-          <FontAwesome6 name="hospital-user" size={20} color="#000" />
-        )} // Replace with your desired icon
-      />
-      )}
-
-{/* display the below drawer item only if user is a client */}
-      { user.role==="client" && (
-      <DrawerItem
-        label="Feedback/review"
-        onPress={() => props.navigation.navigate('Feedback/review')}
-        icon={() => <MaterialIcons name="reviews" size={20} color="#000" />} // Replace with your desired icon
-      />
-      )}
-
-{/* display the below drawer item only if user is a patient*/}
-      { user.role==="therapist" && (
-            <DrawerItem
-              label="My ratings/review"
-              onPress={() => props.navigation.navigate('Ratings/review')}
-              icon={() => <MaterialIcons name="star-rate" size={20} color="#000" />} // Replace with your desired icon
-            />
-            )}
-
-{/* display the below drawer item only if user is a client */}
-      { user.role==='client' && (
-      <DrawerItem
-        label="My therapists"
-        onPress={() => props.navigation.navigate('My therapists')}
-        icon={() => <FontAwesome6 name="user-doctor" size={20} color="#000" />} // Replace with your desired icon
-      />
-      )}
-
-{/* display the below drawer item only if user is a client */}
-    { user.role==='client' && (
-          <DrawerItem
-            label="Find a therapist"
-            onPress={() => props.navigation.navigate('OnBoardQtnsScreen',{userData:user,  source:"UpdateResponse"})}
-            icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
-          />
-          )}
-
-    { user.role==='therapist' && (
-          <DrawerItem
-            label="Generate VR token"
-            onPress={() => props.navigation.navigate('TokenDisplay')}
-            icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
-          />
-          )}
-      <DrawerItem
-        label="Profile"
-        onPress={() => props.navigation.navigate('Profile')}
-        icon={() => <AntDesignIcon name="profile" size={20} color="#000" />} // Replace with your desired icon
-      />
-      <DrawerItem
-        label="Resource Library"
-        onPress={() => props.navigation.navigate('Resource Library')}
-        icon={() => <IoniconsIcon name="library" size={20} color="#000" />} // Replace with your desired icon
-      />
-      {/* Signout button at the bottom */}
-      <DrawerItem
-        label="Sign Out"
-        onPress={handleSignOut}
-        icon={() => <FontAwesomeIcon name="sign-out" size={20} color="#000" />} // Replace with your desired icon
-      />
-    </DrawerContentScrollView>
-  );
-};
-
+//the root of the app where it starts loading from
 export default function App() {
   const navigationRef = useRef();
   const routeNameRef = useRef();
@@ -305,7 +150,6 @@ export default function App() {
 
   return (
     <ToastProvider>
-   
     <SafeAreaView style={{flex:1}}>
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer
@@ -327,6 +171,7 @@ export default function App() {
         {isLoading ? (
           <SplashScreen />
         ) : (
+          // define the navigation stack below
           <Stack.Navigator
             screenOptions={{headerShown: false}}
             initialRouteName="HomePage">
@@ -336,49 +181,19 @@ export default function App() {
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
             <Stack.Screen name="MyTherapists" component={TherapistListScreen} />
             <Stack.Screen name="MyPatients" component={PatientListScreen} />
-
-            <Stack.Screen
-              name="OnBoardQtnsScreen"
-              component={OnBoardQtnsScreen}
-            />
-            <Stack.Screen
-              name="TherapistDetailsScreen"
-              component={TherapistDetailsScreen} options={{ headerShown: true }}
-            />
-            <Stack.Screen
-              name="AppointmentBookingScreen"
-              component={AppointmentBookingScreen}
-            />
-            
+            <Stack.Screen name="OnBoardQtnsScreen" component={OnBoardQtnsScreen}/>
+            <Stack.Screen name="TherapistDetailsScreen" component={TherapistDetailsScreen}/>
+            <Stack.Screen name="AppointmentBookingScreen" component={AppointmentBookingScreen}/>
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
             <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }}/>
-            <Stack.Screen
-              name="AppointmentDetailsScreen"
-              component={AppointmentDetailsScreen}
-            />
-            <Stack.Screen
-              name="VoiceCall"
-              component={VoiceCallPage}
-            />
-            <Stack.Screen
-              name="PatientDetailsScreen"
-              component={PatientDetailsScreen}
-            />
-              <Stack.Screen
-              name="Rating"
-              component={RateTherapistScreen}
-            />
-              <Stack.Screen
-              name="Feedback"
-              component={FeedbackForm}
-            />
+            <Stack.Screen name="AppointmentDetailsScreen" component={AppointmentDetailsScreen}/>
+            <Stack.Screen name="VoiceCall" component={VoiceCallPage}/>
+            <Stack.Screen name="PatientDetailsScreen" component={PatientDetailsScreen}/>
+            <Stack.Screen name="Rating" component={RateTherapistScreen}/>
+            <Stack.Screen name="Feedback" component={FeedbackForm}/>
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
             <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
             <Stack.Screen name="TokenDisplay" component={TokenDisplayScreen} />
-
-
-
-            
           </Stack.Navigator>
         )}
         </UserProvider>
