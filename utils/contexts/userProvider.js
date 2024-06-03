@@ -1,36 +1,36 @@
-// utils/contexts/UserProvider.js
+// UserProvider.js
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import UserContext from './userContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';
+import { useNavigation } from '@react-navigation/native';
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigation=useNavigation()
 
   const fetchUser = useCallback(async () => {
     const token = await AsyncStorage.getItem('userToken');
     if (token) {
       try {
         const response = await fetch(`${Config.BACKEND_API_URL}/user`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
         const result = await response.json();
         if (response.ok) {
           setUser(result);
-          console.log('Fetched user data:', result);//log it
+          setIsAuthenticated(true);
         } else {
           console.error('Error fetching user data:', result.message);
-          await AsyncStorage.removeItem('userToken');
-          // Handle navigation to the login screen if needed
+          setIsAuthenticated(false);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
-        await AsyncStorage.removeItem('userToken');
-        // Handle navigation to the login screen if needed
+        setIsAuthenticated(false);
       }
+    } else {
+      setIsAuthenticated(false);
     }
   }, []);
 
@@ -38,15 +38,18 @@ const UserProvider = ({ children }) => {
     fetchUser();
   }, [fetchUser]);
 
+  const logout = async () => {
+    await AsyncStorage.removeItem('userToken');
+    setUser(null);
+    setIsAuthenticated(false);
+    navigation.navigate('SignInScreen')
+  };
+
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser, isAuthenticated, setIsAuthenticated, logout }}>
       {children}
     </UserContext.Provider>
   );
-};
-
-UserProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default UserProvider;

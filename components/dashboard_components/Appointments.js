@@ -17,9 +17,9 @@ import mystyles from '../../assets/stylesheet';
 import {DatePicker, TimePicker} from './datePicker';
 import { rtdb } from '../../firebaseConfig';
 import { onValue,ref,query,orderByChild,get,update ,equalTo} from 'firebase/database';
-import { where } from 'firebase/firestore';
 import UserContext from '../../utils/contexts/userContext';
 import {Picker} from '@react-native-picker/picker';
+import notifee, { AndroidImportance, AndroidStyle, TriggerType } from '@notifee/react-native';
 
 const AppointmentManagementScreen = ({navigation}) => {
   const [appointments, setAppointments] = useState([]);
@@ -35,6 +35,112 @@ const AppointmentManagementScreen = ({navigation}) => {
   const  [newTime, setNewTime]=useState(new Date())
   const [filter, setFilter] = useState('all'); // State to hold the current filter value
 
+  async function setupNotifications() {
+    // Request permission to display notifications
+    const permissionStatus = await notifee.requestPermission();
+  console.log('Notification permission status:', permissionStatus);
+  
+    // Create a channel (required for Android)
+    await notifee.createChannel({
+      id: 'mindbridge@24',
+      name: 'MindBridge Innovations',
+      importance: AndroidImportance.HIGH, // Ensure high importance for visibility
+
+    });
+  }
+  
+  useEffect(() => {
+    setupNotifications();
+  }, []);
+
+  const scheduleNotification = async (appointment) => {
+    const dateTimeString = `${appointment.date} ${appointment.time}`;
+    const appointmentTime = new Date(dateTimeString);
+    const now = new Date().getTime();
+    const notifee_title = "MindBridge Appointment Reminder";
+    const channelId="mindbridge@24";
+
+    // Schedule a notification 5 mins before the appointment
+    
+      await notifee.createTriggerNotification(
+        {
+          title: notifee_title,
+          android: {
+            channelId,
+            timestamp: Date.now(),
+            style: {
+              type: AndroidStyle.BIGTEXT,
+              text: `Your appointment with ${appointment.user.firstName} ${appointment.user.lastName} is starting in 5 minutes. Please log on to the app to catch up with the appointment`,
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: appointmentTime.getTime() - 5 * 60 * 1000, // At the exact time
+        }
+      );
+  
+      
+    // Schedule a notification 30 minutes before the appointment
+      await notifee.createTriggerNotification(
+        {
+          title: notifee_title,
+          android: {
+            channelId,
+            timestamp: Date.now(),
+            style: {
+              type: AndroidStyle.BIGTEXT,
+              text: `Your appointment with ${appointment.user.firstName} ${appointment.user.lastName} is in 30 minutes. Please prepare and be ready, so you don't miss it`,
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: appointmentTime.getTime() - 30 * 60 * 1000, // 30 minutes before
+        }
+      );
+  
+    // Schedule a notification 1 day before the appointment
+      await notifee.createTriggerNotification(
+        {
+          title: notifee_title,
+          android: {
+            channelId,
+            timestamp: Date.now(),
+            style: {
+              type: AndroidStyle.BIGTEXT,
+              text: `Your appointment with ${appointment.user.username} is tomorrow at ${appointment.time}, please plan your day for tomorrow earlier. Here are the details: ${appointment.details}`,
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: appointmentTime.getTime() - 24 * 60 * 60 * 1000, // 1 day before
+        }
+      );
+    
+  
+    
+    // Schedule a notification 1 week before the appointment
+      await notifee.createTriggerNotification(
+        {
+          title: notifee_title,
+          android: {
+            channelId,
+            timestamp: Date.now(),
+            style: {
+              type: AndroidStyle.BIGTEXT,
+              text: `Your appointment with ${appointment.user.firstName} ${appointment.user.lastName} is next week on ${appointmentTime.getDay()} at ${appointment.time}. Please mark your calendar so that you don't miss it`,
+            },
+          },
+        },
+        {
+          type: TriggerType.TIMESTAMP,
+          timestamp: appointmentTime.getTime() - 7 * 24 * 60 * 60 * 1000, // 1 week before
+        }
+      );
+    }
+  
 
 
   const formatDate = date => {
@@ -47,6 +153,7 @@ const AppointmentManagementScreen = ({navigation}) => {
 
 
   useEffect(() => {
+   
 
     let appointmentsQuery;
 
@@ -70,14 +177,21 @@ const AppointmentManagementScreen = ({navigation}) => {
 
     // Fetch user details for each appointment
     const appointmentsWithUserDetails = await Promise.all(appointmentsList.map(async (appointment) => {
+
       const userRef = ref(rtdb, `users/${appointment.userId}`);
       const userSnapshot = await get(userRef);
       const userData = userSnapshot.val();
-      return {
+      const fullAppointment = {
         ...appointment,
-        user: userData ? userData : { username: 'Unknown' }, // Include the entire user data
+        user: userData ? userData : { username: 'Unknown' }, // Fallback if user data is not found
       };
+
+      // Call scheduleNotification here
+      scheduleNotification(fullAppointment);
+
+      return fullAppointment;
     }));
+
 
     const filteredAppointments = appointmentsWithUserDetails.filter((appointment) => {
       if (filter === 'all') {
@@ -87,6 +201,8 @@ const AppointmentManagementScreen = ({navigation}) => {
     });
 
     setAppointments(filteredAppointments);
+
+
     setIsLoading(false);
   }, (errorObject) => {
     setError(errorObject.message);

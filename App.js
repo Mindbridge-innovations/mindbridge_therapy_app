@@ -19,7 +19,6 @@ import {
   DrawerItem,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import DashboardScreen from './components/Dashboard';
 import SettingScreen from './components/profile';
 import {Image} from 'react-native';
 import TherapistListScreen from './components/dashboard_components/mytherapists';
@@ -102,13 +101,14 @@ let userData;
 };
 const CustomDrawerContent = props => {
   //get the current user data
-  const {user}=useContext(UserContext)
+  const {user,isAuthenticated}=useContext(UserContext)
   const navigation = useNavigation(); // Get the navigation object
 
   const handleSignOut = async () => {
     try {
       // Clear user session by removing the token from AsyncStorage
       await AsyncStorage.removeItem('userToken');
+      isAuthenticated(false)
 
       // After signout, navigate the user to the login screen
       navigation.navigate('SignInScreen');
@@ -305,7 +305,7 @@ export default function App() {
 
   return (
     <ToastProvider>
-    <UserProvider>
+   
     <SafeAreaView style={{flex:1}}>
     <GestureHandlerRootView style={{flex: 1}}>
       <NavigationContainer
@@ -323,6 +323,7 @@ export default function App() {
             }
           }
         }}>
+           <UserProvider>
         {isLoading ? (
           <SplashScreen />
         ) : (
@@ -380,10 +381,10 @@ export default function App() {
             
           </Stack.Navigator>
         )}
+        </UserProvider>
       </NavigationContainer>
     </GestureHandlerRootView>
     </SafeAreaView>
-    </UserProvider>
     </ToastProvider>
   );
 }

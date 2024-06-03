@@ -8,7 +8,7 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import CustomButton from '../assets/utils/custom_button';
 import {ScrollView} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
@@ -25,7 +25,8 @@ import PasswordInput from '../assets/reusablecomponents/passwordInput';
 const SignInScreen = () => {
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false); // State to track loading status
-  const {user}=useContext(UserContext)
+  const { setUser,setIsAuthenticated } = useContext(UserContext);
+
   const sheetRef = useRef(null);
 
   // State to manage password visibility
@@ -35,6 +36,7 @@ const SignInScreen = () => {
   setPasswordVisible(!passwordVisible);
 };
 
+const { isAuthenticated } = useContext(UserContext);
 
 
   const [formData, setFormData] = useState({
@@ -49,6 +51,12 @@ const SignInScreen = () => {
     });
   };
 
+  useEffect(() => {
+    if (isAuthenticated) {
+        console.log("User is authenticated, navigating to DashboardDrawer");
+        navigation.navigate('DashboardDrawer');
+    }
+}, [isAuthenticated, navigation]);
   const handleSubmit = async () => {
     const token = await AsyncStorage.getItem('userToken');
 
@@ -65,8 +73,21 @@ const SignInScreen = () => {
         }),
       });
       const result = await response.json();
+      
 
       if (response.ok) {
+        if(result.userData.role==="admin"){
+          Toast.show("Admins can not sign into the app, please use the web system", {
+            type: "warning",
+            placement: "top",
+            duration: 4000,
+            offset: 30,
+            animationType: "slide-in",
+          });
+          setIsLoading(false)
+          return null;
+  
+        }
         // Handle successful login
         // Save the token, navigate to the dashboard, etc.
         const expirationTime = new Date().getTime() + 3 * 24 * 60 * 60 * 1000; // 7 days from now
@@ -83,7 +104,7 @@ const SignInScreen = () => {
           animationType: "slide-in",
         });
         // match the user after successful login, so long as they are not matched and are clients
-        if(user.isMatched==="false"){
+        if(result.userData.isMatched==="false"){
         const matchingResponse = await fetch(`${Config.BACKEND_API_URL}/match`, {
           method: 'POST',
           headers: {
@@ -114,6 +135,7 @@ const SignInScreen = () => {
           });
         }
       }
+       setIsAuthenticated(true); // Assuming you have this method to update authentication state
         navigation.navigate('DashboardDrawer');
       } else {
         // Handle errors
@@ -125,7 +147,7 @@ const SignInScreen = () => {
           animationType: "slide-in",
         });
       }
-    } catch (error) {
+    } catch (error) {client
       Toast.show(error.message, {
         type: "error",
         placement: "top",
