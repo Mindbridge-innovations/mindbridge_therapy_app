@@ -163,20 +163,6 @@ const ResourcesScreen = () => {
                     </>
                 )}
 
-{/* list of educational resources for mental health */}
-                {/* <TouchableOpacity onPress={() => toggleCategory('books')} style={mystyles.resourceCategory}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={mystyles.categoryText}>Educational resources</Text>
-                        <Text style={{ marginRight: 5, color:'white' }}>{expandedCategory === 'books' ? '▼' : '▶'}</Text>
-                    </View>
-                </TouchableOpacity>
-                {expandedCategory === 'books' && (
-                    <Text onPress={() => handleOpenBook('https://linktothebook.com')}>
-                        Open Book Title
-                    </Text>
-                )} */}
-
-        {/*     the category resource display for interactive text guides */}
 <           TouchableOpacity onPress={() => toggleCategory('guides')} style={mystyles.resourceCategory}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={mystyles.categoryText}>Interactive Guides</Text>

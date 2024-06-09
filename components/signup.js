@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
+  Keyboard,
 } from 'react-native';
 import CustomButton from '../assets/utils/custom_button';
 import { Picker } from '@react-native-picker/picker';
@@ -130,7 +131,7 @@ const handleRoleChange = (role) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }} >
       <View
         style={{
           justifyContent: 'space-around',

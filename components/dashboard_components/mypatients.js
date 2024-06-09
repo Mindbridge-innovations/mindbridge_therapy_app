@@ -16,6 +16,7 @@ import FeedbackForm from './feedbackForm';
 import UserContext from '../../utils/contexts/userContext';
 import mystyles from '../../assets/stylesheet';
 import { ScrollView } from 'react-native-gesture-handler';
+import { Toast } from 'react-native-toast-notifications';
 
 const PatientListScreen = ({navigation}) => {
   const [patients, setPatients] = useState([]);
@@ -54,7 +55,13 @@ const fetchMatchedPatientsForTherapist = async () => {
 
       setMatchedPatients(patientDetails);
     } else {
-      setError('No matches found, please request for a therapist, by clicking on the "Find a therapist" button in the dashboard');
+      Toast.show("No matches found, please request for a therapist, by clicking on the \"Find a therapist\" button in the dashboard",{
+        type: "error",
+        placement: "top",
+        duration: 10000,
+        offset: 30,
+        animationType: "slide-in",
+      });
     }
     setIsLoading(false);
   }, (errorObject) => {
@@ -132,11 +139,19 @@ useEffect(() => {
               textStyle={styles.buttonText}
             />
             <CustomButton
-              onPress={()=>handleOpenFeedbackModal(item)}
-              title="Send Feedback"
+              onPress={()=>navigation.navigate('TokenDisplay',{ passedUser: item})}
+              title="Generate VR token"
               buttonStyle={styles.custombutton}
               textStyle={styles.buttonText}
             />
+            <CustomButton
+              onPress={()=>handleOpenFeedbackModal(item)}
+              title="Provide Feedback"
+              buttonStyle={styles.custombutton}
+              textStyle={styles.buttonText}
+            />
+
+            
           </View>
         )}
       </View>

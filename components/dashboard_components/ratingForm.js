@@ -6,13 +6,16 @@ import mystyles from '../../assets/stylesheet';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';
 import { useNavigation } from '@react-navigation/native';
+import { Toast } from 'react-native-toast-notifications';
 
 const RateTherapistScreen = ({therapistId}) => {
   const [rating, setRating] = useState(1); // Default rating
   const [review,setReview]=useState(''); //review state value
   const navigation=useNavigation();
+  const [isLoading,setLoading]=useState(false)
 
   const handleRatingSubmit = async () => {
+    setLoading(true)
     const ratingData={
       rating:rating,
       review:review,
@@ -20,7 +23,6 @@ const RateTherapistScreen = ({therapistId}) => {
     }
     const token = await AsyncStorage.getItem('userToken');
 
-   console.log(ratingData)
    
     try {
       // Replace 'http://your-backend-url.com' with your actual backend URL
@@ -38,17 +40,35 @@ const RateTherapistScreen = ({therapistId}) => {
 
       if (response.ok) {
         // Handle successful registration
-        alert(
-          'Doctor/therapist rating completed succssfully!',
-        );
-        navigation.navigate('TherapistDetailsScreen',{passedUser});
+        Toast.show("SUCCESS:", result.message,{
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
+        // navigation.navigate('TherapistDetailsScreen',{passedUser});
       } else {
         // Handle errors
-        alert(result.message);
+        Toast.show("An error occured:", error.message,{
+          type: "error",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
       }
     } catch (error) {
       // Handle network errors
-      alert('An error occurred: ' + error.message);
+      Toast.show("An error occured:", error.message,{
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    }finally{
+      setLoading(false)
     }
   };
    
@@ -85,6 +105,7 @@ const RateTherapistScreen = ({therapistId}) => {
               onPress={handleRatingSubmit}
               title="Submit rating"
               textStyle={{color: 'white', fontWeight: 'bold'}}
+              isLoading={isLoading}
             />
         </View>
   );

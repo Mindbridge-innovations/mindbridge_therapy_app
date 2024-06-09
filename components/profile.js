@@ -31,6 +31,7 @@ function ProfileScreen() {
   // const [profileImage, setProfileImage] = useState(user?.profileImage);
   const [imageFile, setImageFile]=useState('');
   const { user , isAuthenticated} = useContext(UserContext);
+  const [isLoading, setIsLoading]=useState(false)
 
   // State for form fields
   const [firstName, setFirstName] = useState('');
@@ -127,6 +128,7 @@ function ProfileScreen() {
   };
 
   const updateProfile = async () => {
+    setIsLoading(true)
     const token = await AsyncStorage.getItem('userToken');
     const formData = new FormData();
     formData.append('firstName', firstName);
@@ -156,10 +158,8 @@ function ProfileScreen() {
           offset: 30,
           animationType: "slide-in",
         });
-        setFirstName(user?.firstName)
-        setLastName(user?.lastName)
-        setPhoneNumber(user?.phoneNumber)
-        setUsername(user?.username)
+       
+
       } else {
         Toast.show(result.message, {
           type: "warning",
@@ -168,13 +168,14 @@ function ProfileScreen() {
           offset: 30,
           animationType: "slide-in",
         });
-        setFirstName(user?.firstName)
-        setLastName(user?.lastName)
-        setPhoneNumber(user?.phoneNumber)
-        setUsername(user?.username)
+        
       }
     } catch (error) {
       console.error('Error updating profile:', error);
+      setIsLoading(false)
+
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -264,6 +265,7 @@ function ProfileScreen() {
             fontWeight: 'bold',
             textAlign: 'center',
           }}
+          isLoading={isLoading}
         />
       </View>
     </ScrollView>

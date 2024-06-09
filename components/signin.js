@@ -6,11 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  Keyboard,
+  Touchable
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import CustomButton from '../assets/utils/custom_button';
-import {ScrollView} from 'react-native-gesture-handler';
+import {ScrollView, TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import mystyles from '../assets/stylesheet';
 import {useNavigation} from '@react-navigation/native';
 import Config from '../config';
@@ -59,9 +61,11 @@ const { isAuthenticated } = useContext(UserContext);
 }, [isAuthenticated, navigation]);
 
   const handleSubmit = async () => {
+    Keyboard.dismiss();  // Dismiss the keyboard programmatically
+    setIsLoading(true)
+
     const token = await AsyncStorage.getItem('userToken');
 
-    setIsLoading(true)
     try {
       const response = await fetch(`${Config.BACKEND_API_URL}/login`, {
         method: 'POST',
@@ -211,6 +215,7 @@ const { isAuthenticated } = useContext(UserContext);
 
   return (
     <>
+    <TouchableWithoutFeedback>
     <ScrollView
       contentContainerStyle={{flexGrow: 1, backgroundColor: '#255ECC'}}>
       <View
@@ -253,12 +258,7 @@ const { isAuthenticated } = useContext(UserContext);
                 onChangeText={text => handleInputChange('password', text)}
               />
             </View>
-          {isLoading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.loadingText}>Logging in, please wait...</Text>
-          </View>
-        ) : (
+          
           <CustomButton
             onPress={handleSubmit}
             title="Sign In"
@@ -269,8 +269,8 @@ const { isAuthenticated } = useContext(UserContext);
               height: 50,
             }}
             textStyle={{color: 'white'}}
+            isLoading={isLoading}
           />
-        )}
 
           
         </View>
@@ -306,10 +306,12 @@ const { isAuthenticated } = useContext(UserContext);
               fontWeight: 'bold',
               textAlign: 'center',
             }}
+            
           />
         </View>
       </View>
     </ScrollView>
+    </TouchableWithoutFeedback>
     {/* BOTTOM SHEET TO DISPLAY EMAIL ENTERING FOR RESETTING PASSWORD */}
     <BottomSheet ref={sheetRef}>
     <View style={{paddingHorizontal:20, alignItems:'center'}}>

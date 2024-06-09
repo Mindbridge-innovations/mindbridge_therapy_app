@@ -22,7 +22,6 @@ import TherapistListScreen from './components/dashboard_components/mytherapists'
 import PatientListScreen from './components/dashboard_components/mypatients';
 import TherapistDetailsScreen from './components/dashboard_components/therapist_details';
 import AppointmentBookingScreen from './components/dashboard_components/bookappointment';
-import AppointmentDetailsScreen from './components/dashboard_components/appointment_details';
 import ChatScreen from './components/dashboard_components/ChatScreen';
 import VoiceCallPage from './components/dashboard_components/VoiceCall';
 import PatientDetailsScreen from './components/dashboard_components/patient_details';
@@ -82,6 +81,7 @@ export default function App() {
     const path = parsedUrl.url.split('://')[1];
     const params = parsedUrl.query;
 
+    //navigation technique from deep link to the reset password screen
     if (path.includes('reset-password')) {
       const { token, email } = params; // Extract both token and email
       if (token && email && navigationRef.current) {
@@ -95,7 +95,7 @@ export default function App() {
     if (url) handleDeepLink({ url });
   });
 
-  return () => {
+  return ()  => {
     Linking.removeEventListener('url', handleDeepLink);
   };
 }, []);
@@ -186,7 +186,6 @@ export default function App() {
             <Stack.Screen name="AppointmentBookingScreen" component={AppointmentBookingScreen}/>
             <Stack.Screen name="DashboardDrawer" component={DashboardDrawer} />
             <Stack.Screen name="Chat" component={ChatScreen} options={{ headerShown: true }}/>
-            <Stack.Screen name="AppointmentDetailsScreen" component={AppointmentDetailsScreen}/>
             <Stack.Screen name="VoiceCall" component={VoiceCallPage}/>
             <Stack.Screen name="PatientDetailsScreen" component={PatientDetailsScreen}/>
             <Stack.Screen name="Rating" component={RateTherapistScreen}/>

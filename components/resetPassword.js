@@ -3,6 +3,7 @@ import { View, TextInput, Button, Text, ScrollView } from 'react-native';
 import Config from '../config';
 import CustomButton from '../assets/utils/custom_button';
 import mystyles from '../assets/stylesheet';
+import { Toast } from 'react-native-toast-notifications';
 
 const ResetPasswordScreen = ({ route, navigation }) => {
   const [newPassword, setNewPassword] = useState('');
@@ -28,13 +29,26 @@ const ResetPasswordScreen = ({ route, navigation }) => {
 
       const data = await response.json();
       if (response.ok) {
-        alert('Password reset successfully!');
+      
+        Toast.show("Success:", result.message,{
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
         navigation.navigate('SignInScreen'); // Navigate to login screen
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
-      alert('Error resetting password: ' + error.message);
+      Toast.show("Error resetting password:", error.message,{
+        type: "success",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
     }
   };
 

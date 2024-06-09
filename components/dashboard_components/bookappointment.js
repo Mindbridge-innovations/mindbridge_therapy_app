@@ -17,6 +17,7 @@ import Config from '../../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import UserContext from '../../utils/contexts/userContext';
+import { Toast } from 'react-native-toast-notifications';
 
 const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
   const {passedUser}=route.params
@@ -25,6 +26,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
   const  [date, setDate]=useState(new Date())
   const  [time, setTime]=useState(new Date())
   const navigation=useNavigation()
+  const [isLoading, setIsLoading]=useState(false);
 
   const [mode,setSelectedMode]=useState('')
 
@@ -47,6 +49,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
   };
 
   const handleBookingSubmit = async () => {
+    setIsLoading(true)
     const appointmentData={
       date:formatDate(date),
       time:formatTime(time),
@@ -76,17 +79,35 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
 
       if (response.ok) {
         // Handle successful registration
-        alert(
-          'Your new appointment has been booked.Please wait for confirmation from your doctor',
-        );
+          Toast.show("Your new appointment has been booked.Please wait for confirmation from your doctor",{
+            type: "success",
+            placement: "top",
+            duration: 4000,
+            offset: 30,
+            animationType: "slide-in",
+          });
         navigation.navigate('AppointmentBookingScreen',{passedUser});
       } else {
         // Handle errors
-        alert(result.message);
+        Toast.show(result.message,{
+          type: "error",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
       }
     } catch (error) {
       // Handle network errors
-      alert('An error occurred: ' + error.message);
+      Toast.show("An error occured:", error.message,{
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    }finally{
+      setIsLoading(false)
     }
   };
 
@@ -126,7 +147,36 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
                 setReason(itemValue)
               }>
               <Picker.Item label="Choose your preference" value="" />
+
               <Picker.Item
+                label="Anxiety Disorder"
+                value="Anxiety Disorder"
+              />
+              <Picker.Item
+                label="Depression"
+                value="Depression"
+              />
+              <Picker.Item
+                label="Substance Abuse Counseling"
+                value="Substance Abuse Counseling"
+              />
+              <Picker.Item
+                label="Mood(Bipolar) disorders"
+                value="Mood(Bipolar) disorders"
+              />
+              <Picker.Item
+                label="Disruptive behaviour and dissocial disorders"
+                value="Disruptive behaviour and dissocial disorders"
+              />
+              <Picker.Item
+                label="Disruptive behaviour and dissocial disorders"
+                value="Disruptive behaviour and dissocial disorders"
+              />
+               <Picker.Item
+                label="Trauma and PTSD Treatment"
+                value="Trauma and PTSD Treatment"
+              />
+               <Picker.Item
                 label="Marriage and Family Therapy"
                 value="Marriage and Family Therapy"
               />
@@ -134,14 +184,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
                 label="Substance Abuse Counseling"
                 value="Substance Abuse Counseling"
               />
-              <Picker.Item
-                label="Trauma and PTSD Treatment"
-                value="Trauma and PTSD Treatment"
-              />
-              <Picker.Item
-                label="Anxiety or Depression Counseling"
-                value="Anxiety or Depression Counseling"
-              />
+             
               <Picker.Item
                 label="Child and Adolescent Therapy"
                 value="Child and Adolescent Therapy"
@@ -210,6 +253,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
             fontWeight: 'bold',
             textAlign: 'center',
           }}
+          isLoading={isLoading}
         />
       </View>
     </ScrollView>

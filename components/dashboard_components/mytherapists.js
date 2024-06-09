@@ -43,7 +43,6 @@ const TherapistListScreen = ({ navigation }) => {
       const data = await response.json();
       setTherapists(data);
     } catch (error) {
-      console.error('Failed to fetch matched therapists:', error);
       setError('Failed to load therapists');
     } finally {
       setIsLoading(false);

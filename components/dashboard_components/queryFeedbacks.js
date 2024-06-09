@@ -66,6 +66,7 @@ const MyFeedbacks = () => {
             </Text>
             {item.feedback.fileUrl&& (
                 <Text>1 file attached, click to download</Text>
+                
             )}
             {expandedIndex === index && item.feedback.fileUrl && (
               <TouchableOpacity onPress={() => Linking.openURL(item.feedback.fileUrl)}>

@@ -8,18 +8,21 @@ import { Toast } from 'react-native-toast-notifications';
 import Config from '../../config';
 
 
-function TokenDisplayScreen() {
+function TokenDisplayScreen({route}) {
   const [token, setToken] = useState('');
+  const {passedUser}=route.params;
+  const userId=passedUser.userId
 
   const fetchToken = async () => {
     const userToken = await AsyncStorage.getItem('userToken');
     try {
       const response = await fetch(`${Config.BACKEND_API_URL}/generate-vr-token`, {
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Authorization': `Bearer ${userToken}`,
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId: userId }), // Corrected to send JSON string
       });
       const result = await response.json();
       if (response.ok) {

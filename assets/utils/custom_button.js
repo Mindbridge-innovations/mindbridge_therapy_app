@@ -1,11 +1,20 @@
 import React from 'react';
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
-const CustomButton = ({onPress, title, buttonStyle, textStyle}) => (
-  <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
-    <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+const CustomButton = ({ onPress, title, buttonStyle, textStyle, isLoading }) => (
+  <TouchableOpacity
+    style={[styles.button, buttonStyle]}
+    onPress={onPress}
+    disabled={isLoading}  // Disable the button when loading
+  >
+    {isLoading ? (
+      <ActivityIndicator size="small" color="#FFFFFF" />
+    ) : (
+      <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+    )}
   </TouchableOpacity>
 );
+
 export default CustomButton;
 
 const styles = StyleSheet.create({
@@ -21,5 +30,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  disabledButton: {
+    backgroundColor: '#555',  // Optional: change to a different color when disabled
   },
 });

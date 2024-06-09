@@ -87,13 +87,13 @@ const CustomDrawerContent = props => {
           />
           )}
 
-    { user.role==='therapist' && (
+    {/* { user.role==='therapist' && (
           <DrawerItem
             label="Generate VR token"
             onPress={() => props.navigation.navigate('TokenDisplay')}
             icon={() => <MaterialIcons name="request-page" size={20} color="#000" />} // Replace with your desired icon
           />
-          )}
+          )} */}
       <DrawerItem
         label="Profile"
         onPress={() => props.navigation.navigate('Profile')}

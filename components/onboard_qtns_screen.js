@@ -16,6 +16,7 @@ import { DatePicker,TimePicker} from './dashboard_components/datePicker';
 import Checkbox from '../assets/utils/checkBox';
 import Config from '../config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from 'react-native-toast-notifications';
 
 const OnBoardQtnsScreen = ({route}) => {
   // defining the navigation variable to shift btn screens
@@ -25,6 +26,8 @@ const OnBoardQtnsScreen = ({route}) => {
   const {params} = route;
   const userData = params ? params?.userData : null;
   const { source } = route.params;
+  //variable to change loading indicator
+  const [isLoading, setIsLoading] = useState(false);
 
   // Determine the API URL based on the source screen
   const apiUrl = source === 'SignUpScreen' ? `${Config.BACKEND_API_URL}/register` : `${Config.BACKEND_API_URL}/user/updateResponses`;
@@ -222,6 +225,7 @@ const OnBoardQtnsScreen = ({route}) => {
   };
   
   const handleSubmit = async () => {
+    setIsLoading(true);  // Start loading
     const payload = {
         username: userData.username,
         email: userData.email,
@@ -259,7 +263,14 @@ const OnBoardQtnsScreen = ({route}) => {
 
         if (response.ok) {
             // Handle successful registration or update
-            alert(source === 'SignUpScreen' ? 'Registration successful, please check your email for confirmation!' : 'Your responses were updated successfully!');
+            Toast.show(source === 'SignUpScreen' ? 'Registration successful, please check your email for confirmation!' : "Your responses were updated successfully!",{
+              type: "success",
+              placement: "top",
+              duration: 4000,
+              offset: 30,
+              animationType: "slide-in",
+            });
+            setIsLoading(false)
             
             // Perform matching only if the source is not 'SignUpScreen' (indicating an update)
             if (source !== 'SignUpScreen') {
@@ -275,10 +286,23 @@ const OnBoardQtnsScreen = ({route}) => {
 
                 if (matchingResponse.ok) {
                     // Handle successful matching
-                    alert('You have been matched successfully with a therapist!');
+                    Toast.show('You have been matched successfully with a therapist!',{
+                      type: "success",
+                      placement: "top",
+                      duration: 4000,
+                      offset: 30,
+                      animationType: "slide-in",
+                    });
+                    setIsLoading(false)
                 } else {
                     // Handle matching errors
-                    alert(matchingResult.message);
+                    Toast.show(matchingResult.message,{
+                      type: "error",
+                      placement: "top",
+                      duration: 4000,
+                      offset: 30,
+                      animationType: "slide-in",
+                    });
                 }
             }
 
@@ -286,11 +310,26 @@ const OnBoardQtnsScreen = ({route}) => {
             navigation.navigate(source === 'SignUpScreen' ? 'SignInScreen' : 'My therapists');
         } else {
             // Handle errors from registration or update
-            alert(result.message);
+            Toast.show(result.message,{
+              type: "error",
+              placement: "top",
+              duration: 4000,
+              offset: 30,
+              animationType: "slide-in",
+            });
+            setIsLoading(false)
         }
     } catch (error) {
         // Handle network errors
-        alert('An error occurred: ' + error.message);
+        Toast.show('Error'.error.message,{
+          type: "error",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
+    }finally{
+      setIsLoading(false);  // Stop loading regardless of the outcome
     }
 };
 
@@ -594,6 +633,7 @@ const OnBoardQtnsScreen = ({route}) => {
                 title="Submit"
                 buttonStyle={styles.buttonStyle}
                 textStyle={{color: 'white'}}
+                isLoading={isLoading}
               />
             </View>
           </View>

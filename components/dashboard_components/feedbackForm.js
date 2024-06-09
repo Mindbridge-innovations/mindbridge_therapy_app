@@ -6,6 +6,7 @@ import CustomButton from '../../assets/utils/custom_button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Config from '../../config';
 import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
+import { Toast } from 'react-native-toast-notifications';
 
 
 
@@ -13,6 +14,7 @@ import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
 const FeedbackForm = ({patientId}) => {
   const [feedback, setFeedback] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  const [isLoading,setIsLoading]=useState(false)
 
   
   const handleSelectFile = async () => {
@@ -44,6 +46,7 @@ const FeedbackForm = ({patientId}) => {
   };
 
   const handleSubmitFeedback = async () => {
+    setIsLoading(true)
     
     // Prepare data to be sent including file if selected
     const formData = new FormData();
@@ -75,15 +78,35 @@ const FeedbackForm = ({patientId}) => {
   
       if (response.ok) {
         // Handle successful feedback submission
-        alert('Feedback submitted successfully!');
+        Toast.show("SUCCESS",result.message,{
+          type: "success",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
         // Navigate to the appropriate screen
       } else {
         // Handle errors
-        alert(result.message);
+        Toast.show("Error",result.message,{
+          type: "error",
+          placement: "top",
+          duration: 4000,
+          offset: 30,
+          animationType: "slide-in",
+        });
       }
     } catch (error) {
       // Handle network errors
-      alert('An error occurred: ' + error.message);
+      Toast.show("Error",error.message,{
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    }finally{
+      setIsLoading(false)
     }
     setSelectedFile('')
     setFeedback('')
@@ -124,6 +147,7 @@ const FeedbackForm = ({patientId}) => {
             onPress={handleSubmitFeedback}
             title="Submit feedback"
             textStyle={{color: 'white', fontWeight: 'bold'}}
+            isLoading={isLoading}
         />
       
     </View>
