@@ -49,7 +49,7 @@ const MyFeedbacks = () => {
   if (feedbacks.length === 0) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>No feedbacks found</Text>
+        <Text>No feedbacks found at the moment</Text>
       </View>
     );
   }

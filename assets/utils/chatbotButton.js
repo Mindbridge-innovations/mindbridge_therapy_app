@@ -44,7 +44,7 @@ const ChatBotButton = () => {
     setShowChat(false);
   };
 
-  const chatUrl = "https://embed.fixie.ai/agents/cf387864-04ee-4450-a37f-699b98621f33";
+  const chatUrl = "https://embed.fixie.ai/agents/cf387864-04ee-4450-a37f-699b98621f33?agentStartsConversation=1";
 
   const glitterStyle = {
     opacity: glitterAnimation,

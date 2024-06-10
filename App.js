@@ -35,6 +35,7 @@ import { ToastProvider } from 'react-native-toast-notifications'
 import WebViewScreen from './components/dashboard_components/WebViewScreen';
 import TokenDisplayScreen from './components/dashboard_components/tokenDisplayScreen';
 import DashboardDrawer from './components/dashboard_components/DashboardDrawer';
+import UserVRInteractionsScreen from './components/dashboard_components/vrTherapySessions';
 
 
 
@@ -193,9 +194,11 @@ export default function App() {
             <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
             <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
             <Stack.Screen name="TokenDisplay" component={TokenDisplayScreen} />
-          </Stack.Navigator>
-        )}
-        </UserProvider>
+            <Stack.Screen name="VRSessionInteractions" component={UserVRInteractionsScreen} options={{ title: 'Virtual Reality Interactions', headerShown:true }} />
+
+          </Stack.Navigator> 
+        )} 
+        </UserProvider> 
       </NavigationContainer>
     </GestureHandlerRootView>
     </SafeAreaView>

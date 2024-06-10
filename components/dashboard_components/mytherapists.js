@@ -92,6 +92,14 @@ const TherapistListScreen = ({ navigation }) => {
     );
   }
 
+  if (therapists.length === 0) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.noPatientsText}>There are no therapist matched at this time.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -152,6 +160,16 @@ const styles = StyleSheet.create({
   errorMessage: {
     fontSize: 18,
     color: 'red',
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noPatientsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#666',
   },
 });
 

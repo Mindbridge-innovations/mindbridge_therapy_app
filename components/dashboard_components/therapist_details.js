@@ -84,43 +84,43 @@ const TherapistDetailsScreen = ({route}) => {
         {/* text display about the therapist */}
         <View style={{backgroundColor: 'lightgray', borderRadius: 10}}>
           <View style={{padding: 10}}>
-          <View style={styles.responsesContainer}>
-    <Text style={styles.responsesHeader}>About Dr. {passedUser.responses.full_name}</Text>
-    <Text>{passedUser.responses.about_therapist}</Text>
+            <View style={styles.responsesContainer}>
+              <Text style={styles.responsesHeader}>About Dr. {passedUser.responses.full_name}</Text>
+              <Text>{passedUser.responses.about_therapist}</Text>
 
-    {/* Therapeutic Experiences */}
-    {passedUser.responses['5'] && (
-        <View>
-            <Text style={styles.infoTitle}>Therapeutic Experiences:</Text>
-            {passedUser.responses['5'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>* {reverseMappings.therapy_experiences[item]}</Text>
-            ))}
-        </View>
-    )}
+              {/* Therapeutic Experiences */}
+              {passedUser.responses['5'] && (
+                  <View>
+                      <Text style={styles.infoTitle}>Therapeutic Experiences:</Text>
+                      {passedUser.responses['5'].map((item, index) => (
+                          <Text key={index} style={styles.responseItem}>* {reverseMappings.therapy_experiences[item]}</Text>
+                      ))}
+                  </View>
+              )}
 
-    {/* Communication Preferences */}
-    {passedUser.responses['4'] && (
-        <View>
-            <Text style={styles.infoTitle}>Communication Preferences:</Text>
-            {passedUser.responses['4'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>* {reverseMappings.communication[item]}</Text>
-            ))}
-        </View>
-    )}
+              {/* Communication Preferences */}
+              {passedUser.responses['4'] && (
+                  <View>
+                      <Text style={styles.infoTitle}>Communication Preferences:</Text>
+                      {passedUser.responses['4'].map((item, index) => (
+                          <Text key={index} style={styles.responseItem}>* {reverseMappings.communication[item]}</Text>
+                      ))}
+                  </View>
+              )}
 
     
 
-    {/* Languages */}
-    {passedUser.responses['6'] && (
-        <View>
-            <Text style={styles.infoTitle}>Languages:</Text>
-            {passedUser.responses['6'].map((item, index) => (
-                <Text key={index} style={styles.responseItem}>* {reverseMappings.languages[item]}</Text>
-            ))}
-        </View>
-    )}
-</View>
-          </View>
+              {/* Languages */}
+              {passedUser.responses['6'] && (
+                  <View>
+                      <Text style={styles.infoTitle}>Languages:</Text>
+                      {passedUser.responses['6'].map((item, index) => (
+                          <Text key={index} style={styles.responseItem}>* {reverseMappings.languages[item]}</Text>
+                      ))}
+                  </View>
+              )}
+           </View>
+         </View>
 
         </View>
 

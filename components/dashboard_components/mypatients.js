@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -7,174 +7,79 @@ import {
   StyleSheet,
   ActivityIndicator,
   Dimensions,
-  Modal
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomButton from '../../assets/utils/custom_button';
-import { rtdb } from '../../firebaseConfig';
-import { onValue,ref,get} from 'firebase/database';
-import FeedbackForm from './feedbackForm';
 import UserContext from '../../utils/contexts/userContext';
-import mystyles from '../../assets/stylesheet';
-import { ScrollView } from 'react-native-gesture-handler';
+import Config from '../../config'; // Ensure this is correctly set up to point to your config file
 import { Toast } from 'react-native-toast-notifications';
 
-const PatientListScreen = ({navigation}) => {
+const PatientListScreen = ({ navigation }) => {
   const [patients, setPatients] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [expandedPatientId, setExpandedPatientId] = useState(null);
-  const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false);
-  const [selectedPatientId, setSelectedPatientId] = useState(null);
-  const {user}=useContext(UserContext);
-  const [matchedPatients, setMatchedPatients] = useState([]);
+  const { user } = useContext(UserContext);
 
+  useEffect(() => {
+    fetchMatchedPatients();
+  }, [user]);
+ // Depend on user.token specifically if it's stable
 
-
-
-// Define fetchMatchedPatientsForTherapist at the top level of your component
-const fetchMatchedPatientsForTherapist = async () => {
+ const fetchMatchedPatients = async () => {
   setIsLoading(true);
-  setError(null);
-
-  const matchesRef = ref(rtdb, `matches/${user.userId}`); // Path to the therapist's matches
-  onValue(matchesRef, async (snapshot) => {
-    if (snapshot.exists()) {
-      const patientIds = snapshot.val(); // This should be an array of patient IDs
-      const patientDetails = [];
-
-      for (const patientId of patientIds) {
-        const patientRef = ref(rtdb, `users/${patientId}`);
-        const patientSnapshot = await get(patientRef);
-        if (patientSnapshot.exists()) {
-          patientDetails.push({
-            patientId,
-            ...patientSnapshot.val(),
-          });
-        }
-      }
-
-      setMatchedPatients(patientDetails);
-    } else {
-      Toast.show("No matches found, please request for a therapist, by clicking on the \"Find a therapist\" button in the dashboard",{
-        type: "error",
-        placement: "top",
-        duration: 10000,
-        offset: 30,
-        animationType: "slide-in",
-      });
+  const token = await AsyncStorage.getItem('userToken');
+  try {
+    const response = await fetch(`${Config.BACKEND_API_URL}/matched-patients`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+    const data = await response.json();
+    setPatients(data);
+  } catch (error) {
+    setError('Failed to load patients');
+    Toast.show(error.message, {
+      type: "error",
+      placement: "top",
+      duration: 4000,
+      offset: 30,
+      animationType: "slide-in",
+    });
+  } finally {
     setIsLoading(false);
-  }, (errorObject) => {
-    setError('The read failed: ' + errorObject.code);
-    setIsLoading(false);
-  });
+  }
 };
 
-useEffect(() => {
-  if (user && user.userId) {
-    fetchMatchedPatientsForTherapist();
-  } else {
-    setIsLoading(false);
-    setError('User context is not set');
-  }
-}, [user]);
-
-
-   const handleOpenFeedbackModal = (patient) => {
-    setSelectedPatientId(patient.userId);
-    setIsFeedbackModalVisible(true);
-  };
-
-  const handleCloseFeedbackModal = () => {
-    setIsFeedbackModalVisible(false);
-  };
-
-
-  const handleToggleDropdown = (patientId) => {
-    //Toggle the dropdown only for the clicked patient
-    setExpandedPatientId(expandedPatientId === patientId ? null : patientId);
-   };
-
   const handleDetailPress = patient => {
-    // Handle interaction logic here:
-    navigation.navigate('PatientDetailsScreen', {passedUser:patient}); // Example navigation
+    navigation.navigate('PatientDetailsScreen', { passedUser: patient });
   };
 
-  const renderPatient = ({ item }) => {
-    // Ensure you have a unique identifier for each patient, such as `item.id`
-    const isExpanded = expandedPatientId === item.id;
-    const dropdownIndicator = isExpanded ? '▲' : '▼';
-    // const itemBackgroundColor = isExpanded ? 'lightgray' : 'white'; // Change background color when expanded
-
-    return (
-      <View>
-        <TouchableOpacity
-          style={styles.patientsItem}
-          onPress={() => handleToggleDropdown(item.id)}>
-          <View style={styles.patientInfo}>
-            <Text style={styles.patientName}>{item.lastName}</Text>
-            <Text style={styles.patientName}>{item.email}</Text>
-          </View>
-          <Text style={styles.dropdownIndicator}>{dropdownIndicator}</Text>
-
-        </TouchableOpacity>
-        {isExpanded && (
-          <View style={styles.dropdownContainer}>
-            {/* Action buttons for the patient */}
-            <CustomButton
-              onPress={() => navigation.navigate('Chat', { passedUser: item })}
-              title="Message chat"
-              textStyle={styles.buttonText}
-            />
-            <CustomButton
-              onPress={() => navigation.navigate('VideoCallPage', { passedUser: item })}
-              title="Video call"
-              buttonStyle={styles.custombutton}
-              textStyle={styles.buttonText}
-            />
-            <CustomButton
-              onPress={() => navigation.navigate('VoiceCall', { passedUser: item })}
-              title="Voice call"
-              buttonStyle={styles.custombutton}
-              textStyle={styles.buttonText}
-            />
-            <CustomButton
-              onPress={()=>navigation.navigate('TokenDisplay',{ passedUser: item})}
-              title="Generate VR token"
-              buttonStyle={styles.custombutton}
-              textStyle={styles.buttonText}
-            />
-            <CustomButton
-              onPress={()=>handleOpenFeedbackModal(item)}
-              title="Provide Feedback"
-              buttonStyle={styles.custombutton}
-              textStyle={styles.buttonText}
-            />
-
-            
-          </View>
-        )}
+  const renderPatient = ({ item }) => (
+    <TouchableOpacity
+      style={styles.therapistItem}
+      onPress={() => handleDetailPress(item)}>
+      <View style={styles.therapistInfo}>
+        <Text style={styles.therapistName}> {item.username}</Text>
+        <Text style={styles.therapistSpecialty}>{item.email}</Text>
+        
       </View>
-    );
-  };
-
-
+    </TouchableOpacity>
+  );
 
   if (isLoading) {
-    return(
-      <View style={mystyles.loadingContainer}>
-        <ActivityIndicator size="large" style={mystyles.loadingIndicator} />
-        <Text style={mystyles.loadingText}>Loading clients list, please wait...</Text>
-      </View>
-    );  
+    return <ActivityIndicator size="large" style={styles.loadingIndicator} />;
   }
-//action of retrying if initial request failed
+
   if (error) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorMessage}>Error: {error}</Text>
         <CustomButton
-          onPress={fetchMatchedPatientsForTherapist}
+          onPress={fetchMatchedPatients} // Directly reference the function
           title="Retry"
           buttonStyle={{
             backgroundColor: 'black',
@@ -192,37 +97,21 @@ useEffect(() => {
     );
   }
 
+  if (patients.length === 0) {
+    return (
+      <View style={styles.centerContainer}>
+        <Text style={styles.noPatientsText}>There are no patients matched at this time.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={matchedPatients}
+        data={patients}
         renderItem={renderPatient}
         keyExtractor={item => item.patientId}
       />
-       {/* Feedback Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isFeedbackModalVisible}
-        onRequestClose={handleCloseFeedbackModal}
-      >
-        <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-
-        <View style={styles.modalContainer}>
-          {/* the feedback form is shown here */}
-          <FeedbackForm
-            patientId={selectedPatientId}
-          />
-          <CustomButton
-            onPress={handleCloseFeedbackModal}
-            title="Close"
-            buttonStyle={styles.custombutton}
-            textStyle={styles.buttonText}
-          />
-        </View>
-        </ScrollView>
-
-      </Modal>
     </View>
   );
 };
@@ -233,7 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
-  patientsItem: {
+  therapistItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -241,10 +130,20 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#ddd',
   },
-  patientInfo: {
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noPatientsText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#666',
+  },
+  therapistInfo: {
     flex: 1,
   },
-  patientName: {
+  therapistName: {
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -252,9 +151,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#888',
   },
-  interactButton: {
+  responsesContainer: { 
+    marginTop: 10,
+  },
+  responsesHeader: {
     fontSize: 16,
-    color: '#007bff',
+    fontWeight: 'bold',
+  },
+  responseItem: {
+    fontSize: 14,
+    color: '#666',
   },
   loadingIndicator: {
     flex: 1,
@@ -270,48 +176,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'red',
   },
-  dropdownContainer: {
-    backgroundColor: '#f9f9f9', // Choose an appropriate background color
-    padding: 10,
-    // Add any additional styling for the dropdown container
-  },
-  custombutton: {
-    // Your button styles
-    marginVertical: -30, // Add vertical spacing between buttons
-  
-    // Add any additional styling for the buttons
-  },
-  buttonText: {
-    // Your button text styles
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  dropdownIndicator: {
-    // Style for the dropdown indicator
-    fontSize: 18,
-    color: '#31363F',
-    marginRight: 10, // Add some margin to the right of the indicator
-  },
-  modalContainer: {
-    margin: 20,
-    backgroundColor: '#257DE9',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  scrollViewContainer: {
-    alignItems: 'center', // Center the content horizontally
-    marginHorizontal:20,
-
-  }
 });
 
 export default PatientListScreen;
