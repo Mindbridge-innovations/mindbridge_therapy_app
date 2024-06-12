@@ -21,7 +21,7 @@ const TherapistListScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchMatchedTherapists();
-  }, []); // Depend on user.token specifically if it's stable
+  }, [user.verificationToken]); // Depend on user.token specifically if it's stable
 
   const fetchMatchedTherapists = async () => {
     const token = await AsyncStorage.getItem('userToken');

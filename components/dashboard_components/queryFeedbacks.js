@@ -10,6 +10,21 @@ const MyFeedbacks = () => {
   const [loading, setLoading] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState(null);
 
+
+  //function called when download button is clicked
+  const handleDownload = (url) => {
+    // console.log("Attempting to open URL:", url);
+    Linking.openURL(url).catch(err => {
+      console.error("Failed to open URL:", err);
+      Toast.show(`Cannot open the document: ${err.message}`, {
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    });
+  };
   useEffect(() => {
     const fetchFeedbacks = async () => {
       setLoading(true);
@@ -68,11 +83,11 @@ const MyFeedbacks = () => {
                 <Text>1 file attached, click to download</Text>
                 
             )}
-            {expandedIndex === index && item.feedback.fileUrl && (
-              <TouchableOpacity onPress={() => Linking.openURL(item.feedback.fileUrl)}>
-                <CustomButton title={('Download document')} buttonStyle={style={marginBottom:-5, margin:10}}/>
-              </TouchableOpacity>
-            )}
+           {expandedIndex === index && item.feedback.fileUrl && (
+            <TouchableOpacity onPress={() => handleDownload(item.feedback.fileUrl)} style={styles.downloadButton}>
+              <Text style={styles.downloadButtonText}>Download Document</Text>
+            </TouchableOpacity>
+          )}
           </View>
         </TouchableOpacity>
       ))}
@@ -89,10 +104,11 @@ const styles = StyleSheet.create({
     },
     downloadButton: {
       marginTop: 10,
-      backgroundColor: '#007BFF',
+      backgroundColor: 'black',
       padding: 10,
       borderRadius: 5,
-      alignItems: 'center'
+      alignItems: 'center',
+      paddingHorizontal:60
     },
     downloadButtonText: {
       color: 'white',

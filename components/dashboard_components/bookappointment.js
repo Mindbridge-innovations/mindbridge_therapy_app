@@ -48,6 +48,78 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
     return `${time.getHours()}:${time.getMinutes().toString().padStart(2, '0')}`;
   };
 
+  const validateDate = (newDate) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);  // Reset time to start of the day for fair comparison
+  
+    if (newDate < today) {
+      Toast.show("Appointments cannot be booked in the past.", {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+      return false;
+    }
+  
+    const day = newDate.getDay();
+    if (day === 0 || day === 6) {
+      Toast.show("Appointments cannot be booked on weekends.", {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+      return false;
+    }
+  
+    return true;
+  };
+  
+  const validateTime = (newTime) => {
+    const currentTime = new Date();
+    const selectedDate = new Date(date);  // Assuming 'date' is the date state
+    selectedDate.setHours(newTime.getHours(), newTime.getMinutes(), 0, 0);
+  
+    if (selectedDate < currentTime) {
+      Toast.show("Appointment times cannot be set in the past.", {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+      return false;
+    }
+  
+    const hours = newTime.getHours();
+    if (hours < 8 || hours >= 17) {
+      Toast.show("Appointments can only be booked from 8 AM to 5 PM on weekdays.", {
+        type: "warning",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+      return false;
+    }
+  
+    return true;
+  };
+  const handleDateChange = (newDate) => {
+    if (validateDate(newDate)) {
+      setDate(newDate);
+    }
+  };
+  
+  const handleTimeChange = (newTime) => {
+    if (validateTime(newTime)) {
+      setTime(newTime);
+    }
+  };
+
   const handleBookingSubmit = async () => {
     setIsLoading(true)
     const appointmentData={
@@ -86,7 +158,7 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
             offset: 30,
             animationType: "slide-in",
           });
-        navigation.navigate('AppointmentBookingScreen',{passedUser});
+        navigation.navigate('TherapistDetailsScreen',{passedUser});
       } else {
         // Handle errors
         Toast.show(result.message,{
@@ -132,9 +204,9 @@ const AppointmentBookingScreen = ({isBackgroundBlue,route}) => {
       <View style={{width: '90%'}}>
         <DatePicker isBackgroundBlue={false} label={'Please select your suitable date for the appointment'} 
          date={date} 
-        onDateChange={setDate}
+        onDateChange={handleDateChange}
         />
-        <TimePicker label={'Please select your suitable time for the appointment'} time={time} onTimeChange={setTime}/>
+        <TimePicker label={'Please select your suitable time for the appointment'} time={time} onTimeChange={handleTimeChange}/>
 
         <View style={{marginBottom: 20}}>
           <Text style={mystyles.dashlabel}>

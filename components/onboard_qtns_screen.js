@@ -26,6 +26,7 @@ const OnBoardQtnsScreen = ({route}) => {
   const {params} = route;
   const userData = params ? params?.userData : null;
   const { source } = route.params;
+  
   //variable to change loading indicator
   const [isLoading, setIsLoading] = useState(false);
 
@@ -54,6 +55,8 @@ const OnBoardQtnsScreen = ({route}) => {
     'English', 'Swahili', 'Luganda', 'Lugbara', 'Luo', 'Runyankoore',
     'Ateso', 'Alur', 'Madi', 'Karamajong', 'Rukiga', 'Rutooro', 'Lusoga',
   ];
+
+  
 
   //list of communication mechanisms
   const communication = [
@@ -168,18 +171,33 @@ const OnBoardQtnsScreen = ({route}) => {
     });
   };
 
-  //function to handle theurapeutic experience selection selection
-  const handleTherapyExperienceToggle = (therapy_type) => {
-    setSelectedTherapyType((currentSelectedType) => {
-      if (currentSelectedType.includes(therapy_type)) {
-        // If the language is already selected, remove it from the array
-        return currentSelectedType.filter((type) => type !== therapy_type);
-      } else {
-        // If the language is not selected, add it to the array
+  // Function to handle therapeutic experience selection
+const handleTherapyExperienceToggle = (therapy_type) => {
+  setSelectedTherapyType((currentSelectedType) => {
+    // Check if the therapy type is already selected
+    if (currentSelectedType.includes(therapy_type)) {
+      // If the therapy type is already selected, remove it from the array
+      return currentSelectedType.filter((type) => type !== therapy_type);
+    } else {
+      // Check the user's role before adding new therapy types
+      if (userData.role === 'client' && currentSelectedType.length < 2) {
         return [...currentSelectedType, therapy_type];
+      } else if (userData.role === 'therapist') {
+        return [...currentSelectedType, therapy_type];
+      } else {
+        // Optionally, show a toast message or alert if the client tries to select more than 2
+        Toast.show('You can only select up to 2 therapy experiences.', {
+          type: "warning",
+          placement: "top",
+          duration: 3000,
+          offset: 30,
+          animationType: "slide-in",
+        });
+        return currentSelectedType;
       }
-    });
-  };
+    }
+  });
+};
 
   //function to handle communication type
   const handlecommunicationToggle = (communication) => {
@@ -192,6 +210,27 @@ const OnBoardQtnsScreen = ({route}) => {
         return [...currentSelectedCommunication, communication];
       }
     });
+  };
+
+  const handleDateChange = (newDate) => {
+    const today = new Date();
+    const eighteenYearsAgo = new Date(
+      today.getFullYear() - 18,
+      today.getMonth(),
+      today.getDate()
+    );
+
+    if (newDate > eighteenYearsAgo) {
+      Toast.show('You must be at least 18 years old.', {
+        type: "warning",
+        placement: "top",
+        duration: 3000,
+        offset: 30,
+        animationType: "slide-in",
+      });
+    } else {
+      setDate(newDate);
+    }
   };
 
   
@@ -375,7 +414,7 @@ const OnBoardQtnsScreen = ({route}) => {
                 }}>
                 Select your date of birth.
               </Text>
-              <DatePicker isBackgroundBlue={false} date={date} onDateChange={setDate} styles={{backgroundColor:'white',marginTop:10}} />
+              <DatePicker isBackgroundBlue={false} date={date} onDateChange={handleDateChange} styles={{backgroundColor:'white',marginTop:10}} />
               </View>
 
             {userData.role === 'client' && (

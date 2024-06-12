@@ -135,8 +135,8 @@ const { isAuthenticated } = useContext(UserContext);
           });
         } else {
           //handle matching errors
-          Toast.show(matchingResult.message, {
-            type: "success",
+          Toast.show('Sorry, you could not be matched with a therapist, please use the resources on this system for the mean time', {
+            type: "error",
             placement: "top",
             duration: 4000,
             offset: 30,
@@ -150,7 +150,7 @@ const { isAuthenticated } = useContext(UserContext);
       });
       } else {
         // Handle errors
-        Toast.show(result.message, {
+        Toast.show('You could not be matched with a therapist', {
           type: "error",
           placement: "top",
           duration: 4000,
@@ -233,7 +233,7 @@ const { isAuthenticated } = useContext(UserContext);
 
           <Text
             style={{
-              paddingBottom: 80,
+              paddingBottom: 60,
               fontSize: 20,
               color: 'white',
               textTransform: 'uppercase',

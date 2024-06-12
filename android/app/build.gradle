@@ -90,6 +90,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('mindbridge.keystore')
+            storePassword 'Ne17991999@'
+            keyAlias 'Ne17991999@'
+            keyPassword 'Ne17991999@'
+        }
     }
     buildTypes {
         debug {
@@ -101,6 +107,8 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
+
         }
     }
 }
@@ -123,3 +131,5 @@ apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
 // project.ext.vectoricons = [
 //     iconFontNames: [ 'MaterialIcons.ttf', 'EvilIcons.ttf','AntDesign.ttf', 'FontAwesome.ttf','IonIcons.ttf' ] // Specify font files
 // ]
+
+

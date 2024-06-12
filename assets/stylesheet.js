@@ -3,6 +3,15 @@
 import {Dimensions, StyleSheet} from 'react-native';
 
 const mystyles = StyleSheet.create({
+  picker: {
+    backgroundColor: '#FFFFFF',
+    width: Dimensions.get('window').width * 0.8,
+    borderRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
   //styles for full page alignment
   containerview: {
     flexGrow: 1,

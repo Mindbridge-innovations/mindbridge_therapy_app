@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Alert } from 'react-native';
 import DocumentPicker from 'react-native-document-picker';
 import mystyles from '../../assets/stylesheet';
 import CustomButton from '../../assets/utils/custom_button';
@@ -8,15 +8,11 @@ import Config from '../../config';
 import FontAwesome6 from 'react-native-vector-icons/dist/FontAwesome6';
 import { Toast } from 'react-native-toast-notifications';
 
-
-
-//this form will only appear as a modal when requested
-const FeedbackForm = ({patientId}) => {
+const FeedbackForm = ({ patientId, onFeedbackSubmit }) => {
   const [feedback, setFeedback] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
-  const [isLoading,setIsLoading]=useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
-  
   const handleSelectFile = async () => {
     try {
       const results = await DocumentPicker.pick({
@@ -46,12 +42,11 @@ const FeedbackForm = ({patientId}) => {
   };
 
   const handleSubmitFeedback = async () => {
-    setIsLoading(true)
-    
-    // Prepare data to be sent including file if selected
+    setIsLoading(true);
+
     const formData = new FormData();
-    formData.append('feedback',feedback);
-    formData.append('clientId',patientId);
+    formData.append('feedback', feedback);
+    formData.append('clientId', patientId);
     if (selectedFile) {
       formData.append('file', {
         uri: selectedFile.uri,
@@ -59,36 +54,31 @@ const FeedbackForm = ({patientId}) => {
         type: selectedFile.type,
       });
     }
-  
-    
 
     const token = await AsyncStorage.getItem('userToken');
-  
+
     try {
       const response = await fetch(`${Config.BACKEND_API_URL}/feedbacks`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
-          // 'Content-Type': 'multipart/form-data', // Ensure correct content type for FormData
         },
         body: formData,
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
-        // Handle successful feedback submission
-        Toast.show("SUCCESS",result.message,{
+        Toast.show("SUCCESS: Your feedback was saved successfully", {
           type: "success",
           placement: "top",
           duration: 4000,
           offset: 30,
           animationType: "slide-in",
         });
-        // Navigate to the appropriate screen
+        onFeedbackSubmit(); // Call the callback to close the modal
       } else {
-        // Handle errors
-        Toast.show("Error",result.message,{
+        Toast.show("Error", result.message, {
           type: "error",
           placement: "top",
           duration: 4000,
@@ -97,62 +87,59 @@ const FeedbackForm = ({patientId}) => {
         });
       }
     } catch (error) {
-      // Handle network errors
-      Toast.show("Error",error.message,{
+      Toast.show("Error", error.message, {
         type: "error",
         placement: "top",
         duration: 4000,
         offset: 30,
         animationType: "slide-in",
       });
-    }finally{
-      setIsLoading(false)
+    } finally {
+      setIsLoading(false);
+      setSelectedFile(null);
+      setFeedback('');
     }
-    setSelectedFile('')
-    setFeedback('')
   };
-  
 
   return (
-    
-    <View style={{paddingHorizontal:20}}>
-      <Text style={{color:'white', fontSize:17, textAlign:'center'}}>Provide feedback for your patient:</Text>
+    <View style={{ paddingHorizontal: 20 }}>
+      <Text style={{ color: 'white', fontSize: 17, textAlign: 'center' }}>Provide feedback for your patient:</Text>
       <View style={mystyles.inputcontainer}>
-      <TextInput style={mystyles.input}
-        multiline
-        placeholder="Write your feedback here..."
-        value={feedback}
-        onChangeText={setFeedback}
-        numberOfLines={7}
-      />
+        <TextInput
+          style={mystyles.input}
+          multiline
+          placeholder="Write your feedback here..."
+          value={feedback}
+          onChangeText={setFeedback}
+          numberOfLines={7}
+        />
       </View>
 
-      <Text style={{color:'white', fontSize:16, paddingTop:10}}>If you would like to send a document instead, please attach a pdf or word file</Text>
-      {selectedFile && <View style={{backgroundColor:'lightgrey', borderRadius:5, marginBottom:10}}>
-        <View style={{margin:10,marginBottom:0}}>
-          {selectedFile && getFileIcon(selectedFile)}
-          {selectedFile && <Text style={{color:'white', marginTop:15, fontWeight:'bold'}} >{selectedFile.name}</Text>}
+      <Text style={{ color: 'white', fontSize: 16, paddingTop: 10 }}>If you would like to send a document instead, please attach a pdf or word file</Text>
+      {selectedFile && (
+        <View style={{ backgroundColor: 'lightgrey', borderRadius: 5, marginBottom: 10 }}>
+          <View style={{ margin: 10, marginBottom: 0 }}>
+            {selectedFile && getFileIcon(selectedFile)}
+            {selectedFile && <Text style={{ color: 'white', marginTop: 15, fontWeight: 'bold' }}>{selectedFile.name}</Text>}
+          </View>
         </View>
-      </View>}
+      )}
 
-      
       <CustomButton
-            onPress={handleSelectFile}
-            title="Select a file"
-            buttonStyle={{backgroundColor:'white'}}
-            textStyle={{color: 'blue', fontWeight: 'bold'}}
-        />
+        onPress={handleSelectFile}
+        title="Select a file"
+        buttonStyle={{ backgroundColor: 'white' }}
+        textStyle={{ color: 'blue', fontWeight: 'bold' }}
+      />
 
-        <CustomButton
-            onPress={handleSubmitFeedback}
-            title="Submit feedback"
-            textStyle={{color: 'white', fontWeight: 'bold'}}
-            isLoading={isLoading}
-        />
-      
+      <CustomButton
+        onPress={handleSubmitFeedback}
+        title="Submit feedback"
+        textStyle={{ color: 'white', fontWeight: 'bold' }}
+        isLoading={isLoading}
+      />
     </View>
   );
 };
 
 export default FeedbackForm;
-
