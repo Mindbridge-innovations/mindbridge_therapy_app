@@ -150,7 +150,7 @@ const { isAuthenticated } = useContext(UserContext);
       });
       } else {
         // Handle errors
-        Toast.show('You could not be matched with a therapist', {
+        Toast.show(result.message, {
           type: "error",
           placement: "top",
           duration: 4000,

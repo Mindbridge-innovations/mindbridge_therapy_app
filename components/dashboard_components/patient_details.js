@@ -30,7 +30,13 @@ const PatientDetailsScreen = ({ route }) => {
         <View style={styles.infoRow}>
           <View style={styles.infoItem}>
             <Text style={styles.infoTitle}>Gender</Text>
-            <Text style={styles.infoValue}>{passedUser.responses?.gender}</Text>
+            {passedUser.responses['1'] && (
+                <View>
+                   <Text style={styles.infoValue}>
+                    {passedUser.responses['1'] ? reverseMappings.gender[passedUser.responses['1']] : 'Unknown'}
+                  </Text>
+                </View>
+              )}
           </View>
           <View style={styles.infoItem}>
             <Text style={styles.infoTitle}>Date of birth</Text>
@@ -41,6 +47,16 @@ const PatientDetailsScreen = ({ route }) => {
         <View style={{ backgroundColor: 'lightgray', borderRadius: 10, width: Dimensions.get('window').width * 0.9 }}>
           <View style={{ padding: 10 }}>
             <View style={styles.responsesContainer}>
+            <View>
+                  <Text style={styles.infoTitle}>Cause for need of therapy</Text>
+                  
+                  <Text style={styles.responseItem}>{passedUser.responses.therapy_cause}</Text>
+                
+                  <Text style={styles.infoTitle}>Expectation from therapist</Text>
+                  
+                  <Text style={styles.responseItem}>{passedUser.responses.expectation}</Text>
+                
+                </View>
               {passedUser.responses['5'] && (
                 <View>
                   <Text style={styles.infoTitle}>Therapeutic reasons/needs of the client</Text>

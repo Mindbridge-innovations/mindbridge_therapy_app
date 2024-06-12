@@ -9,15 +9,24 @@ const ResetPasswordScreen = ({ route, navigation }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { token,email } = route.params;
+  const [isLoading, setIsLoading]=useState(false)
+
 
 
   const handleResetPassword = async () => {
+    setIsLoading(true)
+    console.log(token,email)
+
     if (newPassword !== confirmPassword) {
-      alert('Passwords do not match!');
+      Toast.show('Passwords do not match!',{
+        type: "error",
+        placement: "top",
+        duration: 4000,
+        offset: 30,
+        animationType: "slide-in",});
       return;
     }
 
-    console.log(email,token)
     try {
       const response = await fetch(`${Config.BACKEND_API_URL}/reset-password`, {
         method: 'POST',
@@ -30,7 +39,7 @@ const ResetPasswordScreen = ({ route, navigation }) => {
       const data = await response.json();
       if (response.ok) {
       
-        Toast.show("Success:", result.message,{
+        Toast.show("Success: Password reset successfully, you can log in using the new password",{
           type: "success",
           placement: "top",
           duration: 4000,
@@ -43,19 +52,21 @@ const ResetPasswordScreen = ({ route, navigation }) => {
       }
     } catch (error) {
       Toast.show("Error resetting password:", error.message,{
-        type: "success",
+        type: "error",
         placement: "top",
         duration: 4000,
         offset: 30,
         animationType: "slide-in",
       });
+    }finally{
+      setIsLoading(false)
     }
   };
 
   return (
     <ScrollView
-      contentContainerStyle={{flexGrow: 1, backgroundColor: '#255ECC'}}>
-        <View style={{ padding: 20, alignContent:'center' }}>
+      contentContainerStyle={{flexGrow: 1, backgroundColor: '#255ECC', alignContent:'center'}}>
+        <View style={{ padding: 20,paddingTop:150 }}>
         <View style={{marginBottom: 30}}>
             <Text style={mystyles.label}>Enter new password</Text>
             <TextInput
@@ -87,6 +98,8 @@ const ResetPasswordScreen = ({ route, navigation }) => {
             height: 50,
         }}
         textStyle={{color: 'white'}}
+        isLoading={isLoading}
+
         />   
         </View>
      </ScrollView>
